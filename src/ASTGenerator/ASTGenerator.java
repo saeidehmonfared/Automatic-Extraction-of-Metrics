@@ -84,18 +84,49 @@ public class  ASTGenerator {
 
 
 
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
         }
+
+
+
+        Iterator<String> it5 = compilationUnits.iterator();
+
+        while (it5.hasNext()) {
+            try {
+                String compUnit = it5.next();
+                String myfile = readFile(compUnit);
+
+
+
+                ANTLRInputStream input = new ANTLRInputStream(myfile);
+                javaLexer lexer = new javaLexer(input);
+                CommonTokenStream tokens = new CommonTokenStream(lexer);
+                javaParser parser = new javaParser(tokens);
+                javaParser.CompilationUnitContext tree = parser.compilationUnit();
+                InheritanceMetrics InheritanceExtractor=new InheritanceMetrics();
+                ParseTreeWalker.DEFAULT.walk(InheritanceExtractor,tree);
+
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+
+
         System.out.println("my inheritance list is:" + Inheritancelist.inheritanclist);
         Iterator<Symbol> it3 = Inheritancelist.inheritanclist.values().iterator();
 
         while (it3.hasNext()) {
             try {
                 Symbol s = it3.next();
-                System.out.println("parent of "+s.name+" is:" + s.Parent + "list of implemented interface of this class is:" + s.Implementlist);
+                System.out.println("parent of "+s.name+" is:" + s.Parent + "\nlist of implemented interface of this class is:" + s.Implementlist);
 
             } catch (Exception e) {
                 e.printStackTrace();

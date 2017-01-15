@@ -7,11 +7,13 @@ import java.util.Map;
 import Scopes.*;
 public class MethodSymbol extends Symbol implements Scope  {
         VariableSymbol.TYPE returntype;
+   public ArrayList<Symbol.AccessModifier>methodmodifier=new ArrayList<Symbol.AccessModifier>();
     Map<String, Symbol> arguments = new LinkedHashMap<String, Symbol>();
     Scope enclosingScope;
 
-    public MethodSymbol(String name, ArrayList<AccessModifier>accesstype, VariableSymbol.TYPE returntype, Scope enclosingScope) {
-        super(name, accesstype);
+    public MethodSymbol(String name, ArrayList<Symbol.AccessModifier>accesstype, VariableSymbol.TYPE returntype, Scope enclosingScope) {
+        super(name);
+       methodmodifier.addAll(accesstype);
         this.returntype=returntype;
         this.enclosingScope = enclosingScope;
     }
@@ -38,6 +40,6 @@ public class MethodSymbol extends Symbol implements Scope  {
     public Scope getEnclosingScope() { return enclosingScope; }
     public String getScopeName() { return name; }
 
-    public String toString() { return "Method:"+this.name+super.accessmodifier+"returntype is:"+returntype+" args:"+arguments.keySet(); }
+    public String toString() { return "Method:"+this.name+methodmodifier+"returntype is:"+returntype+" args:"+arguments.keySet(); }
 }
 

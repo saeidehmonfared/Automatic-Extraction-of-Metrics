@@ -41,7 +41,8 @@ public class Symbol { // A generic programming language symbol
         //return getName();
     }
 
-     public Symbol Parent;
+     public Symbol Parent=null;
+
     public ArrayList<Symbol> Implementlist=new ArrayList<Symbol>();
     public  Symbol(String name, Symbol parent, ArrayList<Symbol> implementinterface){
         this.name=name;

@@ -15,4 +15,10 @@ public class ClassScope extends GlobalScope {
     }
 
     public String getScopeName() { return "Class"; }
+    public Map<String,Symbol> symboltableshow(){
+
+        return symbols;
+
+
+    }
 }

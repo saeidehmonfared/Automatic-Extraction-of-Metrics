@@ -36,7 +36,7 @@ import Scopes.*;
 public class Defphase extends javaBaseListener {
     ParseTreeProperty<Scope> Scopes = new ParseTreeProperty<Scope>();
     ParseTreeProperty<VariableSymbol.TYPE> Types = new ParseTreeProperty<VariableSymbol.TYPE>();
-    Map<String, Symbol> refrences = new LinkedHashMap<String, Symbol>();
+    Map<Symbol, String> refrences = new LinkedHashMap<Symbol, String>();
     GlobalScope globals;
     String s;
     Scope currentscope;
@@ -49,6 +49,7 @@ public class Defphase extends javaBaseListener {
     public ArrayList<Symbol.AccessModifier> interfacemodifier=new ArrayList<Symbol.AccessModifier>();
     public ArrayList<Symbol.AccessModifier> fielsmodifier=new ArrayList<Symbol.AccessModifier>();
     public ArrayList<Symbol.AccessModifier> variablemodifier=new ArrayList<Symbol.AccessModifier>();
+    ParseTreeProperty<Symbol.AccessModifier>methodmodifier1=new ParseTreeProperty<Symbol.AccessModifier>();
     public ArrayList<Symbol.AccessModifier> methodmodifier=new ArrayList<Symbol.AccessModifier>();
 
 
@@ -76,6 +77,8 @@ public class Defphase extends javaBaseListener {
     @Override
     public void exitCompilationUnit(javaParser.CompilationUnitContext ctx) {
         currentscope=currentscope.getEnclosingScope();
+
+        System.out.println("coupling is from this symbols:"+refrences);
 
         //System.out.println(StaticList.staticlist);
 
@@ -105,6 +108,8 @@ public class Defphase extends javaBaseListener {
 
     @Override public void exitPackageDeclaration(javaParser.PackageDeclarationContext ctx) {
 
+
+
     }
     //--------------------------------------------------------------------------------------------
 
@@ -130,7 +135,7 @@ public class Defphase extends javaBaseListener {
 
 
         currentscope = new ClassScope(currentscope);// push scope
-        saveScope(ctx, currentscope);
+
     }
 
 
@@ -138,7 +143,12 @@ public class Defphase extends javaBaseListener {
 
     @Override
     public void exitNormalClassDeclaration(javaParser.NormalClassDeclarationContext ctx) {
+
+
+        saveScope(ctx, currentscope);
         System.out.println(currentscope);
+
+
         currentscope = currentscope.getEnclosingScope();
         s = ctx.Identifier().getText().toString();
             boolean a=true;
@@ -165,6 +175,7 @@ public class Defphase extends javaBaseListener {
         System.out.println(currentscope);
 
         accessmod.clear();
+
 
 
     }
@@ -210,29 +221,21 @@ public class Defphase extends javaBaseListener {
 
    //-----------------------------------------------------------------------------------------------------
     public void enterMethodDeclaration(javaParser.MethodDeclarationContext ctx) {
-     methodmodifier.clear();
 
-       // javaParser.MethodModifierContext var = ctx.methodModifier(0);
-       // int m = var.start.getType();
-        //Symbol.AccessModifier accesstype = CheckSymbols.getAccessmodifierType(m);
-
-        //String methodname = ctx.methodHeader().methodDeclarator().getText();
-       // VariableSymbol.TYPE type = getValue(ctx.methodHeader().getChild(0));
-       // System.out.println(type+"saeeeeeeeeedeh");
-      ///  MethodSymbol ms = new MethodSymbol(methodname, accesstype,returnvalue, currentscope);
-       // System.out.println(result1+"saeeeeeeedehamiiiiiiiiir");
-       // currentscope.define(ms);
-        //saveScope(ctx, currentscope);
 
 
     }
+
 
     @Override
     public void exitMethodDeclaration(javaParser.MethodDeclarationContext ctx) {
 
         System.out.println(currentscope);
-        currentscope = currentscope.getEnclosingScope();
         saveScope(ctx,currentscope);
+        currentscope = currentscope.getEnclosingScope();
+        methodmodifier.clear();
+
+
 
 
     }
@@ -241,26 +244,63 @@ public class Defphase extends javaBaseListener {
 
     @Override public void enterMethodDeclarator(javaParser.MethodDeclaratorContext ctx) {
 
+
         String methodname = ctx.getChild(0).getText();
 
-        //System.out.println(methodmodifier+"hhhhhhhhhhhhhhhhhhhhh");
+
+        boolean a=true;
+        if(!(methodmodifier.equals(null))) {
+            for (int i = 0; i < methodmodifier.size(); i++) {
+                Symbol.AccessModifier access = methodmodifier.get(i);
+                if ((access == Symbol.AccessModifier.tpublic) || (access == Symbol.AccessModifier.tprivate) || (access == Symbol.AccessModifier.tprotected))
+                    a = false;
+            }
+
+            if (a) {
+                methodmodifier.add(Symbol.AccessModifier.tpublic);
+            }
+        }
+        else if (methodmodifier.equals(null))
+        {
+            methodmodifier.add(Symbol.AccessModifier.tpublic);
+        }
+
+
+
+
         MethodSymbol ms = new MethodSymbol(methodname, methodmodifier,methodresult, currentscope);
-        //  System.out.println(ms.accessmodifier+"hoooooooooooooooooooooooooo");
+
+        if(methodresult.equals(VariableSymbol.TYPE.TREFRENCE)){
+
+
+            refrences.put(ms,methodresulttype);
+            //System.out.println(s);
+
+
+        }
+
+
+
         currentscope.define(ms);
+
         saveScope(ctx, ms);
         currentscope = ms;
-        methodresult=null;
+
+
 
 
 
 
     }
+    String methodresulttype;
 
     @Override public void exitMethodDeclarator(javaParser.MethodDeclaratorContext ctx) {
        //System.out.println(currentscope);
         //saveScope(ctx, currentscope);
         //currentscope = currentscope.getEnclosingScope();
-       //methodmodifier.clear();
+       // methodmodifier.clear();
+
+
 
     }
 
@@ -279,12 +319,15 @@ public class Defphase extends javaBaseListener {
 
 
 
+
     }
     //------------------------------------------------------------
     @Override public void enterResultunannType(javaParser.ResultunannTypeContext ctx) { }
 
     @Override public void exitResultunannType(javaParser.ResultunannTypeContext ctx) {
         methodresult=getValue(ctx.unannType());
+        if(methodresult.equals(VariableSymbol.TYPE.TREFRENCE)){
+        methodresulttype=ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();}
 
     }
 
@@ -342,7 +385,17 @@ public class Defphase extends javaBaseListener {
             m = ctx.variableDeclaratorId().getText();
             VariableSymbol.TYPE type = getValue(ctx.getChild(0));
 
-            VariableSymbol v = new VariableSymbol(m, accessmod, type);
+            VariableSymbol v = new VariableSymbol(m, variablemodifier, type);
+
+
+        if(type.equals(VariableSymbol.TYPE.TREFRENCE)){
+
+            String s=ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();
+            refrences.put(v,s);
+            //System.out.println(s);
+
+
+        }
        // System.out.println(currentscope+"kojaaaaaaaaaaaim");
             currentscope.define(v);
             // System.out.println(type);
@@ -359,10 +412,32 @@ public class Defphase extends javaBaseListener {
         String m=ctx.formalParameter().variableDeclaratorId().getText();
         VariableSymbol.TYPE type = getValue(ctx.formalParameter().unannType());
         VariableSymbol v = new VariableSymbol(m, variablemodifier, type);
+
+        if(type.equals(VariableSymbol.TYPE.TREFRENCE)){
+
+           String s=ctx.formalParameter().unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();
+
+            refrences.put(v,s);
+            //System.out.println(s);
+
+
+        }
         currentscope.define(v);
        //System.out.println(type);
     }
     //------------------------------------------------------------------
+
+    @Override public void enterUnannArrayType(javaParser.UnannArrayTypeContext ctx) {
+
+    }
+
+    @Override public void exitUnannArrayType(javaParser.UnannArrayTypeContext ctx) {
+        VariableSymbol.TYPE type = getValue(ctx.getChild(0));
+        setValue(ctx,type);
+
+
+
+    }
 
     @Override
     public void enterBlock(javaParser.BlockContext ctx) {
@@ -413,14 +488,13 @@ public class Defphase extends javaBaseListener {
         String name=ctx.variableDeclaratorList().variableDeclarator(0).variableDeclaratorId().getText();
         VariableSymbol.TYPE type = getValue(ctx.unannType());
 
-        //System.out.println(type+"amiiiiiiiiiiiiiiiiiir");
+
         fielsmodifier.add(Symbol.AccessModifier.tpublic);
         VariableSymbol var = new VariableSymbol(name, fielsmodifier, type);
-       // System.out.println(var.accessmodifier+"maaaaaaaaaaan");
-        if(type==VariableSymbol.TYPE.TREFRENCE){
+        if(type.equals(VariableSymbol.TYPE.TREFRENCE)  ){
             String s=ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();
-            refrences.put(s,var);
-            //System.out.println(s);
+            refrences.put(var,s);
+
         }
         currentscope.define(var);
         saveScope(ctx, currentscope);
@@ -457,7 +531,7 @@ public class Defphase extends javaBaseListener {
 
         if(type==VariableSymbol.TYPE.TREFRENCE){
             String s=ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();
-            refrences.put(s,var);
+            refrences.put(var,s);
             //System.out.println(s);
         }
         currentscope.define(var);
@@ -486,9 +560,19 @@ public class Defphase extends javaBaseListener {
          varname=ctx.variableDeclaratorList().variableDeclarator(0).variableDeclaratorId().getText();
         //Symbol.AccessModifier rettype = variablemodifier.get(0);
         VariableSymbol.TYPE type = getValue(ctx.getChild(0));
+
         //System.out.println(varname);
         VariableSymbol var = new VariableSymbol(varname, variablemodifier, type);
-       // System.out.println(currentscope+"alan kojaiim");
+        if(type.equals(VariableSymbol.TYPE.TREFRENCE)){
+
+            String s=ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();
+            refrences.put(var,s);
+            //System.out.println(s);
+
+
+        }
+
+        // System.out.println(currentscope+"alan kojaiim");
         currentscope.define(var);
         saveScope(ctx, currentscope);
             variablemodifier.clear();
@@ -515,7 +599,7 @@ public class Defphase extends javaBaseListener {
     public void exitUnannType(javaParser.UnannTypeContext ctx) {
         VariableSymbol.TYPE type = getValue(ctx.getChild(0));
         setValue(ctx,type);
-       // System.out.println(type+"saeeeeeeeeeeeeeeeeedeh");
+
     }
 
     //-------------------------------------------------------------------------
@@ -600,30 +684,47 @@ public class Defphase extends javaBaseListener {
 
     }
     //-----------------------------------------------------------------------------------------------
-    @Override public void enterMethodModifier(javaParser.MethodModifierContext ctx) { }
+    @Override public void enterMethodModifier(javaParser.MethodModifierContext ctx) {
+
+
+    }
 
     @Override public void exitMethodModifier(javaParser.MethodModifierContext ctx) {
+        //String name = ctx.getText();
 
-        int m=ctx.start.getType();
-        Symbol.AccessModifier methodmod=CheckSymbols.getAccessmodifierType(m);
-        methodmodifier.add(methodmod);
+
+          int m=ctx.start.getType();
+          Symbol.AccessModifier methodmod=CheckSymbols.getAccessmodifierType(m);
+       //methodmodifier1.put(ctx,methodmod);
+            methodmodifier.add(methodmod);
+
+
 
     }
     //----------------------------------------------------------------------------------------------------
 
     @Override public void enterConstructorDeclaration(javaParser.ConstructorDeclarationContext ctx) {
-        methodmodifier.clear();
+
     }
 
-    @Override public void exitConstructorDeclaration(javaParser.ConstructorDeclarationContext ctx) { }
+    @Override public void exitConstructorDeclaration(javaParser.ConstructorDeclarationContext ctx) {
+        System.out.println(currentscope);
+        currentscope = currentscope.getEnclosingScope();
+        saveScope(ctx,currentscope);
+        methodmodifier.clear();
+    }
     //------------------------------------------------------------------------------------------------------
 
     @Override public void enterConstructorDeclarator(javaParser.ConstructorDeclaratorContext ctx) {
         String methodname = ctx.simpleTypeName().getText();
 
         //System.out.println(methodmodifier+"hhhhhhhhhhhhhhhhhhhhh");
+
+        if(methodmodifier.equals(null)){
+            methodmodifier.add(Symbol.AccessModifier.tprotected);
+        }
         MethodSymbol ms = new MethodSymbol(methodname, methodmodifier,null, currentscope);
-        //  System.out.println(ms.accessmodifier+"hoooooooooooooooooooooooooo");
+
         currentscope.define(ms);
         saveScope(ctx, ms);
         currentscope = ms;

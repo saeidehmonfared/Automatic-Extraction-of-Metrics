@@ -22,7 +22,7 @@ import Symbols.*;
 
         public void define(Symbol sym) {
             symbols.put(sym.name, sym);
-            sym.scope = this; // track the scope in each symbol
+            //***sym.scope = this; // track the scope in each symbol
         }
         public Map<String,Symbol> symboltableshow(){
 
@@ -33,6 +33,6 @@ import Symbols.*;
 
         public Scope getEnclosingScope() { return enclosingScope; }
 
-        public String toString() { return getScopeName()+":"+symbols.keySet().toString(); }
+        public String toString() { return getScopeName()+":"+symbols.values().toString(); }
     }
 
