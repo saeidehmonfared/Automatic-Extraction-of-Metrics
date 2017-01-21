@@ -296,15 +296,29 @@ public interface javaListener extends ParseTreeListener {
 	 */
 	void exitT2(javaParser.T2Context ctx);
 	/**
-	 * Enter a parse tree produced by {@link javaParser#expressionName}.
+	 * Enter a parse tree produced by the {@code expertionName1}
+	 * labeled alternative in {@link javaParser#expressionName}.
 	 * @param ctx the parse tree
 	 */
-	void enterExpressionName(javaParser.ExpressionNameContext ctx);
+	void enterExpertionName1(javaParser.ExpertionName1Context ctx);
 	/**
-	 * Exit a parse tree produced by {@link javaParser#expressionName}.
+	 * Exit a parse tree produced by the {@code expertionName1}
+	 * labeled alternative in {@link javaParser#expressionName}.
 	 * @param ctx the parse tree
 	 */
-	void exitExpressionName(javaParser.ExpressionNameContext ctx);
+	void exitExpertionName1(javaParser.ExpertionName1Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code expertionName2}
+	 * labeled alternative in {@link javaParser#expressionName}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpertionName2(javaParser.ExpertionName2Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code expertionName2}
+	 * labeled alternative in {@link javaParser#expressionName}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpertionName2(javaParser.ExpertionName2Context ctx);
 	/**
 	 * Enter a parse tree produced by {@link javaParser#methodName}.
 	 * @param ctx the parse tree
@@ -426,15 +440,29 @@ public interface javaListener extends ParseTreeListener {
 	 */
 	void exitClassDeclaration(javaParser.ClassDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link javaParser#normalClassDeclaration}.
+	 * Enter a parse tree produced by the {@code normalClassDeclaration1}
+	 * labeled alternative in {@link javaParser#normalClassDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterNormalClassDeclaration(javaParser.NormalClassDeclarationContext ctx);
+	void enterNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx);
 	/**
-	 * Exit a parse tree produced by {@link javaParser#normalClassDeclaration}.
+	 * Exit a parse tree produced by the {@code normalClassDeclaration1}
+	 * labeled alternative in {@link javaParser#normalClassDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitNormalClassDeclaration(javaParser.NormalClassDeclarationContext ctx);
+	void exitNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code normalClassdeclaration2}
+	 * labeled alternative in {@link javaParser#normalClassDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void enterNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code normalClassdeclaration2}
+	 * labeled alternative in {@link javaParser#normalClassDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void exitNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx);
 	/**
 	 * Enter a parse tree produced by {@link javaParser#classModifier}.
 	 * @param ctx the parse tree
@@ -2024,15 +2052,77 @@ public interface javaListener extends ParseTreeListener {
 	 */
 	void exitArrayAccess_lfno_primary(javaParser.ArrayAccess_lfno_primaryContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link javaParser#methodInvocation}.
+	 * Enter a parse tree produced by the {@code methodInvoc1}
+	 * labeled alternative in {@link javaParser#methodInvocation}.
 	 * @param ctx the parse tree
 	 */
-	void enterMethodInvocation(javaParser.MethodInvocationContext ctx);
+	void enterMethodInvoc1(javaParser.MethodInvoc1Context ctx);
 	/**
-	 * Exit a parse tree produced by {@link javaParser#methodInvocation}.
+	 * Exit a parse tree produced by the {@code methodInvoc1}
+	 * labeled alternative in {@link javaParser#methodInvocation}.
 	 * @param ctx the parse tree
 	 */
-	void exitMethodInvocation(javaParser.MethodInvocationContext ctx);
+	void exitMethodInvoc1(javaParser.MethodInvoc1Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code methodInvoc2}
+	 * labeled alternative in {@link javaParser#methodInvocation}.
+	 * @param ctx the parse tree
+	 */
+	void enterMethodInvoc2(javaParser.MethodInvoc2Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code methodInvoc2}
+	 * labeled alternative in {@link javaParser#methodInvocation}.
+	 * @param ctx the parse tree
+	 */
+	void exitMethodInvoc2(javaParser.MethodInvoc2Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code methodInvoc3}
+	 * labeled alternative in {@link javaParser#methodInvocation}.
+	 * @param ctx the parse tree
+	 */
+	void enterMethodInvoc3(javaParser.MethodInvoc3Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code methodInvoc3}
+	 * labeled alternative in {@link javaParser#methodInvocation}.
+	 * @param ctx the parse tree
+	 */
+	void exitMethodInvoc3(javaParser.MethodInvoc3Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code methodInvoc4}
+	 * labeled alternative in {@link javaParser#methodInvocation}.
+	 * @param ctx the parse tree
+	 */
+	void enterMethodInvoc4(javaParser.MethodInvoc4Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code methodInvoc4}
+	 * labeled alternative in {@link javaParser#methodInvocation}.
+	 * @param ctx the parse tree
+	 */
+	void exitMethodInvoc4(javaParser.MethodInvoc4Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code methodIncoc5}
+	 * labeled alternative in {@link javaParser#methodInvocation}.
+	 * @param ctx the parse tree
+	 */
+	void enterMethodIncoc5(javaParser.MethodIncoc5Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code methodIncoc5}
+	 * labeled alternative in {@link javaParser#methodInvocation}.
+	 * @param ctx the parse tree
+	 */
+	void exitMethodIncoc5(javaParser.MethodIncoc5Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code methodInvoc6}
+	 * labeled alternative in {@link javaParser#methodInvocation}.
+	 * @param ctx the parse tree
+	 */
+	void enterMethodInvoc6(javaParser.MethodInvoc6Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code methodInvoc6}
+	 * labeled alternative in {@link javaParser#methodInvocation}.
+	 * @param ctx the parse tree
+	 */
+	void exitMethodInvoc6(javaParser.MethodInvoc6Context ctx);
 	/**
 	 * Enter a parse tree produced by {@link javaParser#methodInvocation_lf_primary}.
 	 * @param ctx the parse tree
@@ -2044,15 +2134,65 @@ public interface javaListener extends ParseTreeListener {
 	 */
 	void exitMethodInvocation_lf_primary(javaParser.MethodInvocation_lf_primaryContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link javaParser#methodInvocation_lfno_primary}.
+	 * Enter a parse tree produced by the {@code methodinvocation_lfno_primary1}
+	 * labeled alternative in {@link javaParser#methodInvocation_lfno_primary}.
 	 * @param ctx the parse tree
 	 */
-	void enterMethodInvocation_lfno_primary(javaParser.MethodInvocation_lfno_primaryContext ctx);
+	void enterMethodinvocation_lfno_primary1(javaParser.Methodinvocation_lfno_primary1Context ctx);
 	/**
-	 * Exit a parse tree produced by {@link javaParser#methodInvocation_lfno_primary}.
+	 * Exit a parse tree produced by the {@code methodinvocation_lfno_primary1}
+	 * labeled alternative in {@link javaParser#methodInvocation_lfno_primary}.
 	 * @param ctx the parse tree
 	 */
-	void exitMethodInvocation_lfno_primary(javaParser.MethodInvocation_lfno_primaryContext ctx);
+	void exitMethodinvocation_lfno_primary1(javaParser.Methodinvocation_lfno_primary1Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code methodinvocation_lfno_primary2}
+	 * labeled alternative in {@link javaParser#methodInvocation_lfno_primary}.
+	 * @param ctx the parse tree
+	 */
+	void enterMethodinvocation_lfno_primary2(javaParser.Methodinvocation_lfno_primary2Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code methodinvocation_lfno_primary2}
+	 * labeled alternative in {@link javaParser#methodInvocation_lfno_primary}.
+	 * @param ctx the parse tree
+	 */
+	void exitMethodinvocation_lfno_primary2(javaParser.Methodinvocation_lfno_primary2Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code methodinvocation_lfno_primary3}
+	 * labeled alternative in {@link javaParser#methodInvocation_lfno_primary}.
+	 * @param ctx the parse tree
+	 */
+	void enterMethodinvocation_lfno_primary3(javaParser.Methodinvocation_lfno_primary3Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code methodinvocation_lfno_primary3}
+	 * labeled alternative in {@link javaParser#methodInvocation_lfno_primary}.
+	 * @param ctx the parse tree
+	 */
+	void exitMethodinvocation_lfno_primary3(javaParser.Methodinvocation_lfno_primary3Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code methodinvocation_lfno_primary4}
+	 * labeled alternative in {@link javaParser#methodInvocation_lfno_primary}.
+	 * @param ctx the parse tree
+	 */
+	void enterMethodinvocation_lfno_primary4(javaParser.Methodinvocation_lfno_primary4Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code methodinvocation_lfno_primary4}
+	 * labeled alternative in {@link javaParser#methodInvocation_lfno_primary}.
+	 * @param ctx the parse tree
+	 */
+	void exitMethodinvocation_lfno_primary4(javaParser.Methodinvocation_lfno_primary4Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code methodinvocation_lfno_primary5}
+	 * labeled alternative in {@link javaParser#methodInvocation_lfno_primary}.
+	 * @param ctx the parse tree
+	 */
+	void enterMethodinvocation_lfno_primary5(javaParser.Methodinvocation_lfno_primary5Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code methodinvocation_lfno_primary5}
+	 * labeled alternative in {@link javaParser#methodInvocation_lfno_primary}.
+	 * @param ctx the parse tree
+	 */
+	void exitMethodinvocation_lfno_primary5(javaParser.Methodinvocation_lfno_primary5Context ctx);
 	/**
 	 * Enter a parse tree produced by {@link javaParser#argumentList}.
 	 * @param ctx the parse tree

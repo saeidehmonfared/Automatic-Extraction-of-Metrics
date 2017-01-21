@@ -22,33 +22,22 @@ public class Inheritancephase extends javaBaseListener {
     public ArrayList<String> Implementlist=new ArrayList<String>();
     public ArrayList<Symbol> ImplementSymbollist=new ArrayList<Symbol>();
 
-    String superclassname=null;
-
-
-    @Override public void enterNormalClassDeclaration(javaParser.NormalClassDeclarationContext ctx) {
 
 
 
-    }
+
     //---------------------------------------------------------------------------------------------------
-    @Override public void enterSuperclass(javaParser.SuperclassContext ctx) { }
 
-    @Override public void exitSuperclass(javaParser.SuperclassContext ctx) { superclassname=ctx.classType().getText();
-       // System.out.println(superclassname+"amiiiiiiiiiiiiiiiiir");
-    }
 
-    //------------------------------------------------------------------------------
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void exitNormalClassDeclaration(javaParser.NormalClassDeclarationContext ctx) {
+
+    @Override public void enterNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) {
+        String superclassname=null;
+        superclassname=ctx.superclass().classType().getText();
         String name=ctx.Identifier().toString();
         Symbol superclass=null;
 
         if(superclassname!=null) {
-           superclass  = Inheritancelist.ResolveSuperClassname(superclassname, importlist);
+            superclass  = Inheritancelist.ResolveSuperClassname(superclassname, importlist);
         }
         for (int i=0;i<Implementlist.size();i++){
             String interfacename=Implementlist.get(i);
@@ -56,12 +45,20 @@ public class Inheritancephase extends javaBaseListener {
 
 
         }
-       // System.out.println(ImplementSymbollist+"chiiiiiiiiiiiiiiiiiiii");
+        // System.out.println(ImplementSymbollist+"chiiiiiiiiiiiiiiiiiiii");
         if(!(superclass==null && Implementlist!=null)){
-        Symbol sym=new Symbol(name,superclass,ImplementSymbollist);
-        Inheritancelist.insert(sym);}
-
+            Symbol sym=new Symbol(name,superclass,ImplementSymbollist);
+            Inheritancelist.insert(sym);}
     }
+
+    @Override public void exitNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) { }
+    //------------------------------------------------------------------------------
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+
 
     //--------------------------------------------------------------------------------------------
 

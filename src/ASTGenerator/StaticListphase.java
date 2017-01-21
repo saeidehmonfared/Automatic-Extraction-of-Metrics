@@ -64,19 +64,10 @@ public class StaticListphase extends javaBaseListener {
 
     //------------------------------------------------------------------------------------------------------------
 
-    public void enterNormalClassDeclaration(javaParser.NormalClassDeclarationContext ctx) {
-        accessmod.clear();
-
-
+    @Override public void enterNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx) {  accessmod.clear();
     }
 
-
-
-
-    @Override
-    public void exitNormalClassDeclaration(javaParser.NormalClassDeclarationContext ctx) {
-
-       String s = ctx.Identifier().getText().toString();
+    @Override public void exitNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx) { String s = ctx.Identifier().getText().toString();
         boolean a=true;
         for(int i=0;i<accessmod.size();i++)
         {
@@ -94,9 +85,37 @@ public class StaticListphase extends javaBaseListener {
 
 
         accessmod.clear();
-
-
     }
+    //---------------------------------------------------------------------------
+
+    @Override public void enterNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) {  accessmod.clear();
+    }
+
+    @Override public void exitNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) { String s = ctx.Identifier().getText().toString();
+        boolean a=true;
+        for(int i=0;i<accessmod.size();i++)
+        {
+            Symbol.AccessModifier access=accessmod.get(i);
+            if ((access== Symbol.AccessModifier.tpublic)|| (access== Symbol.AccessModifier.tprivate)||(access== Symbol          .AccessModifier.tprotected)) a=false;
+
+        }
+        if(a){
+            accessmod.add(Symbol.AccessModifier.tpublic);}
+
+        Symbol C = new Symbol(s, accessmod,Symbol.Type.tCLASS,packagename);
+
+
+        StaticList.insert(C);
+
+
+        accessmod.clear();
+    }
+
+
+
+
+
+
     ////--------------------------------------------------------------------------
     @Override public void enterClassModifier(javaParser.ClassModifierContext ctx) { }
 

@@ -351,13 +351,25 @@ public class javaBaseListener implements javaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExpressionName(javaParser.ExpressionNameContext ctx) { }
+	@Override public void enterExpertionName1(javaParser.ExpertionName1Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExpressionName(javaParser.ExpressionNameContext ctx) { }
+	@Override public void exitExpertionName1(javaParser.ExpertionName1Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExpertionName2(javaParser.ExpertionName2Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExpertionName2(javaParser.ExpertionName2Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -507,13 +519,25 @@ public class javaBaseListener implements javaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterNormalClassDeclaration(javaParser.NormalClassDeclarationContext ctx) { }
+	@Override public void enterNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitNormalClassDeclaration(javaParser.NormalClassDeclarationContext ctx) { }
+	@Override public void exitNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -2415,13 +2439,73 @@ public class javaBaseListener implements javaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMethodInvocation(javaParser.MethodInvocationContext ctx) { }
+	@Override public void enterMethodInvoc1(javaParser.MethodInvoc1Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMethodInvocation(javaParser.MethodInvocationContext ctx) { }
+	@Override public void exitMethodInvoc1(javaParser.MethodInvoc1Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMethodInvoc2(javaParser.MethodInvoc2Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMethodInvoc2(javaParser.MethodInvoc2Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMethodInvoc3(javaParser.MethodInvoc3Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMethodInvoc3(javaParser.MethodInvoc3Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMethodInvoc4(javaParser.MethodInvoc4Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMethodInvoc4(javaParser.MethodInvoc4Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMethodIncoc5(javaParser.MethodIncoc5Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMethodIncoc5(javaParser.MethodIncoc5Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMethodInvoc6(javaParser.MethodInvoc6Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMethodInvoc6(javaParser.MethodInvoc6Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -2439,13 +2523,61 @@ public class javaBaseListener implements javaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMethodInvocation_lfno_primary(javaParser.MethodInvocation_lfno_primaryContext ctx) { }
+	@Override public void enterMethodinvocation_lfno_primary1(javaParser.Methodinvocation_lfno_primary1Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMethodInvocation_lfno_primary(javaParser.MethodInvocation_lfno_primaryContext ctx) { }
+	@Override public void exitMethodinvocation_lfno_primary1(javaParser.Methodinvocation_lfno_primary1Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMethodinvocation_lfno_primary2(javaParser.Methodinvocation_lfno_primary2Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMethodinvocation_lfno_primary2(javaParser.Methodinvocation_lfno_primary2Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMethodinvocation_lfno_primary3(javaParser.Methodinvocation_lfno_primary3Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMethodinvocation_lfno_primary3(javaParser.Methodinvocation_lfno_primary3Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMethodinvocation_lfno_primary4(javaParser.Methodinvocation_lfno_primary4Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMethodinvocation_lfno_primary4(javaParser.Methodinvocation_lfno_primary4Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMethodinvocation_lfno_primary5(javaParser.Methodinvocation_lfno_primary5Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMethodinvocation_lfno_primary5(javaParser.Methodinvocation_lfno_primary5Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

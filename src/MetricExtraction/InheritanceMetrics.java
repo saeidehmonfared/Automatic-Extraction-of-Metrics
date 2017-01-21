@@ -35,9 +35,7 @@ public class InheritanceMetrics extends javaBaseListener {
 
     }
 
-    public void enterNormalClassDeclaration(javaParser.NormalClassDeclarationContext ctx) {
-
-       nameofclass = ctx.Identifier().toString();
+    @Override public void enterNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx) {nameofclass = ctx.Identifier().toString();
         Symbol s1 = null;
 
         for (Symbol value : Inheritancelist.inheritanclist.values()) {
@@ -57,7 +55,7 @@ public class InheritanceMetrics extends javaBaseListener {
         if (!(s1==null)) {
             while (!(s1.equals(null)) && ((b))) {
 
-               Inheritancelistofclass.add(s1.Parent.name);
+                Inheritancelistofclass.add(s1.Parent.name);
                 s1 = s1.Parent;
                 b = false;
                 for (Symbol value : Inheritancelist.inheritanclist.values()) {
@@ -76,10 +74,61 @@ public class InheritanceMetrics extends javaBaseListener {
         }
 
 
-            System.out.println("Inheritance list of" + nameofclass + "is:" + Inheritancelistofclass);
-        Inheritancelistofclass.clear();
+        System.out.println("\nInheritance list of " + nameofclass + " is:" + Inheritancelistofclass);
+        //Inheritancelistofclass.clear();
+
+    }
+
+    @Override public void exitNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx) { }
+
+    @Override public void enterNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) { nameofclass = ctx.Identifier().toString();
+        Symbol s1 = null;
+
+        for (Symbol value : Inheritancelist.inheritanclist.values()) {
+            Symbol s = value;
+            if (s.name.equals(nameofclass)) {
+
+                s1 = s;
+                break;
+
+
+            }
+
 
         }
+
+        boolean b = true;
+        if (!(s1==null)) {
+            while (!(s1.equals(null)) && ((b))) {
+
+                Inheritancelistofclass.add(s1.Parent.name);
+                s1 = s1.Parent;
+                b = false;
+                for (Symbol value : Inheritancelist.inheritanclist.values()) {
+                    Symbol s = value;
+                    if ((s.name.equals(s1.name))) {
+                        s1=s;
+
+                        b = true;
+                        break;
+
+
+                    }
+
+                }
+            }
+        }
+
+
+        System.out.println("\nInheritance list of " + nameofclass + " is:" + Inheritancelistofclass);
+        //Inheritancelistofclass.clear();
+
+    }
+
+    @Override public void exitNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) { }
+
+
+
 
 
     }

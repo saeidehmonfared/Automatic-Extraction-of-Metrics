@@ -1,15 +1,13 @@
 package ASTGenerator;
 
 import DirectoryWalker.DirectoryWalker;
+import MetricExtraction.CouplingExtraction.CouplingMetrics;
 import Symbols.Symbol;
-import org.antlr.runtime.ParserRuleReturnScope;
-import org.antlr.runtime.tree.CommonTree;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
@@ -54,8 +52,7 @@ public class  ASTGenerator {
             }
         }
         PrintStaticList();
-
-
+        System.out.println("\n");
 
         Iterator<String> it1 = compilationUnits.iterator();
 
@@ -66,10 +63,6 @@ public class  ASTGenerator {
 
                 String cuOutDir = iom.prepareOutdir(compUnit);
                 Map<String, Symbol> importlist = ExtractImportlist(myfile);
-
-                System.out.println("\n\nimport list is:" + importlist);
-
-
                 ANTLRInputStream input = new ANTLRInputStream(myfile);
                 javaLexer lexer = new javaLexer(input);
                 CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -77,10 +70,79 @@ public class  ASTGenerator {
                 javaParser.CompilationUnitContext tree = parser.compilationUnit();
                 Inheritancephase inheritancelistExtractor = new Inheritancephase(importlist);
                 ParseTreeWalker.DEFAULT.walk(inheritancelistExtractor, tree);
+
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        Iterator<String> it5 = compilationUnits.iterator();
+
+        while (it5.hasNext()) {
+            try {
+                String compUnit = it5.next();
+                String myfile = readFile(compUnit);
+
+
+
+                ANTLRInputStream input = new ANTLRInputStream(myfile);
+                javaLexer lexer = new javaLexer(input);
+                CommonTokenStream tokens = new CommonTokenStream(lexer);
+                javaParser parser = new javaParser(tokens);
+                javaParser.CompilationUnitContext tree = parser.compilationUnit();
+                InheritanceMetrics InheritanceExtractor=new InheritanceMetrics();
+                ParseTreeWalker.DEFAULT.walk(InheritanceExtractor,tree);
                 Defphase symboltableextractor = new Defphase();
                 ParseTreeWalker.DEFAULT.walk(symboltableextractor, tree);
                 ClassLevelMetrics classmetrics=new ClassLevelMetrics(symboltableextractor.globals,symboltableextractor                  .Scopes);
                 ParseTreeWalker.DEFAULT.walk(classmetrics,tree);
+                Map<String, Symbol> importlist = ExtractImportlist(myfile);
+                System.out.println("importlistofclass is:"+importlist);
+                CouplingMetrics couplingextractor=new CouplingMetrics(symboltableextractor.globals,symboltableextractor.Scopes,symboltableextractor.refrences,importlist,InheritanceExtractor.Inheritancelistofclass,symboltableextractor.objectinstances);
+                ParseTreeWalker.DEFAULT.walk(couplingextractor,tree);
+
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+
+
+       /* Iterator<String> it1 = compilationUnits.iterator();
+
+        while (it1.hasNext()) {
+            try {
+                String compUnit = it1.next();
+                String myfile = readFile(compUnit);
+
+                String cuOutDir = iom.prepareOutdir(compUnit);
+                Map<String, Symbol> importlist = ExtractImportlist(myfile);
+
+               // System.out.println("\n\nimport list is:" + importlist);
+
+
+                ANTLRInputStream input = new ANTLRInputStream(myfile);
+                javaLexer lexer = new javaLexer(input);
+                CommonTokenStream tokens = new CommonTokenStream(lexer);
+                javaParser parser = new javaParser(tokens);
+                javaParser.CompilationUnitContext tree = parser.compilationUnit();
+
+                Defphase symboltableextractor = new Defphase();
+                ParseTreeWalker.DEFAULT.walk(symboltableextractor, tree);
+                ClassLevelMetrics classmetrics=new ClassLevelMetrics(symboltableextractor.globals,symboltableextractor                  .Scopes);
+                ParseTreeWalker.DEFAULT.walk(classmetrics,tree);
+
+               /// InheritanceMetrics InheritanceExtractor=new InheritanceMetrics();
+                //ParseTreeWalker.DEFAULT.walk(InheritanceExtractor,tree);
+
+
+                CouplingMetrics couplingextractor=new CouplingMetrics(symboltableextractor.globals,symboltableextractor.Scopes,symboltableextractor.refrences,importlist,InheritanceExtractor.Inheritancelistofclass);
+                ParseTreeWalker.DEFAULT.walk(couplingextractor,tree);
 
 
 
@@ -116,7 +178,7 @@ public class  ASTGenerator {
                 e.printStackTrace();
             }
 
-        }
+        }*/
 
 
 
@@ -155,16 +217,6 @@ public class  ASTGenerator {
         ExtractStaticlist(tree);
 
 
-        //Defphase h = new Defphase();
-       // ParseTreeWalker.DEFAULT.walk(h, tree);
-        //Importphase h1 = new Importphase();
-       // ParseTreeWalker.DEFAULT.walk(h1, tree);
-
-        //**  Refphase r = new Refphase(h.globals,h.Scopes);
-        //** ParseTreeWalker.DEFAULT.walk(r,tree);
-
-
-
     }
 
 
@@ -187,7 +239,9 @@ public class  ASTGenerator {
         }
     }
 
-    public void ExtractStaticlist(javaParser.CompilationUnitContext tree){StaticListphase extractor=new StaticListphase();
+    public void ExtractStaticlist(javaParser.CompilationUnitContext tree){
+
+        StaticListphase extractor=new StaticListphase();
         ParseTreeWalker.DEFAULT.walk(extractor,tree);
             }
 

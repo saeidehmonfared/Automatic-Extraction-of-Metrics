@@ -146,8 +146,8 @@ packageOrTypeName
 	;
 
 expressionName
-	:	Identifier
-	|	ambiguousName '.' Identifier
+	:	Identifier         # expertionName1
+	|	ambiguousName '.' Identifier # expertionName2
 	;
 
 methodName
@@ -215,7 +215,7 @@ classDeclaration
 
 normalClassDeclaration
 	:	classModifier* 'class' Identifier typeParameters?  superinterfaces? classBody  # normalClassDeclaration1
-	|classModifier* 'class' Identifier typeParameters? superclass superinterfaces? classBody # normalClassDeclaration2
+	|classModifier* 'class' Identifier typeParameters? superclass superinterfaces? classBody # normalClassdeclaration2
 	;
 
 classModifier
@@ -1053,12 +1053,12 @@ arrayAccess_lfno_primary
 	;
 
 methodInvocation
-	:	methodName '(' argumentList? ')'
-	|	typeName '.' typeArguments? Identifier '(' argumentList? ')'
-	|	expressionName '.' typeArguments? Identifier '(' argumentList? ')'
-	|	primary '.' typeArguments? Identifier '(' argumentList? ')'
-	|	'super' '.' typeArguments? Identifier '(' argumentList? ')'
-	|	typeName '.' 'super' '.' typeArguments? Identifier '(' argumentList? ')'
+	:	methodName '(' argumentList? ')'  # methodInvoc1
+	|	typeName '.' typeArguments? Identifier '(' argumentList? ')' # methodInvoc2
+	|	expressionName '.' typeArguments? Identifier '(' argumentList? ')' # methodInvoc3
+	|	primary '.' typeArguments? Identifier '(' argumentList? ')'         # methodInvoc4
+	|	'super' '.' typeArguments? Identifier '(' argumentList? ')'         # methodIncoc5
+	|	typeName '.' 'super' '.' typeArguments? Identifier '(' argumentList? ')'   # methodInvoc6
 	;
 
 methodInvocation_lf_primary
@@ -1066,11 +1066,11 @@ methodInvocation_lf_primary
 	;
 
 methodInvocation_lfno_primary
-	:	methodName '(' argumentList? ')'
-	|	typeName '.' typeArguments? Identifier '(' argumentList? ')'
-	|	expressionName '.' typeArguments? Identifier '(' argumentList? ')'
-	|	'super' '.' typeArguments? Identifier '(' argumentList? ')'
-	|	typeName '.' 'super' '.' typeArguments? Identifier '(' argumentList? ')'
+	:	methodName '(' argumentList? ')'    # methodinvocation_lfno_primary1
+	|	typeName '.' typeArguments? Identifier '(' argumentList? ')' # methodinvocation_lfno_primary2
+	|	expressionName '.' typeArguments? Identifier '(' argumentList? ')'  # methodinvocation_lfno_primary3
+	|	'super' '.' typeArguments? Identifier '(' argumentList? ')'             # methodinvocation_lfno_primary4
+	|	typeName '.' 'super' '.' typeArguments? Identifier '(' argumentList? ')'    # methodinvocation_lfno_primary5
 	;
 
 argumentList

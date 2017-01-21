@@ -33,6 +33,6 @@ import Symbols.*;
 
         public Scope getEnclosingScope() { return enclosingScope; }
 
-        public String toString() { return getScopeName()+":"+symbols.values().toString(); }
+        public String toString() { return getScopeName()+":"+symbols.keySet().toString(); }
     }
 

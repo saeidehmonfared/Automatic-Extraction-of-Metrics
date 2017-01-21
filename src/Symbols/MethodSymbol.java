@@ -29,6 +29,7 @@ public class MethodSymbol extends Symbol implements Scope  {
     }
 
     public void define(Symbol sym) {
+
         arguments.put(sym.name, sym);
         sym.scope = this; // track the scope in each symbol
     }

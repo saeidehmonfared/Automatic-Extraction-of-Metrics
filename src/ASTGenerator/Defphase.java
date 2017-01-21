@@ -1,6 +1,7 @@
 package ASTGenerator; /**
  * Created by saeideh on 12/11/16.
  */
+import MetricExtraction.CouplingExtraction.Object;
 import Scopes.ClassScope;
 import Scopes.GlobalScope;
 import Scopes.Scope;
@@ -36,7 +37,8 @@ import Scopes.*;
 public class Defphase extends javaBaseListener {
     ParseTreeProperty<Scope> Scopes = new ParseTreeProperty<Scope>();
     ParseTreeProperty<VariableSymbol.TYPE> Types = new ParseTreeProperty<VariableSymbol.TYPE>();
-    Map<Symbol, String> refrences = new LinkedHashMap<Symbol, String>();
+    public Map<Symbol, String> refrences = new LinkedHashMap<Symbol, String>();
+    public ArrayList<Object>objectinstances=new ArrayList<Object>();
     GlobalScope globals;
     String s;
     Scope currentscope;
@@ -79,12 +81,19 @@ public class Defphase extends javaBaseListener {
         currentscope=currentscope.getEnclosingScope();
 
         System.out.println("coupling is from this symbols:"+refrences);
+        System.out.println("objectinstance list is:");
+        Iterator<Object> it=objectinstances.iterator();
+        while (it.hasNext()){
+            Object s=it.next();
+
+            System.out.println(s.classname+" "+s.symbol+" "+s.currentscope.getScopeName());
+        }
 
         //System.out.println(StaticList.staticlist);
 
-        Iterator<Symbol> it=StaticList.staticlist.values().iterator();
+        Iterator<Symbol> it1=StaticList.staticlist.values().iterator();
         while (it.hasNext()){
-            Symbol s=it.next();
+            Symbol s=it1.next();
 
            // System.out.println(s.name+"   "+s.accessmodifier+"   "+s.type+"   "+s.packagename);
         }
@@ -130,28 +139,20 @@ public class Defphase extends javaBaseListener {
 
     //------------------------------------------------------------------
 
-    @Override
-    public void enterNormalClassDeclaration(javaParser.NormalClassDeclarationContext ctx) {
 
-
+    @Override public void enterNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx) {
         currentscope = new ClassScope(currentscope);// push scope
-
     }
 
 
-
-
-    @Override
-    public void exitNormalClassDeclaration(javaParser.NormalClassDeclarationContext ctx) {
-
-
+    @Override public void exitNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx) {
         saveScope(ctx, currentscope);
         System.out.println(currentscope);
 
 
         currentscope = currentscope.getEnclosingScope();
         s = ctx.Identifier().getText().toString();
-            boolean a=true;
+        boolean a=true;
         for(int i=0;i<accessmod.size();i++)
         {
             Symbol.AccessModifier access=accessmod.get(i);
@@ -162,7 +163,7 @@ public class Defphase extends javaBaseListener {
             accessmod.add(Symbol.AccessModifier.tpublic);}
 
         Symbol C = new Symbol(s, accessmod,Symbol.Type.tCLASS,packagename);
-            //System.out.println("Accessmodofier of this class is:"+C.accessmodifier);
+        //System.out.println("Accessmodofier of this class is:"+C.accessmodifier);
         currentscope.define(C);
         StaticList.insert(C);
 
@@ -177,8 +178,56 @@ public class Defphase extends javaBaseListener {
         accessmod.clear();
 
 
+    }
+
+    //-----------------------------------------------------------------
+    @Override public void enterNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) {
+        currentscope = new ClassScope(currentscope);// push scope
+    }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override public void exitNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) {
+
+        saveScope(ctx, currentscope);
+        System.out.println(currentscope);
+
+
+        currentscope = currentscope.getEnclosingScope();
+        s = ctx.Identifier().getText().toString();
+        boolean a=true;
+        for(int i=0;i<accessmod.size();i++)
+        {
+            Symbol.AccessModifier access=accessmod.get(i);
+            if ((access== Symbol.AccessModifier.tpublic)|| (access== Symbol.AccessModifier.tprivate)||(access== Symbol          .AccessModifier.tprotected)) a=false;
+
+        }
+        if(a){
+            accessmod.add(Symbol.AccessModifier.tpublic);}
+
+        Symbol C = new Symbol(s, accessmod,Symbol.Type.tCLASS,packagename);
+        //System.out.println("Accessmodofier of this class is:"+C.accessmodifier);
+        currentscope.define(C);
+        StaticList.insert(C);
+
+        //currentscope = new ClassScope(currentscope);// push scope
+        //saveScope(ctx, currentscope);
+
+
+
+
+        System.out.println(currentscope);
+
+        accessmod.clear();
+
 
     }
+
+
+
+
     //---------------------------------------------------------------
 
     @Override public void enterInterfaceDeclaration(javaParser.InterfaceDeclarationContext ctx) {
@@ -368,7 +417,8 @@ public class Defphase extends javaBaseListener {
     @Override
     public void exitFormalParameters(javaParser.FormalParametersContext ctx) {
 
-
+        VariableSymbol.TYPE type = getValue(ctx.getChild(0));
+        setValue(ctx,type);
 
     }
     //----------------------------------------------------------------------
@@ -390,8 +440,15 @@ public class Defphase extends javaBaseListener {
 
         if(type.equals(VariableSymbol.TYPE.TREFRENCE)){
 
-            String s=ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();
+            String s=ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().Identifier().getText();
             refrences.put(v,s);
+            Scope myscope;
+            myscope=currentscope;
+            while(myscope.getScopeName().equals("Block")){
+                myscope=myscope.getEnclosingScope();
+            }
+            Object o=new Object(s,v,myscope);
+            objectinstances.add(o);
             //System.out.println(s);
 
 
@@ -418,6 +475,13 @@ public class Defphase extends javaBaseListener {
            String s=ctx.formalParameter().unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();
 
             refrences.put(v,s);
+            Scope myscope;
+            myscope=currentscope;
+            while(myscope.getScopeName().equals("Block")){
+                myscope=myscope.getEnclosingScope();
+            }
+            Object o=new Object(s,v,myscope);
+            objectinstances.add(o);
             //System.out.println(s);
 
 
@@ -494,6 +558,13 @@ public class Defphase extends javaBaseListener {
         if(type.equals(VariableSymbol.TYPE.TREFRENCE)  ){
             String s=ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();
             refrences.put(var,s);
+            Scope myscope;
+            myscope=currentscope;
+            while(myscope.getScopeName().equals("Block")){
+                myscope=myscope.getEnclosingScope();
+            }
+            Object o=new Object(s,var,myscope);
+            objectinstances.add(o);
 
         }
         currentscope.define(var);
@@ -532,6 +603,13 @@ public class Defphase extends javaBaseListener {
         if(type==VariableSymbol.TYPE.TREFRENCE){
             String s=ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();
             refrences.put(var,s);
+            Scope myscope;
+            myscope=currentscope;
+            while(myscope.getScopeName().equals("Block")){
+                myscope=myscope.getEnclosingScope();
+            }
+            Object o=new Object(s,var,myscope);
+            objectinstances.add(o);
             //System.out.println(s);
         }
         currentscope.define(var);
@@ -565,8 +643,15 @@ public class Defphase extends javaBaseListener {
         VariableSymbol var = new VariableSymbol(varname, variablemodifier, type);
         if(type.equals(VariableSymbol.TYPE.TREFRENCE)){
 
-            String s=ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();
+            String s=ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().Identifier().getText();
             refrences.put(var,s);
+            Scope myscope;
+            myscope=currentscope;
+           while(myscope.getScopeName().equals("Block")){
+                myscope=myscope.getEnclosingScope();
+            }
+            Object o=new Object(s,var,myscope);
+            objectinstances.add(o);
             //System.out.println(s);
 
 
