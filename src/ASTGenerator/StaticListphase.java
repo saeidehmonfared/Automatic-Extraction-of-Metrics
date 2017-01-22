@@ -31,17 +31,11 @@ public class StaticListphase extends javaBaseListener {
     }
     //----------------------------------------------------------------------------------------------
 
-    @Override public void enterNormalInterfaceDeclaration(javaParser.NormalInterfaceDeclarationContext ctx) {
-        interfacemodifier.clear();
 
-    }
+    @Override public void enterNormalInterfaceDeclaration1(javaParser.NormalInterfaceDeclaration1Context ctx) {
+        interfacemodifier.clear();}
 
-
-
-
-
-    @Override public void exitNormalInterfaceDeclaration(javaParser.NormalInterfaceDeclarationContext ctx) {
-
+    @Override public void exitNormalInterfaceDeclaration1(javaParser.NormalInterfaceDeclaration1Context ctx) {
         String s1 = ctx.Identifier().getText().toString();
 
 
@@ -56,10 +50,32 @@ public class StaticListphase extends javaBaseListener {
             interfacemodifier.add(Symbol.AccessModifier.tpublic);}
 
         Symbol C = new Symbol(s1, interfacemodifier,Symbol.Type.tINTERFACE,packagename);
-       // System.out.println("Accessmodofier of this interface is:"+C.accessmodifier);
+        // System.out.println("Accessmodofier of this interface is:"+C.accessmodifier);
         StaticList.insert(C);
         interfacemodifier.clear();
+    }
 
+    @Override public void enterNormalInterfaceDeclaration2(javaParser.NormalInterfaceDeclaration2Context ctx) {
+        interfacemodifier.clear(); }
+
+    @Override public void exitNormalInterfaceDeclaration2(javaParser.NormalInterfaceDeclaration2Context ctx) {
+        String s1 = ctx.Identifier().getText().toString();
+
+
+        boolean a=true;
+        for(int i=0;i<interfacemodifier.size();i++)
+        {
+            Symbol.AccessModifier access=interfacemodifier.get(i);
+            if ((access== Symbol.AccessModifier.tpublic)|| (access== Symbol.AccessModifier.tprivate)||(access== Symbol          .AccessModifier.tprotected)) a=false;
+
+        }
+        if(a){
+            interfacemodifier.add(Symbol.AccessModifier.tpublic);}
+
+        Symbol C = new Symbol(s1, interfacemodifier,Symbol.Type.tINTERFACE,packagename);
+        // System.out.println("Accessmodofier of this interface is:"+C.accessmodifier);
+        StaticList.insert(C);
+        interfacemodifier.clear();
     }
 
     //------------------------------------------------------------------------------------------------------------

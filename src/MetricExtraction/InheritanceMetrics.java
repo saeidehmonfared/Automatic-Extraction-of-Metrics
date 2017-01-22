@@ -1,25 +1,25 @@
-package MetricExtraction;
-import ANTLRParser.*;
-import ASTGenerator.Inheritancelist;
-import ASTGenerator.StaticList;
-import Scopes.ClassScope;
-import Scopes.GlobalScope;
-import Symbols.Symbol;
+    package MetricExtraction;
+            import ANTLRParser.*;
+            import ASTGenerator.Inheritancelist;
+            import ASTGenerator.StaticList;
+            import Scopes.ClassScope;
+            import Scopes.GlobalScope;
+            import Symbols.Symbol;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+            import java.util.ArrayList;
+            import java.util.Iterator;
 
 /**
  * Created by saeideh on 1/11/17.
  */
 public class InheritanceMetrics extends javaBaseListener {
-  public   ArrayList<String> Inheritancelistofclass = new ArrayList<String>();
+    public   ArrayList<String> Inheritancelistofclass = new ArrayList<String>();
 
     String nameofclass;
     String Aslnameofclass;
 
     public InheritanceMetrics() {
-      //  Aslnameofclass = name;
+        //  Aslnameofclass = name;
 
 
     }
@@ -40,7 +40,7 @@ public class InheritanceMetrics extends javaBaseListener {
 
         for (Symbol value : Inheritancelist.inheritanclist.values()) {
             Symbol s = value;
-            if (s.name.equals(nameofclass)) {
+            if (s.name.equals(nameofclass)&& s.Parent!=null) {
 
                 s1 = s;
                 break;
@@ -60,7 +60,7 @@ public class InheritanceMetrics extends javaBaseListener {
                 b = false;
                 for (Symbol value : Inheritancelist.inheritanclist.values()) {
                     Symbol s = value;
-                    if ((s.name.equals(s1.name))) {
+                    if ((s.name.equals(s1.name)&&(s.Parent!=null))) {
                         s1=s;
 
                         b = true;
@@ -76,6 +76,25 @@ public class InheritanceMetrics extends javaBaseListener {
 
         System.out.println("\nInheritance list of " + nameofclass + " is:" + Inheritancelistofclass);
         //Inheritancelistofclass.clear();
+
+
+        Iterator<Symbol> it3 = Inheritancelist.inheritanclist.values().iterator();
+
+        while (it3.hasNext()) {
+            try {
+                Symbol s = it3.next();
+
+                if (s.name.equals(nameofclass) && (s.Implementlist != null)) {
+                    System.out.println("implemented interfacec with " + nameofclass + " is:" + s.Implementlist);
+                    break;
+
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
 
     }
 
@@ -86,7 +105,7 @@ public class InheritanceMetrics extends javaBaseListener {
 
         for (Symbol value : Inheritancelist.inheritanclist.values()) {
             Symbol s = value;
-            if (s.name.equals(nameofclass)) {
+            if (s.name.equals(nameofclass) && s.Parent!=null) {
 
                 s1 = s;
                 break;
@@ -100,27 +119,51 @@ public class InheritanceMetrics extends javaBaseListener {
         boolean b = true;
         if (!(s1==null)) {
             while (!(s1.equals(null)) && ((b))) {
+              // if(!(s1.Parent==null))
+                    Inheritancelistofclass.add(s1.Parent.name);
+                    s1 = s1.Parent;
+                    b = false;
+                    for (Symbol value : Inheritancelist.inheritanclist.values()) {
+                        Symbol s = value;
+                        if ((s.name.equals(s1.name))&&(s.Parent!=null)) {
+                            s1 = s;
 
-                Inheritancelistofclass.add(s1.Parent.name);
-                s1 = s1.Parent;
-                b = false;
-                for (Symbol value : Inheritancelist.inheritanclist.values()) {
-                    Symbol s = value;
-                    if ((s.name.equals(s1.name))) {
-                        s1=s;
+                            b = true;
+                            break;
 
-                        b = true;
-                        break;
 
+                        }
 
                     }
 
-                }
+
             }
         }
 
 
         System.out.println("\nInheritance list of " + nameofclass + " is:" + Inheritancelistofclass);
+        //Inheritancelistofclass.clear();
+
+        Iterator<Symbol> it3 = Inheritancelist.inheritanclist.values().iterator();
+
+       while (it3.hasNext()) {
+            try {
+                Symbol s = it3.next();
+
+                if (s.name.equals(nameofclass) && (s.Implementlist != null)) {
+                    System.out.println("implemented interfacec with " + nameofclass + " is:" + s.Implementlist);
+                    break;
+
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+
+
         //Inheritancelistofclass.clear();
 
     }
@@ -131,6 +174,8 @@ public class InheritanceMetrics extends javaBaseListener {
 
 
 
-    }
+}
+
+
 
 

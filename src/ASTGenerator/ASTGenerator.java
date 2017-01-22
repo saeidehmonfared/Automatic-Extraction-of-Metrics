@@ -51,7 +51,7 @@ public class  ASTGenerator {
                 e.printStackTrace();
             }
         }
-        PrintStaticList();
+       //**##** PrintStaticList();
         System.out.println("\n");
 
         Iterator<String> it1 = compilationUnits.iterator();
@@ -99,7 +99,7 @@ public class  ASTGenerator {
                 ClassLevelMetrics classmetrics=new ClassLevelMetrics(symboltableextractor.globals,symboltableextractor                  .Scopes);
                 ParseTreeWalker.DEFAULT.walk(classmetrics,tree);
                 Map<String, Symbol> importlist = ExtractImportlist(myfile);
-                System.out.println("importlistofclass is:"+importlist);
+                //**##**System.out.println("importlistofclass is:"+importlist);
                 CouplingMetrics couplingextractor=new CouplingMetrics(symboltableextractor.globals,symboltableextractor.Scopes,symboltableextractor.refrences,importlist,InheritanceExtractor.Inheritancelistofclass,symboltableextractor.objectinstances);
                 ParseTreeWalker.DEFAULT.walk(couplingextractor,tree);
 
@@ -182,7 +182,7 @@ public class  ASTGenerator {
 
 
 
-        System.out.println("my inheritance list is:" + Inheritancelist.inheritanclist);
+        //**##**System.out.println("my inheritance list is:" + Inheritancelist.inheritanclist);
         Iterator<Symbol> it3 = Inheritancelist.inheritanclist.values().iterator();
 
         while (it3.hasNext()) {
@@ -213,7 +213,7 @@ public class  ASTGenerator {
         javaParser.CompilationUnitContext tree = parser.compilationUnit();
 
 
-        System.out.println(tree.toStringTree(parser));
+        //**##**System.out.println(tree.toStringTree(parser));
         ExtractStaticlist(tree);
 
 

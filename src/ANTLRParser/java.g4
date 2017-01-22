@@ -524,7 +524,8 @@ interfaceDeclaration
 	;
 
 normalInterfaceDeclaration
-	:	interfaceModifier* 'interface' Identifier typeParameters? extendsInterfaces? interfaceBody
+	:	interfaceModifier* 'interface' Identifier typeParameters?  interfaceBody  # normalInterfaceDeclaration1
+	|   interfaceModifier* 'interface' Identifier typeParameters? extendsInterfaces interfaceBody # normalInterfaceDeclaration2
 	;
 
 interfaceModifier

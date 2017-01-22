@@ -1092,15 +1092,29 @@ public interface javaListener extends ParseTreeListener {
 	 */
 	void exitInterfaceDeclaration(javaParser.InterfaceDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link javaParser#normalInterfaceDeclaration}.
+	 * Enter a parse tree produced by the {@code normalInterfaceDeclaration1}
+	 * labeled alternative in {@link javaParser#normalInterfaceDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterNormalInterfaceDeclaration(javaParser.NormalInterfaceDeclarationContext ctx);
+	void enterNormalInterfaceDeclaration1(javaParser.NormalInterfaceDeclaration1Context ctx);
 	/**
-	 * Exit a parse tree produced by {@link javaParser#normalInterfaceDeclaration}.
+	 * Exit a parse tree produced by the {@code normalInterfaceDeclaration1}
+	 * labeled alternative in {@link javaParser#normalInterfaceDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitNormalInterfaceDeclaration(javaParser.NormalInterfaceDeclarationContext ctx);
+	void exitNormalInterfaceDeclaration1(javaParser.NormalInterfaceDeclaration1Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code normalInterfaceDeclaration2}
+	 * labeled alternative in {@link javaParser#normalInterfaceDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void enterNormalInterfaceDeclaration2(javaParser.NormalInterfaceDeclaration2Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code normalInterfaceDeclaration2}
+	 * labeled alternative in {@link javaParser#normalInterfaceDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void exitNormalInterfaceDeclaration2(javaParser.NormalInterfaceDeclaration2Context ctx);
 	/**
 	 * Enter a parse tree produced by {@link javaParser#interfaceModifier}.
 	 * @param ctx the parse tree

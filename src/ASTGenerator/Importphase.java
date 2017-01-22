@@ -94,7 +94,7 @@ public class Importphase extends javaBaseListener {
         //System.out.println(importnameasl);
         importname = "";
         String name = ctx.typeName().getChild(2).getText();
-        String name2;
+        String name2="";
 
         Iterator<Symbol> it = StaticList.staticlist.values().iterator();
         while (it.hasNext()) {

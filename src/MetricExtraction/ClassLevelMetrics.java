@@ -31,11 +31,17 @@ public class ClassLevelMetrics extends javaBaseListener{
         currentScope = this.globals;
         for (Symbol value : currentScope.symboltableshow().values()) {
             Symbol s = value;
-            classname=s.name;
-            System.out.println("Class name is:" + s.name + "\npackage of this class is:" + s.packagename);
+            classname = s.name;
+            if (s.type.equals(Symbol.Type.tCLASS)) {
+                System.out.println("Class name is:" + s.name + "\npackage of this class is:" + s.packagename);
+            } else if (s.type.equals(Symbol.Type.tINTERFACE)) {
+                System.out.println("Interface name is:" + s.name + "\npackage of this interface is:" + s.packagename);
+            }
 
 
         }
+
+
     }
 
     public void exitCompilationUnit(javaParser.CompilationUnitContext ctx) {
