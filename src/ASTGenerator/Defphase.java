@@ -39,6 +39,7 @@ public class Defphase extends javaBaseListener {
     ParseTreeProperty<VariableSymbol.TYPE> Types = new ParseTreeProperty<VariableSymbol.TYPE>();
     public Map<Symbol, String> refrences = new LinkedHashMap<Symbol, String>();
     public ArrayList<Object>objectinstances=new ArrayList<Object>();
+
     GlobalScope globals;
     String s;
     Scope currentscope;
@@ -486,8 +487,11 @@ public class Defphase extends javaBaseListener {
         if(type.equals(VariableSymbol.TYPE.TREFRENCE)){
 
             String s=ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().Identifier().getText();
+
             if(!(s.equals("String"))){
-            refrences.put(v,s);}
+            refrences.put(v,s);
+
+            }
             Scope myscope;
             myscope=currentscope;
             while(myscope.getScopeName().equals("Block")){
@@ -520,6 +524,7 @@ public class Defphase extends javaBaseListener {
         if(type.equals(VariableSymbol.TYPE.TREFRENCE)){
 
            String s=ctx.formalParameter().unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();
+
             if(!(s.equals("String"))){
             refrences.put(v,s);}
             Scope myscope;

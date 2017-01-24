@@ -73,6 +73,7 @@ public class  ASTGenerator {
 
 
 
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -98,10 +99,13 @@ public class  ASTGenerator {
                 ParseTreeWalker.DEFAULT.walk(symboltableextractor, tree);
                 ClassLevelMetrics classmetrics=new ClassLevelMetrics(symboltableextractor.globals,symboltableextractor                  .Scopes);
                 ParseTreeWalker.DEFAULT.walk(classmetrics,tree);
+
                 Map<String, Symbol> importlist = ExtractImportlist(myfile);
                 //**##**System.out.println("importlistofclass is:"+importlist);
                 CouplingMetrics couplingextractor=new CouplingMetrics(symboltableextractor.globals,symboltableextractor.Scopes,symboltableextractor.refrences,importlist,InheritanceExtractor.Inheritancelistofclass,symboltableextractor.objectinstances);
                 ParseTreeWalker.DEFAULT.walk(couplingextractor,tree);
+                CohesionMetrics cohesinextractor=new CohesionMetrics(symboltableextractor.globals,symboltableextractor.Scopes,couplingextractor.objectinstances,importlist);
+                ParseTreeWalker.DEFAULT.walk(cohesinextractor,tree);
 
 
 

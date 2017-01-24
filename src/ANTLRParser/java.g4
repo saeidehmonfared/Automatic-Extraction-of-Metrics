@@ -1146,7 +1146,7 @@ lambdaBody
 
 assignmentExpression
 	:	conditionalExpression
-	|	assignment
+	|
 	;
 
 assignment

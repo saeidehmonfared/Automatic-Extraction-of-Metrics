@@ -14,6 +14,7 @@ public interface  Scope {
 
     /** Look up name in this scope or in enclosing scope if not here */
     public Symbol resolve(String name);
+    public Symbol resolve1(String name);
     public Map<String,Symbol> symboltableshow();
 
 }

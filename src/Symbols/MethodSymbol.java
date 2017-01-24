@@ -28,6 +28,12 @@ public class MethodSymbol extends Symbol implements Scope  {
         return null; // not found
     }
 
+    public Symbol resolve1(String name){
+        Symbol s=arguments.get(name);
+        return  s;
+
+    }
+
     public void define(Symbol sym) {
 
         arguments.put(sym.name, sym);
@@ -42,5 +48,6 @@ public class MethodSymbol extends Symbol implements Scope  {
     public String getScopeName() { return name; }
 
     public String toString() { return "Method:"+this.name+methodmodifier+"returntype is:"+returntype+" args:"+arguments.keySet(); }
+
 }
 

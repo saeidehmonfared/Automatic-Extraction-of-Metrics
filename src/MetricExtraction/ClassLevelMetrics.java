@@ -90,7 +90,7 @@ public class ClassLevelMetrics extends javaBaseListener{
 
                 }
 
-            } else if (s.getClass().getName().equals("Symbols.VariableSymbol")) {
+            } else if (s.getClass().getName().equals("Symbols.VariableSymbol")) { //TODO
                 Variableclasscount = Variableclasscount + 1;
 
                 for (int i = 0; i < ((VariableSymbol) s).variablemodifier.size(); i++) {
