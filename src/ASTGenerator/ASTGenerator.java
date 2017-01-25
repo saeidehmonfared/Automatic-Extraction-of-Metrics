@@ -107,6 +107,31 @@ public class  ASTGenerator {
                 CohesionMetrics cohesinextractor=new CohesionMetrics(symboltableextractor.globals,symboltableextractor.Scopes,couplingextractor.objectinstances,importlist);
                 ParseTreeWalker.DEFAULT.walk(cohesinextractor,tree);
 
+
+
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+        Iterator<String> it2 = compilationUnits.iterator();
+
+        while (it2.hasNext()) {
+            try {
+                String compUnit = it2.next();
+                String myfile = readFile(compUnit);
+
+
+
+                ANTLRInputStream input = new ANTLRInputStream(myfile);
+                javaLexer lexer = new javaLexer(input);
+                CommonTokenStream tokens = new CommonTokenStream(lexer);
+                javaParser parser = new javaParser(tokens);
+                javaParser.CompilationUnitContext tree = parser.compilationUnit();
+                InheritanceMetrics InheritanceExtractor=new InheritanceMetrics();
+                ParseTreeWalker.DEFAULT.walk(InheritanceExtractor,tree);
                 classlevelmetrics2 inheritedmetricextractor=new classlevelmetrics2(InheritanceExtractor.Inheritancelistofclass);
                 ParseTreeWalker.DEFAULT.walk(inheritedmetricextractor,tree);
 
@@ -117,7 +142,6 @@ public class  ASTGenerator {
             }
 
         }
-
 
 
        /* Iterator<String> it1 = compilationUnits.iterator();

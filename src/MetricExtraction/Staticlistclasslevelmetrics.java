@@ -21,6 +21,8 @@ public class Staticlistclasslevelmetrics {
         for(Symbol value: lisofclasses.keySet()){
             Symbol classname=value;
             System.out.println("\n");
+            System.out.println("name of class:"+classname.name);
+
             System.out.println(lisofclasses.get(classname));
             count++;
         }
