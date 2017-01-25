@@ -11,6 +11,8 @@ import org.antlr.v4.runtime.tree.ParseTreeProperty;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by saeideh on 1/9/17.
@@ -20,6 +22,11 @@ public class ClassLevelMetrics extends javaBaseListener{
     GlobalScope globals;
     Scope currentScope;
    public String classname;
+    public String classname1;
+    String packagename="";
+    Symbol classsymbol=null;
+    Map<Symbol,Map<String,ArrayList<String>>>listofclass=new LinkedHashMap<Symbol,Map<String, ArrayList<String>>>();
+    Map<String,ArrayList<String>>metriclist=new LinkedHashMap<String,ArrayList<String>>();
     public ClassLevelMetrics(GlobalScope globals, ParseTreeProperty<Scope> Scopes) {
         this.globals = globals;
         this.scopes = Scopes;
@@ -29,10 +36,12 @@ public class ClassLevelMetrics extends javaBaseListener{
 
     public void enterCompilationUnit(javaParser.CompilationUnitContext ctx) {
         currentScope = this.globals;
+
         for (Symbol value : currentScope.symboltableshow().values()) {
             Symbol s = value;
             classname = s.name;
             if (s.type.equals(Symbol.Type.tCLASS)) {
+              //  classsymbol=s;
                 System.out.println("Class name is:" + s.name + "\npackage of this class is:" + s.packagename);
             } else if (s.type.equals(Symbol.Type.tINTERFACE)) {
                 System.out.println("Interface name is:" + s.name + "\npackage of this interface is:" + s.packagename);
@@ -40,6 +49,13 @@ public class ClassLevelMetrics extends javaBaseListener{
 
 
         }
+        metriclist.put("publicmethods",new ArrayList<String>());
+        metriclist.put("privatemethods",new ArrayList<String>());
+        metriclist.put("protectedmethods",new ArrayList<String>());
+        metriclist.put("publicvariables",new ArrayList<String>());
+        metriclist.put("protectedvariables",new ArrayList<String>());
+        metriclist.put("privatevariables",new ArrayList<String>());
+        listofclass.put(classsymbol,metriclist);
 
 
     }
@@ -48,6 +64,23 @@ public class ClassLevelMetrics extends javaBaseListener{
 
 
         }
+        //-------------------------------------------------------------------------
+        @Override public void enterPackageDeclaration(javaParser.PackageDeclarationContext ctx) {
+
+            for(int i=1;i<ctx.getChildCount()-1;i++){
+                packagename=packagename+ctx.getChild(i).getText();
+            }
+            packagename=packagename+".";
+
+            // System.out.println("mypackname:"+packagename);
+        }
+
+    @Override public void exitPackageDeclaration(javaParser.PackageDeclarationContext ctx) {
+
+
+
+    }
+//------------------------------------------------------------------
     @Override public void enterNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx) {
 
         ArrayList<String> listofPublicmethods = new ArrayList<String>();
@@ -61,6 +94,7 @@ public class ClassLevelMetrics extends javaBaseListener{
         ArrayList<String> listofStaticvariables = new ArrayList<String>();
 
         currentScope = scopes.get(ctx);
+        classname1=ctx.Identifier().getText();
 
 
 
@@ -79,7 +113,7 @@ public class ClassLevelMetrics extends javaBaseListener{
 
                     if (((MethodSymbol) s).methodmodifier.get(i).equals(Symbol.AccessModifier.tpublic)){
                         listofPublicmethods.add(s.name);}
-                    else if (((MethodSymbol) s).methodmodifier.get(i).equals(Symbol.AccessModifier.tprivate)){
+                       else if (((MethodSymbol) s).methodmodifier.get(i).equals(Symbol.AccessModifier.tprivate)){
                         listofPrivatemethods.add(s.name);}
                     else if (((MethodSymbol) s).methodmodifier.get(i).equals(Symbol.AccessModifier.tprotected)){
                         listofProtectedmethods.add(s.name);}
@@ -112,8 +146,16 @@ public class ClassLevelMetrics extends javaBaseListener{
 
 
 
+        metriclist.get("publicmethods").addAll(listofPublicmethods);
+        metriclist.get("protectedmethods").addAll(listofProtectedmethods);
+        metriclist.get("privatemethods").addAll(listofPrivatemethods);
+        metriclist.get("publicvariables").addAll(listofPublicVariables);
+        metriclist.get("privatevariables").addAll(listofPrivateVariables);
+        metriclist.get("protectedvariables").addAll(listofProtectedVariables);
 
-
+        Symbol s1=new Symbol(classname1,packagename);
+        classsymbol=s1;
+        Staticlistclasslevelmetrics.put(s1,metriclist);
 
 
         System.out.println("number of methods of this class is:"+Methodclasscount);
@@ -201,9 +243,19 @@ public class ClassLevelMetrics extends javaBaseListener{
         }
 
 
+                classname1=ctx.Identifier().getText();
 
 
+        metriclist.get("publicmethods").addAll(listofPublicmethods);
+        metriclist.get("protectedmethods").addAll(listofProtectedmethods);
+        metriclist.get("privatemethods").addAll(listofPrivatemethods);
+        metriclist.get("publicvariables").addAll(listofPublicVariables);
+        metriclist.get("privatevariables").addAll(listofPrivateVariables);
+        metriclist.get("protectedvariables").addAll(listofProtectedVariables);
 
+        Symbol s1=new Symbol(classname1,packagename);
+        classsymbol=s1;
+        Staticlistclasslevelmetrics.put(s1,metriclist);
 
 
         System.out.println("number of methods of this class is:"+Methodclasscount);

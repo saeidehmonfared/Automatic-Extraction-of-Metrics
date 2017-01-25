@@ -83,13 +83,13 @@ public class Defphase extends javaBaseListener {
     public void exitCompilationUnit(javaParser.CompilationUnitContext ctx) {
         currentscope=currentscope.getEnclosingScope();
 
-        System.out.println("coupling is from this symbols:"+refrences);
-        System.out.println("objectinstance list is:");
+       //**// System.out.println("coupling is from this symbols:"+refrences);
+        //**//System.out.println("objectinstance list is:");
         Iterator<Object> it=objectinstances.iterator();
         while (it.hasNext()){
             Object s=it.next();
 
-            System.out.println(s.classname+" "+s.symbol+" "+s.currentscope.getScopeName());
+           //**// System.out.println(s.classname+" "+s.symbol+" "+s.currentscope.getScopeName());
         }
 
         //System.out.println(StaticList.staticlist);
@@ -150,7 +150,7 @@ public class Defphase extends javaBaseListener {
 
     @Override public void exitNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx) {
         saveScope(ctx, currentscope);
-       System.out.println(currentscope);
+       //**//System.out.println(currentscope);
 
 
         currentscope = currentscope.getEnclosingScope();
@@ -176,7 +176,7 @@ public class Defphase extends javaBaseListener {
 
 
 
-       System.out.println(currentscope);
+      //**// System.out.println(currentscope);
 
         accessmod.clear();
 
@@ -195,7 +195,7 @@ public class Defphase extends javaBaseListener {
     @Override public void exitNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) {
 
         saveScope(ctx, currentscope);
-       System.out.println(currentscope);
+       //**//System.out.println(currentscope);
 
 
         currentscope = currentscope.getEnclosingScope();
@@ -221,7 +221,7 @@ public class Defphase extends javaBaseListener {
 
 
 
-        System.out.println(currentscope);
+        //**//System.out.println(currentscope);
 
         accessmod.clear();
 
@@ -247,7 +247,7 @@ public class Defphase extends javaBaseListener {
     }
 
     @Override public void exitNormalInterfaceDeclaration1(javaParser.NormalInterfaceDeclaration1Context ctx) { saveScope(ctx, currentscope);
-        System.out.println(currentscope);
+       //**// System.out.println(currentscope);
 
 
         currentscope = currentscope.getEnclosingScope();
@@ -270,14 +270,14 @@ public class Defphase extends javaBaseListener {
         currentscope.define(C);
         StaticList.insert(C);
         interfacemodifier.clear();
-        System.out.println(currentscope);
+       //**// System.out.println(currentscope);
     }
 
     @Override public void enterNormalInterfaceDeclaration2(javaParser.NormalInterfaceDeclaration2Context ctx) {currentscope=new InterfaceScope(currentscope);
     }
 
     @Override public void exitNormalInterfaceDeclaration2(javaParser.NormalInterfaceDeclaration2Context ctx) { saveScope(ctx, currentscope);
-        System.out.println(currentscope);
+       //**// System.out.println(currentscope);
 
 
         currentscope = currentscope.getEnclosingScope();
@@ -300,7 +300,7 @@ public class Defphase extends javaBaseListener {
         currentscope.define(C);
         StaticList.insert(C);
         interfacemodifier.clear();
-        System.out.println(currentscope);
+        //**//System.out.println(currentscope);
     }
 
 
@@ -315,7 +315,7 @@ public class Defphase extends javaBaseListener {
     @Override
     public void exitMethodDeclaration(javaParser.MethodDeclarationContext ctx) {
 
-       System.out.println(currentscope);
+       //**//System.out.println(currentscope);
         saveScope(ctx,currentscope);
         currentscope = currentscope.getEnclosingScope();
         methodmodifier.clear();
@@ -329,7 +329,7 @@ public class Defphase extends javaBaseListener {
     @Override public void enterInterfaceMethodDeclaration(javaParser.InterfaceMethodDeclarationContext ctx) { }
 
     @Override public void exitInterfaceMethodDeclaration(javaParser.InterfaceMethodDeclarationContext ctx) {
-        System.out.println(currentscope);
+       //**// System.out.println(currentscope);
         saveScope(ctx,currentscope);
         currentscope = currentscope.getEnclosingScope();
         methodmodifier.clear();
@@ -596,7 +596,7 @@ public class Defphase extends javaBaseListener {
     public void exitBlock(javaParser.BlockContext ctx) {
         myscope=currentscope;
         saveScope(ctx, currentscope);
-      System.out.println(currentscope);
+     //**// System.out.println(currentscope);
         currentscope = currentscope.getEnclosingScope();
 
     }
@@ -881,7 +881,7 @@ public class Defphase extends javaBaseListener {
     }
 
     @Override public void exitConstructorDeclaration(javaParser.ConstructorDeclarationContext ctx) {
-        System.out.println(currentscope);
+       //**// System.out.println(currentscope);
         currentscope = currentscope.getEnclosingScope();
         saveScope(ctx,currentscope);
         methodmodifier.clear();

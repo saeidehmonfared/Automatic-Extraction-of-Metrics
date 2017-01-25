@@ -13,7 +13,7 @@
  * Created by saeideh on 1/11/17.
  */
 public class InheritanceMetrics extends javaBaseListener {
-    public   ArrayList<String> Inheritancelistofclass = new ArrayList<String>();
+    public   ArrayList<Symbol> Inheritancelistofclass = new ArrayList<Symbol>();
 
     String nameofclass;
     String Aslnameofclass;
@@ -55,7 +55,7 @@ public class InheritanceMetrics extends javaBaseListener {
         if (!(s1==null)) {
             while (!(s1.equals(null)) && ((b))) {
 
-                Inheritancelistofclass.add(s1.Parent.name);
+                Inheritancelistofclass.add(s1.Parent);
                 s1 = s1.Parent;
                 b = false;
                 for (Symbol value : Inheritancelist.inheritanclist.values()) {
@@ -120,7 +120,7 @@ public class InheritanceMetrics extends javaBaseListener {
         if (!(s1==null)) {
             while (!(s1.equals(null)) && ((b))) {
               // if(!(s1.Parent==null))
-                    Inheritancelistofclass.add(s1.Parent.name);
+                    Inheritancelistofclass.add(s1.Parent);
                     s1 = s1.Parent;
                     b = false;
                     for (Symbol value : Inheritancelist.inheritanclist.values()) {

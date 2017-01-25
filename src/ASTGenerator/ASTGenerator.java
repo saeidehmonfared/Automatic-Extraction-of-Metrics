@@ -107,6 +107,9 @@ public class  ASTGenerator {
                 CohesionMetrics cohesinextractor=new CohesionMetrics(symboltableextractor.globals,symboltableextractor.Scopes,couplingextractor.objectinstances,importlist);
                 ParseTreeWalker.DEFAULT.walk(cohesinextractor,tree);
 
+                classlevelmetrics2 inheritedmetricextractor=new classlevelmetrics2(InheritanceExtractor.Inheritancelistofclass);
+                ParseTreeWalker.DEFAULT.walk(inheritedmetricextractor,tree);
+
 
 
             } catch (Exception e) {
@@ -205,7 +208,7 @@ public class  ASTGenerator {
         p.ListofClasses();
         p.Packagemetrics();
 
-
+        Staticlistclasslevelmetrics.show();
 
     }
     public void parseFile(String compUnit, String outDir) {

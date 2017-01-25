@@ -20,6 +20,11 @@ public class Symbol { // A generic programming language symbol
     public String packagename;
 
     public Symbol(String name) { this.name = name; }
+    public Symbol(String name,String packagename){
+        this.name=name;
+        this.packagename=packagename;
+
+    }
     public Symbol(String name, ArrayList<AccessModifier>accesstype) { this(name); this.accessmodifier=accesstype; }
     public Symbol(String name, ArrayList<AccessModifier>accesstype,Type type){ this(name); this.accessmodifier.addAll(accesstype); this.type=type; }
     public Symbol(String name, ArrayList<AccessModifier>accesstype,Type type, String packagename){ this(name); this.accessmodifier.addAll(accesstype);   this.type=type; this.packagename=packagename; }

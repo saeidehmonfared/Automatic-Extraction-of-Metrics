@@ -12,8 +12,8 @@ import java.util.Map;
 public class PackageLevelMetrics {
         protected int numberofpackages;
         int numberofabstractclasses;
-        int numberofclasses=0;
-        int numberofinterfaces=0;
+
+
         int numberoffinalclasses;
         ArrayList<String> listofpackages=new ArrayList<String>();
     ArrayList<String> listofAbstractclasses=new ArrayList<String>();
@@ -62,7 +62,8 @@ public class PackageLevelMetrics {
     }
     public void ListofClasses(){
 
-
+        int numberofclasses=0;
+        int numberofinterfaces=0;
         Iterator<Symbol> it = StaticList.staticlist.values().iterator();
 
 

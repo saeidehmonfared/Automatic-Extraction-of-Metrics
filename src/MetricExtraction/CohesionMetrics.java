@@ -62,8 +62,8 @@ public class CohesionMetrics extends javaBaseListener {
     }
 
     public void exitCompilationUnit(javaParser.CompilationUnitContext ctx) {
-
-        System.out.println(Allofmethods+"ffffffffffffffffffffffffffffffffffff");
+        System.out.println("All of methods with distinict parameters:");
+        System.out.println(Allofmethods);
 
 
     }
@@ -93,8 +93,8 @@ public class CohesionMetrics extends javaBaseListener {
     @Override
     public void exitNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx) {
         currentScope = currentScope.getEnclosingScope();
-        System.out.println("classs variables issssssssssssssssssssssssssss:"+classvariables);
-        System.out.println("method calls isssssssssssssssssssssssssssss:"+methodcalls);
+        System.out.println("classs variables is:"+classvariables);
+        System.out.println("method calls is:"+methodcalls);
     }
 
     //-----------------------------------------------------------------------------------------------------
@@ -121,8 +121,8 @@ public class CohesionMetrics extends javaBaseListener {
     @Override
     public void exitNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) {
         currentScope = currentScope.getEnclosingScope();
-        System.out.println("classs variableswwwwwwwwwwwwwwwwwwwwwwwwwwww:"+classvariables);
-        System.out.println("method calls isssssssssssssssssssssssssssss:"+methodcalls);
+        System.out.println("classs variables:"+classvariables);
+        System.out.println("method calls is:"+methodcalls);
     }
 
     //-----------------------------------------------------------------------

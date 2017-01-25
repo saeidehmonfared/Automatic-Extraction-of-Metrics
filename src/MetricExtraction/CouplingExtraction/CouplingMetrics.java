@@ -34,13 +34,13 @@ public class CouplingMetrics extends javaBaseListener {
     public ArrayList<Object> objectinstances = new ArrayList<Object>();
 
 
-    public ArrayList<String> Inheritancelistofclass = new ArrayList<String>();
+    public ArrayList<Symbol> Inheritancelistofclass = new ArrayList<Symbol>();
     Scope currentScope;
     String assignmentclassname=null;
     String assignmentname=null;
     String leftofassignment;
 
-    public CouplingMetrics(GlobalScope globals, ParseTreeProperty<Scope> Scopes, Map<Symbol, String> refrences, Map<String, Symbol> importlist, ArrayList<String> inheritancelistofclass, ArrayList<Object> objectinstances) {
+    public CouplingMetrics(GlobalScope globals, ParseTreeProperty<Scope> Scopes, Map<Symbol, String> refrences, Map<String, Symbol> importlist, ArrayList<Symbol> inheritancelistofclass, ArrayList<Object> objectinstances) {
         this.globals = globals;
         this.scopes = Scopes;
         this.refrencesofclass = refrences;
@@ -77,13 +77,14 @@ public class CouplingMetrics extends javaBaseListener {
             //Couplinglist.put(name1.packagename+name1.name,)
 
         }
+        System.out.println("coupling list is:" );
         for (String value : Couplinglist.keySet()) {
             String name = value;
 
 
             ArrayList<Invoc> mylist = new ArrayList<Invoc>();
             mylist = Couplinglist.get(name);
-            System.out.println("coupling list iiiiiiiiiiiiiiiiiiiis:" + name);
+            System.out.println(name);
             Iterator<Invoc> it1 = Couplinglist.get(name).iterator();
             while (it1.hasNext()) {
                 Invoc name1 = it1.next();
@@ -181,10 +182,10 @@ public class CouplingMetrics extends javaBaseListener {
             s1 = value1;
 
             if (s1.name.equals(classname)) {
-                Iterator<String> it = Inheritancelistofclass.iterator();
+                Iterator<Symbol> it = Inheritancelistofclass.iterator();
                 while (it.hasNext()) {
-                    String name2 = it.next();
-                    if ((classname.equals(name2))) {
+                    Symbol name2 = it.next();
+                    if ((classname.equals(name2.name))) {
                         coupling = false;
                         break;
 
@@ -305,10 +306,10 @@ public class CouplingMetrics extends javaBaseListener {
             for (Symbol value1 : importlistofclass.values()) {
                 s1 = value1;
                 if (s1.name.equals(classname)) {
-                    Iterator<String> it = Inheritancelistofclass.iterator();
+                    Iterator<Symbol> it = Inheritancelistofclass.iterator();
                     while (it.hasNext()) {
-                        String name2 = it.next();
-                        if ((classname.equals(name2))) {
+                        Symbol name2 = it.next();
+                        if ((classname.equals(name2.name))) {
                             coupling = false;
                             break;
 
@@ -398,10 +399,10 @@ public class CouplingMetrics extends javaBaseListener {
     for (Symbol value1 : importlistofclass.values()) {
         s1 = value1;
         if (s1.name.equals(classname)) {
-            Iterator<String> it = Inheritancelistofclass.iterator();
+            Iterator<Symbol> it = Inheritancelistofclass.iterator();
             while (it.hasNext()) {
-                String name2 = it.next();
-                if ((classname.equals(name2))) {
+                Symbol name2 = it.next();
+                if ((classname.equals(name2.name))) {
                     coupling = false;
                     break;
 
