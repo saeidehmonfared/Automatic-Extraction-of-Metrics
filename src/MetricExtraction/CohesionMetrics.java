@@ -104,7 +104,7 @@ public class CohesionMetrics extends javaBaseListener {
 
         for (Symbol value : currentScope.symboltableshow().values()) {
             Symbol s = value;
-            if (s.getClass().getName().equals("Symbols.VariableSymbol")) { //TODO
+            if (s.getClass().getName().equals("Symbols.VariableSymbol")) {
                 ArrayList<String>var=new ArrayList<String>();
                 classvariables.put(((VariableSymbol)s).name,var);
             }

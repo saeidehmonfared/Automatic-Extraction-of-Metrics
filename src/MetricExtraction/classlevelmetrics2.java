@@ -16,6 +16,9 @@ public class classlevelmetrics2 extends javaBaseListener {
     String packagename = "";
     Map<String, ArrayList<String>> metriclist1 = new LinkedHashMap<String, ArrayList<String>>();
     Map<String, ArrayList<String>> metriclist2 = new LinkedHashMap<String, ArrayList<String>>();
+    int overridedmethod;
+    ArrayList<String>overridedmethods=new ArrayList<String>();
+
 
 
     public classlevelmetrics2(ArrayList<Symbol> inheritance) {
@@ -57,6 +60,7 @@ public class classlevelmetrics2 extends javaBaseListener {
         int count = 0;
 
         String methodname = null;
+
         for (Symbol value : Staticlistclasslevelmetrics.lisofclasses.keySet()) {
             Symbol classname1 = value;
 
@@ -72,8 +76,134 @@ public class classlevelmetrics2 extends javaBaseListener {
         if(!(metriclist1.get("privatemethods")==null))
         {
         allmethodmetrics.addAll(metriclist1.get("privatemethods"));}
+        //----------------------------------------------------------------
+        // number of overrideded methods
 
-        // System.out.println(allmethodmetrics+"uhdgsfugudgfudsghfdfjdshfhskdfksdgfkdhfj");
+
+        for (int i = 0; i < inheritancelist.size(); i++) {
+
+            Symbol parentname = inheritancelist.get(i);
+            for (Symbol value1 : Staticlistclasslevelmetrics.lisofclasses.keySet()) {
+                Symbol myclass = value1;
+                if (myclass.name.equals(parentname.name) && (myclass.packagename.equals(parentname.packagename))) {
+                    metriclist2 = Staticlistclasslevelmetrics.lisofclasses.get(myclass);
+                    break;
+                }
+            }
+
+            //for (String value2 : metriclist2.keySet()) {
+            //  String name = value2;
+            //   switch (name) {
+            //case "publicmethods":
+            boolean oveeride=true;
+            int count1=0;
+            Iterator<String> it = metriclist2.get("publicmethods").iterator();
+
+
+            while (it.hasNext()) {
+                try {
+                    String s = it.next();
+                    for (int m = 0; m < allmethodmetrics.size(); m++) {
+
+                        if (s.equals(allmethodmetrics.get(m))) {
+                            if (overridedmethods.isEmpty()) {
+                                overridedmethods.add(s);
+                                overridedmethod++;
+                            }
+                            //m1=true;
+                            for (int j = 0; j < overridedmethods.size(); j++) {
+                                if (s.equals(overridedmethods.get(j))) {
+                                    count1 = 1;
+                                    break;
+
+
+                                }
+                            }
+                            if(count1==0)
+                                oveeride=false;
+                            if (!oveeride) {
+                                overridedmethod++;
+                                overridedmethods.add(s);
+
+                            }
+                            oveeride = true;
+                            count = 1;
+
+                            break;
+                        }
+                    }
+
+
+
+
+                }
+                 catch(Exception e){
+                        e.printStackTrace();
+                    }
+                }
+
+
+
+
+            // case "protectedmethods":
+
+            Iterator<String> it7 = metriclist2.get("protectedmethods").iterator();
+
+
+            while (it7.hasNext()) {
+                try {
+                    String s = it7.next();
+                    for (int m = 0; m < allmethodmetrics.size(); m++) {
+
+                        if (s.equals(allmethodmetrics.get(m))) {
+                            if (overridedmethods.isEmpty()) {
+                                overridedmethods.add(s);
+                                overridedmethod++;
+                            }
+                            //m1=true;
+                            for (int j = 0; j < overridedmethods.size(); j++) {
+                                if (s.equals(overridedmethods.get(j))) {
+                                    count1 = 1;
+                                    break;
+
+
+                                }
+                            }
+                            if(count1==0)
+                                oveeride=false;
+                            if (!oveeride) {
+                                overridedmethod++;
+                                overridedmethods.add(s);
+
+                            }
+                            oveeride = true;
+                            oveeride=true;
+                            count = 1;
+
+                            break;
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+        //------------------------------------------------------------------------
         for (int i = 0; i < inheritancelist.size(); i++) {
             for (Symbol value : Staticlistclasslevelmetrics.lisofclasses.keySet()) {
                 Symbol classname1 = value;
@@ -115,6 +245,7 @@ public class classlevelmetrics2 extends javaBaseListener {
                         if (s.equals(allmethodmetrics.get(m))) {
                             //m1=true;
                             count = 1;
+
                             break;
                         }
 
@@ -153,6 +284,7 @@ public class classlevelmetrics2 extends javaBaseListener {
                     for (int m = 0; m < allmethodmetrics.size(); m++) {
                         if (s.equals(allmethodmetrics.get(m))) {
                             count = 1;
+
                             break;
                         }
                     }
@@ -257,7 +389,7 @@ public class classlevelmetrics2 extends javaBaseListener {
                 if (m1) {
                     //  System.out.println("tttttttttttttttttttttttt" + methodname);
                     if (metriclist1.get("publicvariables") == null) {
-                        metriclist1.put("publicvsriables", new ArrayList<String>());
+                        metriclist1.put("publicvariables", new ArrayList<String>());
                     }
                     metriclist1.get("publicvariables").add(methodname);
                     // break;
@@ -313,7 +445,11 @@ public class classlevelmetrics2 extends javaBaseListener {
     }
 }
 
+    @Override public void exitNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) {
 
+        System.out.println("number of overrided jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjmethods is:"+overridedmethod);
+        System.out.println("list of overrided methods is:"+overridedmethods);
+    }
 
 
 
