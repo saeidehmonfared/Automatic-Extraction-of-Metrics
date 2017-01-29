@@ -5,8 +5,11 @@ import ASTGenerator.StaticList;
 import Scopes.ClassScope;
 import Scopes.GlobalScope;
 import Scopes.Scope;
+import Symbols.MethodSymbol;
 import Symbols.Symbol;
 import java.lang.String;
+
+import Symbols.VariableSymbol;
 import com.sun.org.apache.xpath.internal.SourceTree;
 
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
@@ -55,6 +58,7 @@ public class CouplingMetrics extends javaBaseListener {
 
     public void enterCompilationUnit(javaParser.CompilationUnitContext ctx) {
         Currentscope = globals;
+       // System.out.println(this.objectinstances+"66666666666666666666");
 
     }
 
@@ -88,7 +92,7 @@ public class CouplingMetrics extends javaBaseListener {
             Iterator<Invoc> it1 = Couplinglist.get(name).iterator();
             while (it1.hasNext()) {
                 Invoc name1 = it1.next();
-                System.out.println(name1.name+"  "+ name1.invoc+" "+name1.relationType.toString());
+                System.out.println(name1.name+"  "+ name1.invoctype+" "+name1.relationType.toString());
 
 
             }
@@ -142,7 +146,7 @@ public class CouplingMetrics extends javaBaseListener {
 
     @Override
     public void exitMethodDeclaration(javaParser.MethodDeclarationContext ctx) {
-       // currentScope = currentScope.getEnclosingScope();
+        currentScope = currentScope.getEnclosingScope();
     }
     //----------------------------------------------------------------------------------
 
@@ -157,24 +161,63 @@ public class CouplingMetrics extends javaBaseListener {
 
         Invoc.RelationType relation = Invoc.RelationType.INVALID;
 
+        ArrayList<Object>kandidlist=new ArrayList<Object>();
+
         Iterator<Object> it0 = objectinstances.iterator();
         while (it0.hasNext()) {
             Object name1 = it0.next();
             if (name.equals(name1.symbol.name)) {
-                classname = name1.classname;
+                kandidlist.add(name1);
+            }
+        }
 
-                if (!(name1.currentscope.getScopeName().equals("Class"))) {
-                    relation = Invoc.RelationType.DEPENDENCY;
-                } else if(name1.currentscope.getScopeName().equals("Class")) {
-                    relation = Invoc.RelationType.ASSOSIATION;
-                }
+        Object primaryname=null;
+
+        Iterator<Object> it01 = kandidlist.iterator();
+        while (it01.hasNext()) {
+            Object name2 = it01.next();
+            classname = name2.classname;
+
+            if ((name2.symbol.name.equals(name))&&(name2.currentscope.getScopeName().equals(currentScope.getScopeName()))) {
+
+                primaryname = name2;
                 break;
+            }
+        }
+
+        if(primaryname==null){
+
+            Iterator<Object> it02 = kandidlist.iterator();
+            while (it02.hasNext()) {
+                Object name2 = it02.next();
+                classname = name2.classname;
+
+                if ((name2.symbol.name.equals(name))) {
+
+                    primaryname = name2;
+                    break;}
+
+
 
             }
         }
 
+        if(primaryname!=null) {
+            if (primaryname.currentscope.getScopeName().equals("Class")) {
+                relation = Invoc.RelationType.ASSOSIATION;
+            } else if ((primaryname.currentscope.getClass().getName().equals("Symbols.MethodSymbol"))) {
+                if (((MethodSymbol) primaryname.currentscope).returntype.equals(VariableSymbol.TYPE.TCONSTRUCTOR))
+                    relation = Invoc.RelationType.ASSOSIATION;
+                else
+                    relation = Invoc.RelationType.DEPENDENCY;
+            }
+        }
 
-        Invoc inv = new Invoc(ctx.Identifier().getText(), Invoc.InvocType.ATTRIBUTEINVOC, relation);
+
+
+
+
+        Invoc inv = new Invoc(ctx.Identifier().getText(), Invoc.InvocType.ATTRIBUTEINVOC, relation,currentScope);
         //be in nokte deghat kon k momken ast dar packagehay mokhtalef classhay hamname dashte bashim, felan in ro dar nazar nagerefti
         Symbol s1=null;
         boolean r=false;
@@ -221,7 +264,7 @@ public class CouplingMetrics extends javaBaseListener {
                 Iterator<Invoc> it3 = Couplinglist.get(keyname).iterator();
                 while (it3.hasNext()) {
                     Invoc name2 = it3.next();
-                    if ((name2.name.equals(inv.name))) {
+                    if ((name2.name.equals(inv.name))&&(name2.currentScope.getScopeName().equals(inv.currentScope.getScopeName()))) {
                         h = false;
                         break;
 
@@ -281,25 +324,69 @@ public class CouplingMetrics extends javaBaseListener {
         boolean coupling = true;
 
         Invoc.RelationType relation = Invoc.RelationType.INVALID;
+        ArrayList<Object>kandidlist=new ArrayList<Object>();
 
         Iterator<Object> it0 = objectinstances.iterator();
         while (it0.hasNext()) {
             Object name1 = it0.next();
             if (objectname.equals(name1.symbol.name)) {
-                classname = name1.classname;
+                kandidlist.add(name1);
+            }
+        }
 
-                if (!(name1.currentscope.getScopeName().equals("Class"))) {
-                    relation = Invoc.RelationType.DEPENDENCY;
-                } else if(name1.currentscope.getScopeName().equals("Class")) {
-                    relation = Invoc.RelationType.ASSOSIATION;
-                }
+        Object primaryname=null;
+
+        Iterator<Object> it01 = kandidlist.iterator();
+        while (it01.hasNext()) {
+            Object name2 = it01.next();
+            classname = name2.classname;
+
+            if ((name2.symbol.name.equals(objectname))&&(name2.currentscope.getScopeName().equals(currentScope.getScopeName()))) {
+
+                primaryname = name2;
                 break;
+            }
+            else if(objectname.equals(name2.symbol.name)){
+                primaryname=name2;
+                break;
+            }
+        }
+
+        if(primaryname==null){
+
+            Iterator<Object> it02 = kandidlist.iterator();
+            while (it01.hasNext()) {
+                Object name2 = it02.next();
+                classname = name2.classname;
+
+                if ((name2.symbol.name.equals(objectname))) {
+
+                    primaryname = name2;
+                    break;}
+
+
 
             }
         }
 
+        if(primaryname!=null) {
+            if (primaryname.currentscope.getScopeName().equals("Class")) {
+                relation = Invoc.RelationType.ASSOSIATION;
+            } else if ((primaryname.currentscope.getClass().getName().equals("Symbols.MethodSymbol"))) {
+                if (((MethodSymbol) primaryname.currentscope).returntype.equals(VariableSymbol.TYPE.TCONSTRUCTOR))
+                    relation = Invoc.RelationType.ASSOSIATION;
+                else
+                    relation = Invoc.RelationType.DEPENDENCY;
+            }
+        }
 
-            Invoc inv = new Invoc(ctx.Identifier().getText(), Invoc.InvocType.METHODINVOC, relation);
+
+
+
+
+
+
+            Invoc inv = new Invoc(ctx.Identifier().getText(), Invoc.InvocType.METHODINVOC, relation,currentScope);
             //be in nokte deghat kon k momken ast dar packagehay mokhtalef classhay hamname dashte bashim, felan in ro dar nazar nagerefti
         Symbol s1=null;
         boolean r=false;
@@ -345,7 +432,8 @@ public class CouplingMetrics extends javaBaseListener {
                             Iterator<Invoc> it3 = Couplinglist.get(keyname).iterator();
                             while (it3.hasNext()) {
                                 Invoc name2 = it3.next();
-                                if ((name2.name.equals(inv.name))) {
+                                if ((name2.name.equals(inv.name))&&(name2.currentScope.getScopeName().equals(inv.currentScope.getScopeName())))
+                                {
                                     h = false;
                                     break;
 
@@ -376,24 +464,62 @@ public class CouplingMetrics extends javaBaseListener {
 
     Invoc.RelationType relation = Invoc.RelationType.INVALID;
 
+    ArrayList<Object>kandidlist=new ArrayList<Object>();
+
     Iterator<Object> it0 = objectinstances.iterator();
     while (it0.hasNext()) {
         Object name1 = it0.next();
         if (objectname.equals(name1.symbol.name)) {
-            classname = name1.classname;
+            kandidlist.add(name1);
+        }
+    }
 
-            if (!(name1.currentscope.getScopeName().equals("Class"))) {
-                relation = Invoc.RelationType.DEPENDENCY;
-            } else if(name1.currentscope.getScopeName().equals("Class")) {
+    Object primaryname=null;
+
+    Iterator<Object> it01 = kandidlist.iterator();
+    while (it01.hasNext()) {
+        Object name2 = it01.next();
+        classname = name2.classname;
+
+        if ((name2.symbol.name.equals(objectname))&&(name2.currentscope.getScopeName().equals(currentScope.getScopeName()))) {
+
+            primaryname = name2;
+            break;}
+
+
+
+    }
+    if(primaryname==null){
+
+        Iterator<Object> it02 = kandidlist.iterator();
+        while (it01.hasNext()) {
+            Object name2 = it02.next();
+            classname = name2.classname;
+
+            if ((name2.symbol.name.equals(objectname))) {
+
+                primaryname = name2;
+                break;}
+
+
+
+        }
+    }
+    if(primaryname!=null) {
+        if (primaryname.currentscope.getScopeName().equals("Class")) {
+            relation = Invoc.RelationType.ASSOSIATION;
+        } else if ((primaryname.currentscope.getClass().getName().equals("Symbols.MethodSymbol"))) {
+            if (((MethodSymbol) primaryname.currentscope).returntype.equals(VariableSymbol.TYPE.TCONSTRUCTOR))
                 relation = Invoc.RelationType.ASSOSIATION;
-            }
-            break;
-
+            else
+                relation = Invoc.RelationType.DEPENDENCY;
         }
     }
 
 
-    Invoc inv = new Invoc(ctx.Identifier().getText(), Invoc.InvocType.METHODINVOC, relation);
+
+
+    Invoc inv = new Invoc(ctx.Identifier().getText(), Invoc.InvocType.METHODINVOC, relation,currentScope);
     //be in nokte deghat kon k momken ast dar packagehay mokhtalef classhay hamname dashte bashim, felan in ro dar nazar nagerefti
     Symbol s1=null;
     for (Symbol value1 : importlistofclass.values()) {
@@ -434,7 +560,8 @@ public class CouplingMetrics extends javaBaseListener {
             Iterator<Invoc> it3 = Couplinglist.get(keyname).iterator();
             while (it3.hasNext()) {
                 Invoc name2 = it3.next();
-                if ((name2.name.equals(inv.name))) {
+                if ((name2.name.equals(inv.name))&&(name2.currentScope.getScopeName().equals(inv.currentScope.getScopeName())))
+                {
                     h = false;
                     break;
 
@@ -456,67 +583,8 @@ public class CouplingMetrics extends javaBaseListener {
     }
 
 }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
     @Override public void exitMethodinvocation_lfno_primary2(javaParser.Methodinvocation_lfno_primary2Context ctx) { }
 
-
-
-
-
-
-
-        /*for (Symbol value :refrencesofclass.keySet()) {
-            Symbol s = value;
-            if (s.name.equals(objectname)) {
-                classname = refrencesofclass.get(s);
-
-            }
-        }
-
-            for (Symbol value1 :importlistofclass.values()) {
-                Symbol s1=value1;
-                if(s1.name.equals(classname)){
-                    Iterator<String> it=Inheritancelistofclass.iterator();
-                    while (it.hasNext()){
-                        String name1=it.next();
-                        if((classname.equals(name1)))
-                        {
-                            coupling=false;
-                            break;
-
-                        }
-
-
-                    }
-                    if(coupling){
-
-
-                        boolean b=true;
-                        for(int i=0;i<Couplinglistofclass.size();i++)
-                        {
-                           if(Couplinglistofclass.get(i).name.equals(s1.name))
-                            {
-                                b=false;
-                               break;
-                            }
-                       }
-                       if(b)
-                        {
-                            Couplinglistofclass.add(s1);
-
-                        }
-
-
-                        break;
-
-                    }
-
-                }
-            }*/
 
 
 

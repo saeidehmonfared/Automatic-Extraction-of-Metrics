@@ -89,7 +89,7 @@ public class Defphase extends javaBaseListener {
         while (it.hasNext()){
             Object s=it.next();
 
-           //**// System.out.println(s.classname+" "+s.symbol+" "+s.currentscope.getScopeName());
+           System.out.println("objectinstansec:\n"+s.classname+" "+s.symbol+" "+s.currentscope.getScopeName());
         }
 
         //System.out.println(StaticList.staticlist);
@@ -102,7 +102,7 @@ public class Defphase extends javaBaseListener {
         }
 
 
-
+        //System.out.println(objectinstances+"5555555555555555555");
 
     }
 
@@ -896,7 +896,7 @@ public class Defphase extends javaBaseListener {
         if(methodmodifier.equals(null)){
             methodmodifier.add(Symbol.AccessModifier.tprotected);
         }
-        MethodSymbol ms = new MethodSymbol(methodname, methodmodifier,null, currentscope);
+        MethodSymbol ms = new MethodSymbol(methodname, methodmodifier, VariableSymbol.TYPE.TCONSTRUCTOR, currentscope);
 
         currentscope.define(ms);
         saveScope(ctx, ms);

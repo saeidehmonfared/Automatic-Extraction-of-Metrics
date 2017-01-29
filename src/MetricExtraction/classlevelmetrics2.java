@@ -127,7 +127,7 @@ public class classlevelmetrics2 extends javaBaseListener {
 
                             }
                             oveeride = true;
-                            count = 1;
+                            count1 = 0;
 
                             break;
                         }
@@ -178,7 +178,7 @@ public class classlevelmetrics2 extends javaBaseListener {
                             }
                             oveeride = true;
                             oveeride=true;
-                            count = 1;
+                            count1 = 0;
 
                             break;
                         }
@@ -447,7 +447,7 @@ public class classlevelmetrics2 extends javaBaseListener {
 
     @Override public void exitNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) {
 
-        System.out.println("number of overrided jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjmethods is:"+overridedmethod);
+        System.out.println("number of overrided methods is:"+overridedmethod);
         System.out.println("list of overrided methods is:"+overridedmethods);
     }
 

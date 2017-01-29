@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class VariableSymbol extends Symbol {
 
     public ArrayList<AccessModifier>variablemodifier=new ArrayList<AccessModifier>();
-    public static enum TYPE{TINVALID, TINT,TFLOAT,TDOUBLE,TREFRENCE,TCHAR,TBYTE,TSHORT,TLONG,TBOOLean,TVOid}
+    public static enum TYPE{TINVALID, TINT,TFLOAT,TDOUBLE,TREFRENCE,TCHAR,TBYTE,TSHORT,TLONG,TBOOLean,TVOid,TCONSTRUCTOR}
     public TYPE vartype;
     public VariableSymbol(String name, ArrayList<AccessModifier>accesstype, TYPE vartype) {
         super(name);

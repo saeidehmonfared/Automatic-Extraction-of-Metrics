@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import Scopes.*;
 public class MethodSymbol extends Symbol implements Scope  {
-        VariableSymbol.TYPE returntype;
+       public VariableSymbol.TYPE returntype;
    public ArrayList<Symbol.AccessModifier>methodmodifier=new ArrayList<Symbol.AccessModifier>();
     Map<String, Symbol> arguments = new LinkedHashMap<String, Symbol>();
     Scope enclosingScope;

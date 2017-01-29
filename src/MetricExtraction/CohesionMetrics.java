@@ -92,7 +92,8 @@ public class CohesionMetrics extends javaBaseListener {
 
     @Override
     public void exitNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx) {
-        currentScope = currentScope.getEnclosingScope();
+        if(currentScope.getScopeName().equals("Class")){
+        currentScope = currentScope.getEnclosingScope();}
         System.out.println("classs variables is:"+classvariables);
         System.out.println("method calls is:"+methodcalls);
     }
@@ -337,33 +338,42 @@ public class CohesionMetrics extends javaBaseListener {
     @Override public void enterAssignment(javaParser.AssignmentContext ctx) {
         ArrayList<String>methods=new ArrayList<String>();
         String name=ctx.leftHandSide().expressionName().getText();
+        String Scope=currentScope.getScopeName();
+        Scope mycurrentscope=null;
+        if(Scope.equals("Block")){
+            mycurrentscope=currentScope.getEnclosingScope();
 
-       Symbol s= currentScope.resolve1(name);
 
-        if(s==null){
+                Symbol s = mycurrentscope.resolve1(name);
 
-            boolean b=true;
-            for(String value:classvariables.keySet()){
+                if (s == null) {
 
-                String name1=value;
+                    boolean b = true;
+                    for (String value : classvariables.keySet()) {
 
-                if(name.equals(name1)) {
+                        String name1 = value;
 
-                    for(int i=0;i<classvariables.get(name).size();i++){
-                        if(currentScope.getScopeName().equals(classvariables.get(name1).get(i))){
-                            b=false;break;
+                        if (name.equals(name1)) {
+
+                            for (int i = 0; i < classvariables.get(name).size(); i++) {
+                                if (mycurrentscope.getScopeName().equals(classvariables.get(name1).get(i))) {
+                                    b = false;
+                                    break;
+                                }
+                            }
+                            if (b == true)
+                                methods = classvariables.get(name);
+                            methods.add(mycurrentscope.getScopeName());
+                            classvariables.put(name, methods);
+
+                            break;
+
                         }
-                    }
-                    if(b==true)
-                        methods=classvariables.get(name);
-                    methods.add(currentScope.getScopeName());
-                    classvariables.put(name,methods);
 
-                         break;
+                    }
 
                 }
 
-            }
         }
     }
 

@@ -21,4 +21,10 @@ public class ClassScope extends GlobalScope {
 
 
     }
+    int id=0;
+    public void define(Symbol sym) {
+        id++;
+        symbols.put(sym.name+id, sym); //TODO
+        //***sym.scope = this; // track the scope in each symbol
+    }
 }

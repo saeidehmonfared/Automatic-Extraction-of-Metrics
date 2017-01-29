@@ -27,6 +27,9 @@ public class ClassLevelMetrics extends javaBaseListener{
     Symbol classsymbol=null;
     Map<Symbol,Map<String,ArrayList<String>>>listofclass=new LinkedHashMap<Symbol,Map<String, ArrayList<String>>>();
     Map<String,ArrayList<String>>metriclist=new LinkedHashMap<String,ArrayList<String>>();
+    ArrayList<Symbol>allofmethods=new ArrayList<Symbol>();
+    ArrayList<Symbol>overridedmethods=new ArrayList<Symbol>();
+    int numberofoverridemethods;
     public ClassLevelMetrics(GlobalScope globals, ParseTreeProperty<Scope> Scopes) {
         this.globals = globals;
         this.scopes = Scopes;
@@ -107,6 +110,7 @@ public class ClassLevelMetrics extends javaBaseListener{
             if (s.getClass().getName().equals("Symbols.MethodSymbol")) {
                 //Symbol m= (MethodSymbol)s;
                 Methodclasscount = Methodclasscount + 1;
+                allofmethods.add(s);
 
                 for (int i = 0; i < ((MethodSymbol) s).methodmodifier.size(); i++) {
 
@@ -177,7 +181,43 @@ public class ClassLevelMetrics extends javaBaseListener{
 
     }
 
-    @Override public void exitNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx) { }
+    @Override public void exitNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx) {
+        int count=0;
+        boolean b=true;
+        for(int i=0;i<allofmethods.size();i++){
+            for(int j=i+1;j<allofmethods.size();j++)
+            {
+                if(allofmethods.get(i).name.equals(allofmethods.get(j).name)){
+                    if(overridedmethods.isEmpty()){
+                        overridedmethods.add(allofmethods.get(i));
+                        numberofoverridemethods++;
+                    }
+                    for(int k=0;k<overridedmethods.size();k++){
+                        if(allofmethods.get(i).name.equals(overridedmethods.get(k).name)){
+                            count=1;
+                            break;
+
+                        }
+                    }
+                    if(count==0){
+                        b=false;
+                    }
+                    if(!b){
+                        overridedmethods.add(allofmethods.get(i));
+                        numberofoverridemethods++;
+
+                    }
+                    count=0;
+                    b=true;
+
+                }
+
+            }
+        }
+        System.out.println("number of overrided methods:"+numberofoverridemethods);
+        System.out.println("list of overrided methods:"+overridedmethods);
+
+    }
 
 
     @Override public void enterNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) {
@@ -203,6 +243,7 @@ public class ClassLevelMetrics extends javaBaseListener{
             Symbol s = value;
 
             if (s.getClass().getName().equals("Symbols.MethodSymbol")) {
+                allofmethods.add(s);
                 //Symbol m= (MethodSymbol)s;
                 Methodclasscount = Methodclasscount + 1;
 
@@ -276,7 +317,46 @@ public class ClassLevelMetrics extends javaBaseListener{
 
     }
 
-    @Override public void exitNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) { }
+    @Override public void exitNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) {
+
+        int count = 0;
+        boolean b = true;
+        for (int i = 0; i < allofmethods.size(); i++) {
+            for (int j = i + 1; j < allofmethods.size(); j++) {
+                if (allofmethods.get(i).name.equals(allofmethods.get(j).name)) {
+                    if (overridedmethods.isEmpty()) {
+                        overridedmethods.add(allofmethods.get(i));
+                        numberofoverridemethods++;
+                    }
+                    for (int k = 0; k < overridedmethods.size(); k++) {
+                        if (allofmethods.get(i).name.equals(overridedmethods.get(k).name)) {
+                            count = 1;
+                            break;
+
+                        }
+                    }
+                    if (count == 0) {
+                        b = false;
+                    }
+                    if (!b) {
+                        overridedmethods.add(allofmethods.get(i));
+                        numberofoverridemethods++;
+
+                    }
+                    count = 0;
+                    b = true;
+
+                }
+
+            }
+
+
+
+        }
+
+        System.out.println("number of overrided methods:" + numberofoverridemethods);
+        System.out.println("list of overrided methods:" + overridedmethods);
+    }
 
 
    /* public void enterNormalClassDeclaration(javaParser.NormalClassDeclarationContext ctx) {

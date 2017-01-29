@@ -1,5 +1,7 @@
 package MetricExtraction.CouplingExtraction;
 
+import Scopes.Scope;
+
 /**
  * Created by saeideh on 1/17/17.
  */
@@ -8,15 +10,17 @@ public class Invoc {
 
     public static enum RelationType {ASSOSIATION, DEPENDENCY,INVALID};
 
-    InvocType invoc;
+    InvocType invoctype;
     RelationType relationType;
     String name;
+    Scope currentScope;
 
 
-    public Invoc(String name,InvocType invoc, RelationType relation){
+    public Invoc(String name,InvocType invoc, RelationType relation,Scope currentScope){
         this.name=name;
-        this.invoc=invoc;
+        this.invoctype=invoc;
         this.relationType=relation;
+        this.currentScope=currentScope;
     }
 }
 
