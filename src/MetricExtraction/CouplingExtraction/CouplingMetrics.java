@@ -203,7 +203,7 @@ public class CouplingMetrics extends javaBaseListener {
         }
 
         if(primaryname!=null) {
-            if (primaryname.currentscope.getScopeName().equals("Class")) {
+            if (primaryname.currentscope.getScopeName().equals("Class") ) {
                 relation = Invoc.RelationType.ASSOSIATION;
             } else if ((primaryname.currentscope.getClass().getName().equals("Symbols.MethodSymbol"))) {
                 if (((MethodSymbol) primaryname.currentscope).returntype.equals(VariableSymbol.TYPE.TCONSTRUCTOR))

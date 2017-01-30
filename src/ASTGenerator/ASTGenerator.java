@@ -107,7 +107,8 @@ public class  ASTGenerator {
                 CohesionMetrics cohesinextractor=new CohesionMetrics(symboltableextractor.globals,symboltableextractor.Scopes,couplingextractor.objectinstances,importlist);
                 ParseTreeWalker.DEFAULT.walk(cohesinextractor,tree);
 
-
+                Defectdensitymetrics defectdensityextractor=new Defectdensitymetrics(symboltableextractor.globals,symboltableextractor.Scopes);
+                ParseTreeWalker.DEFAULT.walk(defectdensityextractor,tree);
 
 
 

@@ -78,6 +78,7 @@ public class classlevelmetrics2 extends javaBaseListener {
         allmethodmetrics.addAll(metriclist1.get("privatemethods"));}
         //----------------------------------------------------------------
         // number of overrideded methods
+        // az ebteda ta entehay in for baray mohasebey override ast
 
 
         for (int i = 0; i < inheritancelist.size(); i++) {
@@ -91,105 +92,102 @@ public class classlevelmetrics2 extends javaBaseListener {
                 }
             }
 
-            //for (String value2 : metriclist2.keySet()) {
-            //  String name = value2;
-            //   switch (name) {
-            //case "publicmethods":
+
             boolean oveeride=true;
             int count1=0;
-            Iterator<String> it = metriclist2.get("publicmethods").iterator();
+            if(!metriclist2.isEmpty()) {
+                Iterator<String> it = metriclist2.get("publicmethods").iterator();
 
 
-            while (it.hasNext()) {
-                try {
-                    String s = it.next();
-                    for (int m = 0; m < allmethodmetrics.size(); m++) {
+                while (it.hasNext()) {
+                    try {
+                        String s = it.next();
+                        for (int m = 0; m < allmethodmetrics.size(); m++) {
 
-                        if (s.equals(allmethodmetrics.get(m))) {
-                            if (overridedmethods.isEmpty()) {
-                                overridedmethods.add(s);
-                                overridedmethod++;
-                            }
-                            //m1=true;
-                            for (int j = 0; j < overridedmethods.size(); j++) {
-                                if (s.equals(overridedmethods.get(j))) {
-                                    count1 = 1;
-                                    break;
-
+                            if (s.equals(allmethodmetrics.get(m))) {
+                                if (overridedmethods.isEmpty()) {
+                                    overridedmethods.add(s);
+                                    overridedmethod++;
 
                                 }
-                            }
-                            if(count1==0)
-                                oveeride=false;
-                            if (!oveeride) {
-                                overridedmethod++;
-                                overridedmethods.add(s);
+                                //m1=true;
+                                for (int j = 0; j < overridedmethods.size(); j++) {
+                                    if (s.equals(overridedmethods.get(j))) {
+                                        count1 = 1;
+                                        break;
 
-                            }
-                            oveeride = true;
-                            count1 = 0;
 
-                            break;
+                                    }
+                                }
+                                if (count1 == 0)
+                                    oveeride = false;
+                                if (!oveeride) {
+                                    overridedmethod++;
+                                    overridedmethods.add(s);
+
+                                }
+                                oveeride = true;
+                                count1 = 0;
+
+                                break;
+                            }
                         }
-                    }
 
 
-
-
-                }
-                 catch(Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
 
-
-
-
-            // case "protectedmethods":
-
-            Iterator<String> it7 = metriclist2.get("protectedmethods").iterator();
-
-
-            while (it7.hasNext()) {
-                try {
-                    String s = it7.next();
-                    for (int m = 0; m < allmethodmetrics.size(); m++) {
-
-                        if (s.equals(allmethodmetrics.get(m))) {
-                            if (overridedmethods.isEmpty()) {
-                                overridedmethods.add(s);
-                                overridedmethod++;
-                            }
-                            //m1=true;
-                            for (int j = 0; j < overridedmethods.size(); j++) {
-                                if (s.equals(overridedmethods.get(j))) {
-                                    count1 = 1;
-                                    break;
-
-
-                                }
-                            }
-                            if(count1==0)
-                                oveeride=false;
-                            if (!oveeride) {
-                                overridedmethod++;
-                                overridedmethods.add(s);
-
-                            }
-                            oveeride = true;
-                            oveeride=true;
-                            count1 = 0;
-
-                            break;
-                        }
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             }
 
+
+
+            if(!metriclist2.isEmpty()) {
+
+                Iterator<String> it7 = metriclist2.get("protectedmethods").iterator();
+
+
+                while (it7.hasNext()) {
+                    try {
+                        String s = it7.next();
+                        for (int m = 0; m < allmethodmetrics.size(); m++) {
+
+                            if (s.equals(allmethodmetrics.get(m))) {
+                                if (overridedmethods.isEmpty()) {
+                                    overridedmethods.add(s);
+                                    overridedmethod++;
+                                }
+                                //m1=true;
+                                for (int j = 0; j < overridedmethods.size(); j++) {
+                                    if (s.equals(overridedmethods.get(j))) {
+                                        count1 = 1;
+                                        break;
+
+
+                                    }
+                                }
+                                if (count1 == 0)
+                                    oveeride = false;
+                                if (!oveeride) {
+                                    overridedmethod++;
+                                    overridedmethods.add(s);
+
+                                }
+                                oveeride = true;
+
+                                count1 = 0;
+
+                                break;
+                            }
+                        }
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
 
         }
 
@@ -204,6 +202,7 @@ public class classlevelmetrics2 extends javaBaseListener {
 
 
         //------------------------------------------------------------------------
+        //az ebteda ta entehay in halghey for baray mohasebey method hay ers borde shode az class digar ast
         for (int i = 0; i < inheritancelist.size(); i++) {
             for (Symbol value : Staticlistclasslevelmetrics.lisofclasses.keySet()) {
                 Symbol classname1 = value;
@@ -234,90 +233,92 @@ public class classlevelmetrics2 extends javaBaseListener {
             //  String name = value2;
             //   switch (name) {
             //case "publicmethods":
-            Iterator<String> it = metriclist2.get("publicmethods").iterator();
+            if(!metriclist2.isEmpty()) {
+                Iterator<String> it = metriclist2.get("publicmethods").iterator();
 
 
-            while (it.hasNext()) {
-                try {
-                    String s = it.next();
-                    for (int m = 0; m < allmethodmetrics.size(); m++) {
+                while (it.hasNext()) {
+                    try {
+                        String s = it.next();
+                        for (int m = 0; m < allmethodmetrics.size(); m++) {
 
-                        if (s.equals(allmethodmetrics.get(m))) {
-                            //m1=true;
-                            count = 1;
+                            if (s.equals(allmethodmetrics.get(m))) {
+                                //m1=true;
+                                count = 1;
 
-                            break;
+                                break;
+                            }
+
+
                         }
-
-
-                    }
-                    if (count == 0) {
-                        m1 = true;
-                    }
-                    methodname = s;
-
-
-                    if (m1) {
-                      //  System.out.println("tttttttttttttttttttttttt" + methodname);
-                        if(metriclist1.get("publicmethods")==null){
-                            metriclist1.put("publicmethods",new ArrayList<String>());
+                        if (count == 0) {
+                            m1 = true;
                         }
-                        metriclist1.get("publicmethods").add(methodname);
-                        // break;
+                        methodname = s;
+
+
+                        if (m1) {
+                            //  System.out.println("tttttttttttttttttttttttt" + methodname);
+                            if (metriclist1.get("publicmethods") == null) {
+                                metriclist1.put("publicmethods", new ArrayList<String>());
+                            }
+                            metriclist1.get("publicmethods").add(methodname);
+                            // break;
+                        }
+                        m1 = false;
+                        count = 0;
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    m1=false;
-                    count=0;
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
+
             }
-
-
             // case "protectedmethods":
+            if(!metriclist2.isEmpty()) {
 
-            Iterator<String> it7 = metriclist2.get("protectedmethods").iterator();
+                Iterator<String> it7 = metriclist2.get("protectedmethods").iterator();
 
 
-            while (it7.hasNext()) {
-                try {
-                    String s = it7.next();
-                    for (int m = 0; m < allmethodmetrics.size(); m++) {
-                        if (s.equals(allmethodmetrics.get(m))) {
-                            count = 1;
+                while (it7.hasNext()) {
+                    try {
+                        String s = it7.next();
+                        for (int m = 0; m < allmethodmetrics.size(); m++) {
+                            if (s.equals(allmethodmetrics.get(m))) {
+                                count = 1;
 
-                            break;
+                                break;
+                            }
                         }
-                    }
 
-                    if (count == 0) {
-                        m1 = true;
-                    }
-                    methodname = s;
-
-                    if (m1) {
-                       // System.out.println("tttttttttttttttttttttttt" + methodname);
-                        if(metriclist1.get("protectedmethods")==null){
-                            metriclist1.put("protectedmethods",new ArrayList<String>());
+                        if (count == 0) {
+                            m1 = true;
                         }
-                        metriclist1.get("protectedmethods").add(methodname);
-                        // break;
+                        methodname = s;
 
+                        if (m1) {
+                            // System.out.println("tttttttttttttttttttttttt" + methodname);
+                            if (metriclist1.get("protectedmethods") == null) {
+                                metriclist1.put("protectedmethods", new ArrayList<String>());
+                            }
+                            metriclist1.get("protectedmethods").add(methodname);
+                            // break;
+
+                        }
+                        m1 = false;
+                        count = 0;
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    m1=false;
-                    count=0;
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
-
 
         }
 
 
-    String variablena,e;
+    String variablenae;
 
 
-    //attribute inheritance
+    // calculate attribute inheritance
     for (Symbol value : Staticlistclasslevelmetrics.lisofclasses.keySet()) {
         Symbol classname1 = value;
 
@@ -365,83 +366,83 @@ public class classlevelmetrics2 extends javaBaseListener {
         //  String name = value2;
         //   switch (name) {
         //case "publicmethods":
-        Iterator<String> it8 = metriclist2.get("publicvariables").iterator();
+            if(!metriclist2.isEmpty()) {
+                Iterator<String> it8 = metriclist2.get("publicvariables").iterator();
 
-        while (it8.hasNext()) {
-            try {
-                String s = it8.next();
-                for (int m = 0; m < allmethodmetrics.size(); m++) {
+                while (it8.hasNext()) {
+                    try {
+                        String s = it8.next();
+                        for (int m = 0; m < allmethodmetrics.size(); m++) {
 
-                    if (s.equals(allmethodmetrics.get(m))) {
-                        //m1=true;
-                        count = 1;
-                        break;
+                            if (s.equals(allmethodmetrics.get(m))) {
+                                //m1=true;
+                                count = 1;
+                                break;
+                            }
+
+
+                        }
+                        if (count == 0) {
+                            m1 = true;
+                        }
+                        methodname = s;
+
+
+                        if (m1) {
+                            //  System.out.println("tttttttttttttttttttttttt" + methodname);
+                            if (metriclist1.get("publicvariables") == null) {
+                                metriclist1.put("publicvariables", new ArrayList<String>());
+                            }
+                            metriclist1.get("publicvariables").add(methodname);
+                            // break;
+                        }
+                        m1 = false;
+                        count = 0;
+
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
                     }
-
-
                 }
-                if (count == 0) {
-                    m1 = true;
-                }
-                methodname = s;
-
-
-                if (m1) {
-                    //  System.out.println("tttttttttttttttttttttttt" + methodname);
-                    if (metriclist1.get("publicvariables") == null) {
-                        metriclist1.put("publicvariables", new ArrayList<String>());
-                    }
-                    metriclist1.get("publicvariables").add(methodname);
-                    // break;
-                }
-                m1 = false;
-                count = 0;
-
             }
-            catch (Exception e1) {
-                e1.printStackTrace();
-            }
-        }
-
 
         // case "protectedmethods":
+            if(!metriclist2.isEmpty()) {
 
-        Iterator<String> it9 = metriclist2.get("protectedvariables").iterator();
+                Iterator<String> it9 = metriclist2.get("protectedvariables").iterator();
 
 
-        while (it9.hasNext()) {
-            try {
-                String s = it9.next();
-                for (int m = 0; m < allmethodmetrics.size(); m++) {
-                    if (s.equals(allmethodmetrics.get(m))) {
-                        count = 1;
-                        break;
+                while (it9.hasNext()) {
+                    try {
+                        String s = it9.next();
+                        for (int m = 0; m < allmethodmetrics.size(); m++) {
+                            if (s.equals(allmethodmetrics.get(m))) {
+                                count = 1;
+                                break;
+                            }
+                        }
+
+                        if (count == 0) {
+                            m1 = true;
+                        }
+                        methodname = s;
+
+                        if (m1) {
+                            // System.out.println("tttttttttttttttttttttttt" + methodname);
+                            if (metriclist1.get("protectedvariables") == null) {
+                                metriclist1.put("protectedvariables", new ArrayList<String>());
+                            }
+                            metriclist1.get("protectedvariables").add(methodname);
+                            // break;
+
+                        }
+                        m1 = false;
+                        count = 0;
+                    } catch (Exception e2) {
+                        e2.printStackTrace();
                     }
                 }
 
-                if (count == 0) {
-                    m1 = true;
-                }
-                methodname = s;
-
-                if (m1) {
-                    // System.out.println("tttttttttttttttttttttttt" + methodname);
-                    if(metriclist1.get("protectedvariables")==null){
-                        metriclist1.put("protectedvariables",new ArrayList<String>());
-                    }
-                    metriclist1.get("protectedvariables").add(methodname);
-                    // break;
-
-                }
-                m1=false;
-                count=0;
             }
-            catch (Exception e2) {
-                e2.printStackTrace();
-            }
-        }
-
-
     }
 }
 
@@ -449,6 +450,8 @@ public class classlevelmetrics2 extends javaBaseListener {
 
         System.out.println("number of overrided methods is:"+overridedmethod);
         System.out.println("list of overrided methods is:"+overridedmethods);
+        overridedmethod=0;
+        overridedmethods.clear();
     }
 
 

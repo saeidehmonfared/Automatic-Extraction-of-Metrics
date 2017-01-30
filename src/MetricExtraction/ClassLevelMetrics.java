@@ -182,6 +182,10 @@ public class ClassLevelMetrics extends javaBaseListener{
     }
 
     @Override public void exitNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx) {
+
+        ///fekr mikonam hadaf inja mohasebey overload hast
+
+        //TODO:number of overload of on method should be calculat
         int count=0;
         boolean b=true;
         for(int i=0;i<allofmethods.size();i++){
@@ -214,8 +218,8 @@ public class ClassLevelMetrics extends javaBaseListener{
 
             }
         }
-        System.out.println("number of overrided methods:"+numberofoverridemethods);
-        System.out.println("list of overrided methods:"+overridedmethods);
+        System.out.println("number of overloaded methods:"+numberofoverridemethods);
+        System.out.println("list of overloaded methods:"+overridedmethods);
 
     }
 
@@ -354,8 +358,8 @@ public class ClassLevelMetrics extends javaBaseListener{
 
         }
 
-        System.out.println("number of overrided methods:" + numberofoverridemethods);
-        System.out.println("list of overrided methods:" + overridedmethods);
+        System.out.println("number of overloaded methods:" + numberofoverridemethods);
+        System.out.println("list of overloaded methods:" + overridedmethods);
     }
 
 

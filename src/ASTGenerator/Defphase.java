@@ -86,20 +86,20 @@ public class Defphase extends javaBaseListener {
        //**// System.out.println("coupling is from this symbols:"+refrences);
         //**//System.out.println("objectinstance list is:");
         Iterator<Object> it=objectinstances.iterator();
-        while (it.hasNext()){
-            Object s=it.next();
+        //while (it.hasNext()){
+          //  Object s=it.next();
 
-           System.out.println("objectinstansec:\n"+s.classname+" "+s.symbol+" "+s.currentscope.getScopeName());
-        }
+          // System.out.println("objectinstansec:\n"+s.classname+" "+s.symbol+" "+s.currentscope.getScopeName());
+       // }
 
         //System.out.println(StaticList.staticlist);
 
-        Iterator<Symbol> it1=StaticList.staticlist.values().iterator();
-        while (it.hasNext()){
-            Symbol s=it1.next();
+        //Iterator<Symbol> it1=StaticList.staticlist.values().iterator();
+        //while (it1.hasNext()){
+          //  Symbol s=it1.next();
 
            // System.out.println(s.name+"   "+s.accessmodifier+"   "+s.type+"   "+s.packagename);
-        }
+     //   }
 
 
         //System.out.println(objectinstances+"5555555555555555555");
