@@ -37,7 +37,7 @@ import Scopes.*;
 public class Defphase extends javaBaseListener {
     ParseTreeProperty<Scope> Scopes = new ParseTreeProperty<Scope>();
     ParseTreeProperty<VariableSymbol.TYPE> Types = new ParseTreeProperty<VariableSymbol.TYPE>();
-    ParseTreeProperty<String> nameoftypes=new ParseTreeProperty<String>();
+    public ParseTreeProperty<String> nameoftypes=new ParseTreeProperty<String>();
     public Map<Symbol, String> refrences = new LinkedHashMap<Symbol, String>();
     public ArrayList<Object>objectinstances=new ArrayList<Object>();
 
@@ -88,12 +88,13 @@ public class Defphase extends javaBaseListener {
 
        //**// System.out.println("coupling is from this symbols:"+refrences);
         //**//System.out.println("objectinstance list is:");
-        Iterator<Object> it=objectinstances.iterator();
-        //while (it.hasNext()){
-          //  Object s=it.next();
 
-          // System.out.println("objectinstansec:\n"+s.classname+" "+s.symbol+" "+s.currentscope.getScopeName());
-       // }
+       // Iterator<Object> it=objectinstances.iterator();
+       //while (it.hasNext()){
+          // Object s=it.next();
+
+         // System.out.println("objectinstansec:\n"+s.classname+" "+s.symbol+" "+s.currentscope.getScopeName());
+       //}
 
         //System.out.println(StaticList.staticlist);
 
@@ -425,7 +426,8 @@ public class Defphase extends javaBaseListener {
     @Override public void exitResultunannType(javaParser.ResultunannTypeContext ctx) {
         methodresult=getValue(ctx.unannType());
         if(methodresult.equals(VariableSymbol.TYPE.TREFRENCE)){
-        methodresulttype=ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();}
+       // methodresulttype=ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();}
+            methodresulttype=getnameoftypes(ctx.getChild(0));
 
     }
 
@@ -482,14 +484,15 @@ public class Defphase extends javaBaseListener {
         Symbol.AccessModifier accesstype = null;
 
             m = ctx.variableDeclaratorId().getText();
-            VariableSymbol.TYPE type = getValue(ctx.getChild(0));
+            VariableSymbol.TYPE type = getValue(ctx.unannType());
 
             VariableSymbol v = new VariableSymbol(m, variablemodifier, type);
 
 
         if(type.equals(VariableSymbol.TYPE.TREFRENCE)){
 
-            String s=ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().Identifier().getText();
+           // String s=ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().Identifier().getText();
+            String s=getnameoftypes(ctx.unannType());
 
             if(!(s.equals("String"))){
             refrences.put(v,s);
@@ -509,6 +512,8 @@ public class Defphase extends javaBaseListener {
         }
        // System.out.println(currentscope+"kojaaaaaaaaaaaim");
             currentscope.define(v);
+
+
             // System.out.println(type);
 
             // System.out.println(currentscope);
@@ -526,7 +531,8 @@ public class Defphase extends javaBaseListener {
 
         if(type.equals(VariableSymbol.TYPE.TREFRENCE)){
 
-           String s=ctx.formalParameter().unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();
+          // String s=ctx.formalParameter().unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();
+            String s=getnameoftypes(ctx.formalParameter().unannType());
 
             if(!(s.equals("String"))){
             refrences.put(v,s);}
@@ -598,12 +604,25 @@ public class Defphase extends javaBaseListener {
     @Override public void exitUnannArrayType(javaParser.UnannArrayTypeContext ctx) {
         VariableSymbol.TYPE type = getValue(ctx.getChild(0));
         setValue(ctx,type);
+        String name=getnameoftypes(ctx.getChild(0));
+        setnameoftypes(ctx,name);
 
 
 
     }
+    //---------------------------------------------------------------------------------------
+    @Override public void enterUnannTypeVariable(javaParser.UnannTypeVariableContext ctx) { }
 
-    @Override
+    @Override public void exitUnannTypeVariable(javaParser.UnannTypeVariableContext ctx) {
+        int t =ctx.start.getType();
+
+        VariableSymbol.TYPE type=CheckVariableSymbol.getType(t);
+        setValue(ctx,type);
+
+
+    }
+
+    //--------------------------------------------------------------
     public void enterBlock(javaParser.BlockContext ctx) {
         saveScope(ctx, currentscope);
         currentscope = new BlockScope(currentscope);
@@ -656,7 +675,8 @@ public class Defphase extends javaBaseListener {
         fielsmodifier.add(Symbol.AccessModifier.tpublic);
         VariableSymbol var = new VariableSymbol(name, fielsmodifier, type);
         if(type.equals(VariableSymbol.TYPE.TREFRENCE)  ){
-            String s=ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();
+           // String s=ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();
+            String s=getnameoftypes(ctx.unannType());
             if(!(s.equals("String"))){
             refrences.put(var,s);}
             Scope myscope;
@@ -703,7 +723,8 @@ public class Defphase extends javaBaseListener {
         VariableSymbol var = new VariableSymbol(varname, fielsmodifier, type);
 
         if(type==VariableSymbol.TYPE.TREFRENCE){
-            String s=ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();
+          //  String s=ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();
+            String s=getnameoftypes(ctx.unannType());
             if(!(s.equals("String"))){
             refrences.put(var,s);}
             Scope myscope;
@@ -747,7 +768,8 @@ public class Defphase extends javaBaseListener {
         VariableSymbol var = new VariableSymbol(varname, variablemodifier, type);
         if(type.equals(VariableSymbol.TYPE.TREFRENCE)){
 
-            String s=ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().Identifier().getText();
+           // String s=ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().Identifier().getText();
+            String s=getnameoftypes(ctx.unannType());
             if(!(s.equals("String"))){
             refrences.put(var,s);}
             Scope myscope;
@@ -790,6 +812,8 @@ public class Defphase extends javaBaseListener {
     public void exitUnannType(javaParser.UnannTypeContext ctx) {
         VariableSymbol.TYPE type = getValue(ctx.getChild(0));
         setValue(ctx,type);
+        String name=getnameoftypes(ctx.getChild(0));
+        setnameoftypes(ctx,name);
 
     }
 
@@ -805,6 +829,8 @@ public class Defphase extends javaBaseListener {
         VariableSymbol.TYPE type=CheckVariableSymbol.getType(t);
         setValue(ctx,type);
        // System.out.println(type);
+        String name=ctx.getText();
+        setnameoftypes(ctx,name);
 
     }
     //-----------------------------------------------------------------------------
@@ -815,8 +841,12 @@ public class Defphase extends javaBaseListener {
     @Override public void exitUnannReferenceType(javaParser.UnannReferenceTypeContext ctx) {
         VariableSymbol.TYPE type = getValue(ctx.getChild(0));
         setValue(ctx,type);
+        String name=getnameoftypes(ctx.getChild(0));
+        setnameoftypes(ctx,name);
         //System.out.println(type);
     }
+    //----------------------------------------------------------------------------------
+
 
     //------------------------------------------------------------------------------
     @Override public void enterUnannClassOrInterfaceType(javaParser.UnannClassOrInterfaceTypeContext ctx) { }
@@ -825,6 +855,8 @@ public class Defphase extends javaBaseListener {
         VariableSymbol.TYPE type = getValue(ctx.getChild(0));
         setValue(ctx,type);
         //System.out.println(type);
+        String name=getnameoftypes(ctx.getChild(0));
+        setnameoftypes(ctx,name);
 
     }
 
@@ -838,7 +870,7 @@ public class Defphase extends javaBaseListener {
         VariableSymbol.TYPE type=CheckVariableSymbol.getType(t);
         setValue(ctx,type);
         String name=ctx.Identifier().getText();
-        setnameoftypes();
+        setnameoftypes(ctx,name);
 
     }
     //--------------------------------------------------------------------------------------

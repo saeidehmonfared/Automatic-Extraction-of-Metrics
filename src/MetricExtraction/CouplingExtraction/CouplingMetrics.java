@@ -366,6 +366,27 @@ public class CouplingMetrics extends javaBaseListener {
             }
         }
 
+        if(primaryname==null){
+            boolean f=false;
+            Symbol s0=null;
+            for (Symbol value1 : importlistofclass.values()) {
+                s0 = value1;
+                if (s0.name.equals(objectname)) {
+                    for(int i=0;i<s0.accessmodifier.size();i++){
+                        if(s0.accessmodifier.get(i).equals(Symbol.AccessModifier.TSTATIC)) {
+                            f = true;
+                            break;
+                        }
+
+                    }
+                    relation=Invoc.RelationType.STATICMETHOD;
+                    f=false;
+                    break;
+                }
+            }
+
+        }
+
         if(primaryname!=null) {
             if (primaryname.currentscope.getScopeName().equals("Class")) {
                 relation = Invoc.RelationType.ASSOSIATION;
@@ -473,6 +494,7 @@ public class CouplingMetrics extends javaBaseListener {
 
     Object primaryname=null;
 
+
     Iterator<Object> it01 = kandidlist.iterator();
     while (it01.hasNext()) {
         Object name2 = it01.next();
@@ -481,11 +503,14 @@ public class CouplingMetrics extends javaBaseListener {
         if ((name2.symbol.name.equals(objectname))&&(name2.currentscope.getScopeName().equals(currentScope.getScopeName()))) {
 
             primaryname = name2;
-            break;}
-
-
-
+            break;
+        }
+        else if(objectname.equals(name2.symbol.name)){
+            primaryname=name2;
+            break;
+        }
     }
+
     if(primaryname==null){
 
         Iterator<Object> it02 = kandidlist.iterator();
@@ -501,6 +526,26 @@ public class CouplingMetrics extends javaBaseListener {
 
 
         }
+    }
+    if(primaryname==null){
+        boolean f=false;
+        Symbol s0=null;
+        for (Symbol value1 : importlistofclass.values()) {
+            s0 = value1;
+            if (s0.name.equals(objectname)) {
+                for(int i=0;i<s0.accessmodifier.size();i++){
+                    if(s0.accessmodifier.get(i).equals(Symbol.AccessModifier.TSTATIC)) {
+                        f = true;
+                        break;
+                    }
+
+                }
+               relation=Invoc.RelationType.STATICMETHOD;
+                f=false;
+                break;
+            }
+            }
+
     }
     if(primaryname!=null) {
         if (primaryname.currentscope.getScopeName().equals("Class")) {

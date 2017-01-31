@@ -68,8 +68,14 @@ public class Defectdensitymetrics extends javaBaseListener {
 
     @Override public void exitMethodDeclaration(javaParser.MethodDeclarationContext ctx) {
 
-        Classcatchslist.put(((Symbol)currentscope),Integer.toString(numberofcatchClause));
-        numberofcatchClause=0;
+
+        Scope myscope=currentscope.getEnclosingScope();
+        while (myscope.getClass().getName().equals("Block")){
+            myscope=myscope.getEnclosingScope();
+        }
+if(myscope.getClass().getName().equals("Symbols.Method")){
+        Classcatchslist.put(((Symbol)myscope),Integer.toString(numberofcatchClause));
+        numberofcatchClause=0;}
 
         currentscope=currentscope.getEnclosingScope();
     }

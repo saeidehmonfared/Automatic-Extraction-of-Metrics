@@ -25,8 +25,9 @@ public class PackageLevelMetrics {
 
     public void ListofPackages(){
 
+
         Iterator<Symbol> it = StaticList.staticlist.values().iterator();
-        Symbol s1=it.next();
+        //Symbol s1=it.next();
         //listofpackages.add(s1.packagename);
         boolean b=true;
         while (it.hasNext()) {

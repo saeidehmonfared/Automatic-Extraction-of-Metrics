@@ -33,6 +33,7 @@ public class CohesionMetrics extends javaBaseListener {
     Map<String,ArrayList<String>>methodcalls=new LinkedHashMap<String,ArrayList<String>>();
     public ArrayList<Object> objectinstances = new ArrayList<Object>();
     Map<String, Symbol> importlistofclass = new LinkedHashMap<String, Symbol>();
+    ParseTreeProperty<String>nameoftypes=new ParseTreeProperty<String>();
 
 
     public void setValue(ParseTree ctx, VariableSymbol.TYPE value) {
@@ -44,11 +45,12 @@ public class CohesionMetrics extends javaBaseListener {
     }
 
 
-    public CohesionMetrics(GlobalScope globals, ParseTreeProperty<Scope> scopes,ArrayList<Object>objectinsatnce,Map<String,Symbol>importlistofclass) {
+    public CohesionMetrics(GlobalScope globals, ParseTreeProperty<Scope> scopes,ArrayList<Object>objectinsatnce,Map<String,Symbol>importlistofclass,ParseTreeProperty<String>nameoftypes) {
         this.globals = globals;
         this.scopes = scopes;
         this.objectinstances=objectinsatnce;
         this.importlistofclass=importlistofclass;
+        this.nameoftypes=nameoftypes;
 
     }
 
@@ -62,8 +64,8 @@ public class CohesionMetrics extends javaBaseListener {
     }
 
     public void exitCompilationUnit(javaParser.CompilationUnitContext ctx) {
-        System.out.println("All of methods with distinict parameters:");
-        System.out.println(Allofmethods);
+        //**//System.out.println("All of methods with distinict parameters:");
+        //**//System.out.println(Allofmethods);
 
 
     }
@@ -287,25 +289,26 @@ public class CohesionMetrics extends javaBaseListener {
     public void exitFormalParameter(javaParser.FormalParameterContext ctx) {
 
         String m = ctx.variableDeclaratorId().getText();
-        VariableSymbol.TYPE type = getValue(ctx.getChild(0));
+        VariableSymbol.TYPE type = getValue(ctx.unannType());
 
         VariableSymbol v = new VariableSymbol(m, variablemodifier, type);
 
+if(type!=null) {
+    if (type.equals(VariableSymbol.TYPE.TREFRENCE)) {
 
-        if (type.equals(VariableSymbol.TYPE.TREFRENCE)) {
+        String s = ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().Identifier().getText();
 
-            String s = ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().Identifier().getText();
 
-            argumentlist.put(s, v);
-            // System.out.println(type);
+        argumentlist.put(s, v);
+        // System.out.println(type);
 
-            // System.out.println(currentscope);
-            //currentscope = currentscope.getEnclosingScope();
+        // System.out.println(currentscope);
+        //currentscope = currentscope.getEnclosingScope();
 
-        }
-        else if(!(type.equals(VariableSymbol.TYPE.TREFRENCE))){
-            argumentlist.put(v.name,v);
-        }
+    } else if (!(type.equals(VariableSymbol.TYPE.TREFRENCE))) {
+        argumentlist.put(v.name, v);
+    }
+}
     }
 
     //----------------------------------------------------------------

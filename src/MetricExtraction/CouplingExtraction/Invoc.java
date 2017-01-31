@@ -8,7 +8,7 @@ import Scopes.Scope;
 public class Invoc {
     public static enum InvocType {METHODINVOC, ATTRIBUTEINVOC};
 
-    public static enum RelationType {ASSOSIATION, DEPENDENCY,INVALID};
+    public static enum RelationType {ASSOSIATION, DEPENDENCY,INVALID,STATICMETHOD};
 
     InvocType invoctype;
     RelationType relationType;

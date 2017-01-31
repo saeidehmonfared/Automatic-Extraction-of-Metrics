@@ -104,7 +104,7 @@ public class  ASTGenerator {
                 //**##**System.out.println("importlistofclass is:"+importlist);
                 CouplingMetrics couplingextractor=new CouplingMetrics(symboltableextractor.globals,symboltableextractor.Scopes,symboltableextractor.refrences,importlist,InheritanceExtractor.Inheritancelistofclass,symboltableextractor.objectinstances);
                 ParseTreeWalker.DEFAULT.walk(couplingextractor,tree);
-                CohesionMetrics cohesinextractor=new CohesionMetrics(symboltableextractor.globals,symboltableextractor.Scopes,couplingextractor.objectinstances,importlist);
+                CohesionMetrics cohesinextractor=new CohesionMetrics(symboltableextractor.globals,symboltableextractor.Scopes,couplingextractor.objectinstances,importlist,symboltableextractor.nameoftypes);
                 ParseTreeWalker.DEFAULT.walk(cohesinextractor,tree);
 
                 Defectdensitymetrics defectdensityextractor=new Defectdensitymetrics(symboltableextractor.globals,symboltableextractor.Scopes);
