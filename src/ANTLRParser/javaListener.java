@@ -2348,25 +2348,41 @@ public interface javaListener extends ParseTreeListener {
 	 */
 	void exitAssignmentExpression(javaParser.AssignmentExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link javaParser#assignment}.
+	 * Enter a parse tree produced by the {@code assignment1}
+	 * labeled alternative in {@link javaParser#assignment}.
 	 * @param ctx the parse tree
 	 */
-	void enterAssignment(javaParser.AssignmentContext ctx);
+	void enterAssignment1(javaParser.Assignment1Context ctx);
 	/**
-	 * Exit a parse tree produced by {@link javaParser#assignment}.
+	 * Exit a parse tree produced by the {@code assignment1}
+	 * labeled alternative in {@link javaParser#assignment}.
 	 * @param ctx the parse tree
 	 */
-	void exitAssignment(javaParser.AssignmentContext ctx);
+	void exitAssignment1(javaParser.Assignment1Context ctx);
 	/**
-	 * Enter a parse tree produced by {@link javaParser#leftHandSide}.
+	 * Enter a parse tree produced by the {@code assignment2}
+	 * labeled alternative in {@link javaParser#assignment}.
 	 * @param ctx the parse tree
 	 */
-	void enterLeftHandSide(javaParser.LeftHandSideContext ctx);
+	void enterAssignment2(javaParser.Assignment2Context ctx);
 	/**
-	 * Exit a parse tree produced by {@link javaParser#leftHandSide}.
+	 * Exit a parse tree produced by the {@code assignment2}
+	 * labeled alternative in {@link javaParser#assignment}.
 	 * @param ctx the parse tree
 	 */
-	void exitLeftHandSide(javaParser.LeftHandSideContext ctx);
+	void exitAssignment2(javaParser.Assignment2Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code assignment3}
+	 * labeled alternative in {@link javaParser#assignment}.
+	 * @param ctx the parse tree
+	 */
+	void enterAssignment3(javaParser.Assignment3Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code assignment3}
+	 * labeled alternative in {@link javaParser#assignment}.
+	 * @param ctx the parse tree
+	 */
+	void exitAssignment3(javaParser.Assignment3Context ctx);
 	/**
 	 * Enter a parse tree produced by {@link javaParser#assignmentOperator}.
 	 * @param ctx the parse tree

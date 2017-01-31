@@ -2763,25 +2763,37 @@ public class javaBaseListener implements javaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAssignment(javaParser.AssignmentContext ctx) { }
+	@Override public void enterAssignment1(javaParser.Assignment1Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAssignment(javaParser.AssignmentContext ctx) { }
+	@Override public void exitAssignment1(javaParser.Assignment1Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLeftHandSide(javaParser.LeftHandSideContext ctx) { }
+	@Override public void enterAssignment2(javaParser.Assignment2Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLeftHandSide(javaParser.LeftHandSideContext ctx) { }
+	@Override public void exitAssignment2(javaParser.Assignment2Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAssignment3(javaParser.Assignment3Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAssignment3(javaParser.Assignment3Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

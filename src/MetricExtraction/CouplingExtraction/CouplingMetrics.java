@@ -301,17 +301,14 @@ public class CouplingMetrics extends javaBaseListener {
     public void exitExpertionName2(javaParser.ExpertionName2Context ctx) {
     }
     //------------------------------------------------------------------------------
+    @Override public void enterAssignment1(javaParser.Assignment1Context ctx) { }
 
-    @Override public void enterAssignment(javaParser.AssignmentContext ctx) {
-
-
-    }
-    @Override public void exitAssignment(javaParser.AssignmentContext ctx) {
+    @Override public void exitAssignment1(javaParser.Assignment1Context ctx) {
 
         assignmentname=null;
-        leftofassignment=ctx.leftHandSide().expressionName().getText();
-
+        leftofassignment=ctx.expressionName().getText();
     }
+    //---------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------------
 

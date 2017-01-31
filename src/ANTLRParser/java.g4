@@ -1150,14 +1150,12 @@ assignmentExpression
 	;
 
 assignment
-	:	leftHandSide assignmentOperator expression
+	:	expressionName assignmentOperator expression # assignment1
+	|   fieldAccess    assignmentOperator expression # assignment2
+	|   arrayAccess    assignmentOperator expression # assignment3
 	;
 
-leftHandSide
-	:	expressionName
-	|	fieldAccess
-	|	arrayAccess
-	;
+
 
 assignmentOperator
 	:	'='

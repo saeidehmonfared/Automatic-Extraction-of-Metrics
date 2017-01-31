@@ -37,6 +37,7 @@ import Scopes.*;
 public class Defphase extends javaBaseListener {
     ParseTreeProperty<Scope> Scopes = new ParseTreeProperty<Scope>();
     ParseTreeProperty<VariableSymbol.TYPE> Types = new ParseTreeProperty<VariableSymbol.TYPE>();
+    ParseTreeProperty<String> nameoftypes=new ParseTreeProperty<String>();
     public Map<Symbol, String> refrences = new LinkedHashMap<Symbol, String>();
     public ArrayList<Object>objectinstances=new ArrayList<Object>();
 
@@ -70,6 +71,8 @@ public class Defphase extends javaBaseListener {
     public VariableSymbol.TYPE getValue(ParseTree ctx) {
         return Types.get(ctx);
     }
+    public void setnameoftypes(ParseTree ctx,String typename){nameoftypes.put(ctx,typename);}
+    public String getnameoftypes(ParseTree ctx){ return nameoftypes.get(ctx);}
 
 
     @Override
@@ -544,9 +547,10 @@ public class Defphase extends javaBaseListener {
     }
     //------------------------------------------------------------------------
 
-    @Override public void enterAssignment(javaParser.AssignmentContext ctx) { }
-    @Override public void exitAssignment(javaParser.AssignmentContext ctx) {
-        String name=ctx.leftHandSide().expressionName().getText();
+    @Override public void enterAssignment1(javaParser.Assignment1Context ctx) { }
+
+    @Override public void exitAssignment1(javaParser.Assignment1Context ctx) {
+        String name=ctx.expressionName().getText();
         VariableSymbol v=new VariableSymbol(name,variablemodifier,VariableSymbol.TYPE.TREFRENCE);
         Scope myscope;
         myscope=currentscope;
@@ -559,7 +563,21 @@ public class Defphase extends javaBaseListener {
         assignmentname=null;
 
     }
+    //-------------------------------------------------------------------------------
 
+
+
+    //----------------------------------------------------------------------
+
+
+
+    //----------------------------------------------------------------
+    String expertionname="";
+    @Override public void enterExpertionName1(javaParser.ExpertionName1Context ctx) { }
+
+    @Override public void exitExpertionName1(javaParser.ExpertionName1Context ctx) {
+        expertionname=ctx.getText();
+    }
 
     //----------------------------------------------------------------------
     @Override public void enterClassInstanceCreationExpression_lfno_primary(javaParser.ClassInstanceCreationExpression_lfno_primaryContext ctx) {
@@ -819,6 +837,8 @@ public class Defphase extends javaBaseListener {
 
         VariableSymbol.TYPE type=CheckVariableSymbol.getType(t);
         setValue(ctx,type);
+        String name=ctx.Identifier().getText();
+        setnameoftypes();
 
     }
     //--------------------------------------------------------------------------------------

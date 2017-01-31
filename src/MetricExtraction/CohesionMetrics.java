@@ -335,49 +335,51 @@ public class CohesionMetrics extends javaBaseListener {
 
     }
 
-    @Override public void enterAssignment(javaParser.AssignmentContext ctx) {
-        ArrayList<String>methods=new ArrayList<String>();
-        String name=ctx.leftHandSide().expressionName().getText();
-        String Scope=currentScope.getScopeName();
-        Scope mycurrentscope=null;
-        if(Scope.equals("Block")){
-            mycurrentscope=currentScope.getEnclosingScope();
+    //------------------------------------------------------------------------------------
+
+    @Override public void enterAssignment1(javaParser.Assignment1Context ctx) {
+        ArrayList<String> methods = new ArrayList<String>();
+        String name = ctx.expressionName().getText();
+        String Scope = currentScope.getScopeName();
+        Scope mycurrentscope = null;
+        if (Scope.equals("Block")) {
+            mycurrentscope = currentScope.getEnclosingScope();
 
 
-                Symbol s = mycurrentscope.resolve1(name);
+            Symbol s = mycurrentscope.resolve1(name);
 
-                if (s == null) {
+            if (s == null) {
 
-                    boolean b = true;
-                    for (String value : classvariables.keySet()) {
+                boolean b = true;
+                for (String value : classvariables.keySet()) {
 
-                        String name1 = value;
+                    String name1 = value;
 
-                        if (name.equals(name1)) {
+                    if (name.equals(name1)) {
 
-                            for (int i = 0; i < classvariables.get(name).size(); i++) {
-                                if (mycurrentscope.getScopeName().equals(classvariables.get(name1).get(i))) {
-                                    b = false;
-                                    break;
-                                }
+                        for (int i = 0; i < classvariables.get(name).size(); i++) {
+                            if (mycurrentscope.getScopeName().equals(classvariables.get(name1).get(i))) {
+                                b = false;
+                                break;
                             }
-                            if (b == true)
-                                methods = classvariables.get(name);
-                            methods.add(mycurrentscope.getScopeName());
-                            classvariables.put(name, methods);
-
-                            break;
-
                         }
+                        if (b == true)
+                            methods = classvariables.get(name);
+                        methods.add(mycurrentscope.getScopeName());
+                        classvariables.put(name, methods);
+
+                        break;
 
                     }
 
                 }
 
+            }
+
         }
     }
 
-    @Override public void exitAssignment(javaParser.AssignmentContext ctx) { }
+    @Override public void exitAssignment1(javaParser.Assignment1Context ctx) { }
     //--------------------------------------------------------------------------------------
 
     @Override public void enterMethodInvoc1(javaParser.MethodInvoc1Context ctx) {
