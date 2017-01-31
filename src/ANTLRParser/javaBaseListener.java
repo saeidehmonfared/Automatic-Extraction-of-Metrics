@@ -1023,13 +1023,25 @@ public class javaBaseListener implements javaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLastFormalParameter(javaParser.LastFormalParameterContext ctx) { }
+	@Override public void enterLastFormalparameter1(javaParser.LastFormalparameter1Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLastFormalParameter(javaParser.LastFormalParameterContext ctx) { }
+	@Override public void exitLastFormalparameter1(javaParser.LastFormalparameter1Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterLastFormalParameter2(javaParser.LastFormalParameter2Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitLastFormalParameter2(javaParser.LastFormalParameter2Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -424,11 +424,12 @@ public class Defphase extends javaBaseListener {
     @Override public void enterResultunannType(javaParser.ResultunannTypeContext ctx) { }
 
     @Override public void exitResultunannType(javaParser.ResultunannTypeContext ctx) {
-        methodresult=getValue(ctx.unannType());
-        if(methodresult.equals(VariableSymbol.TYPE.TREFRENCE)){
-       // methodresulttype=ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();}
-            methodresulttype=getnameoftypes(ctx.getChild(0));
+        methodresult = getValue(ctx.unannType());
+        if (methodresult.equals(VariableSymbol.TYPE.TREFRENCE)) {
+            // methodresulttype=ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();}
+            methodresulttype = getnameoftypes(ctx.getChild(0));
 
+        }
     }
 
 //----------------------------------------------------------------------------------
@@ -522,35 +523,72 @@ public class Defphase extends javaBaseListener {
         }
 
     //----------------------------------------------------------------
-    @Override public void enterLastFormalParameter(javaParser.LastFormalParameterContext ctx) { }
 
-    @Override public void exitLastFormalParameter(javaParser.LastFormalParameterContext ctx) {
-        String m=ctx.formalParameter().variableDeclaratorId().getText();
-        VariableSymbol.TYPE type = getValue(ctx.formalParameter().unannType());
+    //------------------------------------------------------------------------
+
+    @Override public void enterLastFormalparameter1(javaParser.LastFormalparameter1Context ctx) { }
+
+    @Override public void exitLastFormalparameter1(javaParser.LastFormalparameter1Context ctx) {
+
+        String m=ctx.variableDeclaratorId().getText();
+        VariableSymbol.TYPE type = getValue(ctx.unannType());
         VariableSymbol v = new VariableSymbol(m, variablemodifier, type);
 
         if(type.equals(VariableSymbol.TYPE.TREFRENCE)){
 
-          // String s=ctx.formalParameter().unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();
-            String s=getnameoftypes(ctx.formalParameter().unannType());
+            // String s=ctx.formalParameter().unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();
+            String s=getnameoftypes(ctx.unannType());
 
             if(!(s.equals("String"))){
-            refrences.put(v,s);}
+                refrences.put(v,s);}
             Scope myscope;
             myscope=currentscope;
             while(myscope.getScopeName().equals("Block")){
                 myscope=myscope.getEnclosingScope();
             }
             if(!(s.equals("String"))){
-            Object o=new Object(s,v,myscope);
-            objectinstances.add(o);}
+                Object o=new Object(s,v,myscope);
+                objectinstances.add(o);}
             //System.out.println(s);
 
 
         }
         currentscope.define(v);
-       //System.out.println(type);
+        //System.out.println(type);
     }
+
+    @Override public void enterLastFormalParameter2(javaParser.LastFormalParameter2Context ctx) { }
+
+    @Override public void exitLastFormalParameter2(javaParser.LastFormalParameter2Context ctx) {
+        String m=ctx.formalParameter().variableDeclaratorId().getText();
+        VariableSymbol.TYPE type = getValue(ctx.formalParameter().unannType());
+        VariableSymbol v = new VariableSymbol(m, variablemodifier, type);
+
+        if(type.equals(VariableSymbol.TYPE.TREFRENCE)){
+
+            // String s=ctx.formalParameter().unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();
+            String s=getnameoftypes(ctx.formalParameter().unannType());
+
+            if(!(s.equals("String"))){
+                refrences.put(v,s);}
+            Scope myscope;
+            myscope=currentscope;
+            while(myscope.getScopeName().equals("Block")){
+                myscope=myscope.getEnclosingScope();
+            }
+            if(!(s.equals("String"))){
+                Object o=new Object(s,v,myscope);
+                objectinstances.add(o);}
+            //System.out.println(s);
+
+
+        }
+        currentscope.define(v);
+        //System.out.println(type);
+
+
+    }
+
     //------------------------------------------------------------------------
 
     @Override public void enterAssignment1(javaParser.Assignment1Context ctx) { }

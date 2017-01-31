@@ -872,15 +872,29 @@ public interface javaListener extends ParseTreeListener {
 	 */
 	void exitVariableModifier(javaParser.VariableModifierContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link javaParser#lastFormalParameter}.
+	 * Enter a parse tree produced by the {@code lastFormalparameter1}
+	 * labeled alternative in {@link javaParser#lastFormalParameter}.
 	 * @param ctx the parse tree
 	 */
-	void enterLastFormalParameter(javaParser.LastFormalParameterContext ctx);
+	void enterLastFormalparameter1(javaParser.LastFormalparameter1Context ctx);
 	/**
-	 * Exit a parse tree produced by {@link javaParser#lastFormalParameter}.
+	 * Exit a parse tree produced by the {@code lastFormalparameter1}
+	 * labeled alternative in {@link javaParser#lastFormalParameter}.
 	 * @param ctx the parse tree
 	 */
-	void exitLastFormalParameter(javaParser.LastFormalParameterContext ctx);
+	void exitLastFormalparameter1(javaParser.LastFormalparameter1Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code lastFormalParameter2}
+	 * labeled alternative in {@link javaParser#lastFormalParameter}.
+	 * @param ctx the parse tree
+	 */
+	void enterLastFormalParameter2(javaParser.LastFormalParameter2Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code lastFormalParameter2}
+	 * labeled alternative in {@link javaParser#lastFormalParameter}.
+	 * @param ctx the parse tree
+	 */
+	void exitLastFormalParameter2(javaParser.LastFormalParameter2Context ctx);
 	/**
 	 * Enter a parse tree produced by {@link javaParser#receiverParameter}.
 	 * @param ctx the parse tree

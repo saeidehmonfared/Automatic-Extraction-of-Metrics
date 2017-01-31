@@ -424,8 +424,8 @@ variableModifier
 	;
 
 lastFormalParameter
-	:	variableModifier* unannType annotation* '...' variableDeclaratorId
-	|	formalParameter
+	:	variableModifier* unannType annotation* '...' variableDeclaratorId # lastFormalparameter1
+	|	formalParameter                                                    # lastFormalParameter2
 	;
 
 receiverParameter

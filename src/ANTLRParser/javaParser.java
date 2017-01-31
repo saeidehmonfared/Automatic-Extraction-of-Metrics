@@ -5425,6 +5425,31 @@ public class javaParser extends Parser {
 	}
 
 	public static class LastFormalParameterContext extends ParserRuleContext {
+		public LastFormalParameterContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_lastFormalParameter; }
+	 
+		public LastFormalParameterContext() { }
+		public void copyFrom(LastFormalParameterContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class LastFormalParameter2Context extends LastFormalParameterContext {
+		public FormalParameterContext formalParameter() {
+			return getRuleContext(FormalParameterContext.class,0);
+		}
+		public LastFormalParameter2Context(LastFormalParameterContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof javaListener ) ((javaListener)listener).enterLastFormalParameter2(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof javaListener ) ((javaListener)listener).exitLastFormalParameter2(this);
+		}
+	}
+	public static class LastFormalparameter1Context extends LastFormalParameterContext {
 		public UnannTypeContext unannType() {
 			return getRuleContext(UnannTypeContext.class,0);
 		}
@@ -5443,20 +5468,14 @@ public class javaParser extends Parser {
 		public AnnotationContext annotation(int i) {
 			return getRuleContext(AnnotationContext.class,i);
 		}
-		public FormalParameterContext formalParameter() {
-			return getRuleContext(FormalParameterContext.class,0);
-		}
-		public LastFormalParameterContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_lastFormalParameter; }
+		public LastFormalparameter1Context(LastFormalParameterContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof javaListener ) ((javaListener)listener).enterLastFormalParameter(this);
+			if ( listener instanceof javaListener ) ((javaListener)listener).enterLastFormalparameter1(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof javaListener ) ((javaListener)listener).exitLastFormalParameter(this);
+			if ( listener instanceof javaListener ) ((javaListener)listener).exitLastFormalparameter1(this);
 		}
 	}
 
@@ -5469,6 +5488,7 @@ public class javaParser extends Parser {
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,91,_ctx) ) {
 			case 1:
+				_localctx = new LastFormalparameter1Context(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(1081);
@@ -5508,6 +5528,7 @@ public class javaParser extends Parser {
 				}
 				break;
 			case 2:
+				_localctx = new LastFormalParameter2Context(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(1094);

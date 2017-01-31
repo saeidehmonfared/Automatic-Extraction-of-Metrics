@@ -150,9 +150,9 @@ public class CohesionMetrics extends javaBaseListener {
             for (String value : argumentlist.keySet()) {
                 b=true;
                 s = argumentlist.get(value);
-                if ((s.vartype.equals(VariableSymbol.TYPE.TREFRENCE))) {
+                if ((s.vartype==VariableSymbol.TYPE.TREFRENCE)){
                     parametertypename = value.toString();
-                } else if (!(s.vartype.equals(VariableSymbol.TYPE.TREFRENCE))) {
+                } else if (!(s.vartype==VariableSymbol.TYPE.TREFRENCE)) {
                     parametertypename=s.vartype.toString();
                 }
 
@@ -312,19 +312,17 @@ if(type!=null) {
     }
 
     //----------------------------------------------------------------
-    @Override
-    public void enterLastFormalParameter(javaParser.LastFormalParameterContext ctx) {
-    }
 
-    @Override
-    public void exitLastFormalParameter(javaParser.LastFormalParameterContext ctx) {
-        String m = ctx.formalParameter().variableDeclaratorId().getText();
-        VariableSymbol.TYPE type = getValue(ctx.formalParameter().unannType());
+    @Override public void enterLastFormalparameter1(javaParser.LastFormalparameter1Context ctx) { }
+
+    @Override public void exitLastFormalparameter1(javaParser.LastFormalparameter1Context ctx) {
+        String m = ctx.variableDeclaratorId().getText();
+        VariableSymbol.TYPE type = getValue(ctx.unannType());
         VariableSymbol v = new VariableSymbol(m, variablemodifier, type);
 
         if (type.equals(VariableSymbol.TYPE.TREFRENCE)) {
 
-            String s = ctx.formalParameter().unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();
+            String s = ctx.unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();
 
             argumentlist.put(s, v);
         }
@@ -333,10 +331,30 @@ if(type!=null) {
         }
 
 
+    }
 
+    @Override public void enterLastFormalParameter2(javaParser.LastFormalParameter2Context ctx) { }
+
+    @Override public void exitLastFormalParameter2(javaParser.LastFormalParameter2Context ctx) {
+        String m = ctx.formalParameter().variableDeclaratorId().getText();
+        VariableSymbol.TYPE type = getValue(ctx.formalParameter().unannType());
+        VariableSymbol v = new VariableSymbol(m, variablemodifier, type);
+
+        if (type==VariableSymbol.TYPE.TREFRENCE){
+
+            String s = ctx.formalParameter().unannType().unannReferenceType().unannClassOrInterfaceType().unannClassType_lfno_unannClassOrInterfaceType().getText();
+
+            argumentlist.put(s, v);
+        }
+        else if(!(type==VariableSymbol.TYPE.TREFRENCE)){
+            argumentlist.put(v.name,v);
+        }
 
 
     }
+
+    //-----------------------------------------------------------------
+
 
     //------------------------------------------------------------------------------------
 
