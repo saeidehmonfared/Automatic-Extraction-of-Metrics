@@ -141,7 +141,7 @@ public class InheritanceMetrics extends javaBaseListener {
         }
 
 
-        System.out.println("\nInheritance list of " + nameofclass + " is:" + Inheritancelistofclass);
+       System.out.println("\nInheritance list of " + nameofclass + " is:" + Inheritancelistofclass);
         //Inheritancelistofclass.clear();
 
         Iterator<Symbol> it3 = Inheritancelist.inheritanclist.values().iterator();

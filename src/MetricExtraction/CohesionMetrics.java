@@ -34,6 +34,10 @@ public class CohesionMetrics extends javaBaseListener {
     public ArrayList<Object> objectinstances = new ArrayList<Object>();
     Map<String, Symbol> importlistofclass = new LinkedHashMap<String, Symbol>();
     ParseTreeProperty<String>nameoftypes=new ParseTreeProperty<String>();
+    public  Map<Symbol,Map<String,ArrayList<String>>> lisofclasses=new LinkedHashMap<Symbol,Map<String, ArrayList<String>>>();
+    String nameofclass;
+
+
 
 
     public void setValue(ParseTree ctx, VariableSymbol.TYPE value) {
@@ -45,12 +49,13 @@ public class CohesionMetrics extends javaBaseListener {
     }
 
 
-    public CohesionMetrics(GlobalScope globals, ParseTreeProperty<Scope> scopes,ArrayList<Object>objectinsatnce,Map<String,Symbol>importlistofclass,ParseTreeProperty<String>nameoftypes) {
+    public CohesionMetrics(GlobalScope globals, ParseTreeProperty<Scope> scopes,ArrayList<Object>objectinsatnce,Map<String,Symbol>importlistofclass,ParseTreeProperty<String>nameoftypes,Map<Symbol,Map<String,ArrayList<String>>> lisofclasses) {
         this.globals = globals;
         this.scopes = scopes;
         this.objectinstances=objectinsatnce;
         this.importlistofclass=importlistofclass;
         this.nameoftypes=nameoftypes;
+        this.lisofclasses=lisofclasses;
 
     }
 
@@ -66,6 +71,7 @@ public class CohesionMetrics extends javaBaseListener {
     public void exitCompilationUnit(javaParser.CompilationUnitContext ctx) {
         //**//System.out.println("All of methods with distinict parameters:");
         //**//System.out.println(Allofmethods);
+        cohesionmetrics2();
 
 
     }
@@ -74,6 +80,7 @@ public class CohesionMetrics extends javaBaseListener {
     @Override
     public void enterNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx) {
         currentScope = scopes.get(ctx);
+        nameofclass=ctx.Identifier().getText();
 
         for (Symbol value : currentScope.symboltableshow().values()) {
             Symbol s = value;
@@ -104,6 +111,7 @@ public class CohesionMetrics extends javaBaseListener {
     @Override
     public void enterNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) {
         currentScope = scopes.get(ctx);
+        nameofclass=ctx.Identifier().getText();
 
         for (Symbol value : currentScope.symboltableshow().values()) {
             Symbol s = value;
@@ -153,6 +161,9 @@ public class CohesionMetrics extends javaBaseListener {
                 if ((s.vartype==VariableSymbol.TYPE.TREFRENCE)){
                     parametertypename = value.toString();
                 } else if (!(s.vartype==VariableSymbol.TYPE.TREFRENCE)) {
+                    if(s.vartype!=null
+
+                                                                                                                                                                    )
                     parametertypename=s.vartype.toString();
                 }
 
@@ -401,6 +412,101 @@ if(type!=null) {
     }
 
     @Override public void exitAssignment1(javaParser.Assignment1Context ctx) { }
+    //--------------------------------------------------------------------------------------
+    @Override public void enterExpertionName1(javaParser.ExpertionName1Context ctx) {
+
+        ArrayList<String> methods = new ArrayList<String>();
+        String name = ctx.Identifier().getText();
+        String Scope = currentScope.getScopeName();
+        Scope mycurrentscope = null;
+        if (Scope.equals("Block")) {
+            mycurrentscope = currentScope.getEnclosingScope();
+        }
+        if(mycurrentscope!=null)
+        while(mycurrentscope.getScopeName().equals("Block")){
+            mycurrentscope=mycurrentscope.getEnclosingScope();
+        }
+            Symbol s = currentScope.resolve1(name);
+
+            if (s == null) {
+
+                boolean b = true;
+                for (String value : classvariables.keySet()) {
+
+                    String name1 = value;
+
+                    if (name.equals(name1)) {
+
+                        for (int i = 0; i < classvariables.get(name).size(); i++) {
+                            if (mycurrentscope.getScopeName().equals(classvariables.get(name1).get(i))) {
+                                b = false;
+                                break;
+                            }
+                        }
+                        if (b == true)
+                            methods = classvariables.get(name);
+                        methods.add(mycurrentscope.getScopeName());
+                        classvariables.put(name, methods);
+
+                        break;
+
+                    }
+
+                }
+
+            }
+
+
+        }
+
+    @Override public void exitExpertionName1(javaParser.ExpertionName1Context ctx) { }
+
+    @Override public void enterExpertionName2(javaParser.ExpertionName2Context ctx) {
+        ArrayList<String> methods = new ArrayList<String>();
+        String name = ctx.ambiguousName().Identifier().getText();
+        String Scope = currentScope.getScopeName();
+        Scope mycurrentscope = null;
+        if (Scope.equals("Block")) {
+            mycurrentscope = currentScope.getEnclosingScope();
+        }
+
+        while(mycurrentscope.getScopeName().equals("Block")){
+            mycurrentscope=mycurrentscope.getEnclosingScope();
+        }
+
+            Symbol s = mycurrentscope.resolve1(name);
+
+            if (s == null) {
+
+                boolean b = true;
+                for (String value : classvariables.keySet()) {
+
+                    String name1 = value;
+
+                    if (name.equals(name1)) {
+
+                        for (int i = 0; i < classvariables.get(name).size(); i++) {
+                            if (mycurrentscope.getScopeName().equals(classvariables.get(name1).get(i))) {
+                                b = false;
+                                break;
+                            }
+                        }
+                        if (b == true)
+                            methods = classvariables.get(name);
+                        methods.add(mycurrentscope.getScopeName());
+                        classvariables.put(name, methods);
+
+                        break;
+
+                    }
+
+                }
+
+            }
+    }
+
+    @Override public void exitExpertionName2(javaParser.ExpertionName2Context ctx) { }
+
     //--------------------------------------------------------------------------------------
 
     @Override public void enterMethodInvoc1(javaParser.MethodInvoc1Context ctx) {
@@ -656,14 +762,110 @@ if(type!=null) {
 
     //--------------------------------------------------------------------------------------------
     @Override public void enterBlock(javaParser.BlockContext ctx) {
-        currentScope=scopes.get(ctx);
+        //currentScope=scopes.get(ctx);
     }
 
     @Override public void exitBlock(javaParser.BlockContext ctx) {
-        currentScope=currentScope.getEnclosingScope();
+        //currentScope=currentScope.getEnclosingScope();
     }
     //----------------------------------------------------------
+        ArrayList<String>publicmethodsofclass=new ArrayList<String>();
+        ArrayList<String>protectedmethodsofclass=new ArrayList<String>();
+        ArrayList<String>privatemethodsofclass=new ArrayList<String>();
+        ArrayList<String>variablesofclass=new ArrayList<String>();
+        ArrayList<String>methodscalled=new ArrayList<String>();
+        Map<String,Map<String,ArrayList<String>>>privatecallofmethods=new LinkedHashMap<String,Map<String, ArrayList<String>>>();
+
+    public void cohesionmetrics2() {
+        System.out.println("cohesion metrics of this class iissssssssssssssssssss:");
+        for (Symbol value : lisofclasses.keySet()) {
+            Symbol myclassname = value;
+            //TODO:shart hamnam bodane package ra ham dar nazar begir
+            if(myclassname!=null && nameofclass!=null) {
+                if (nameofclass.equals(myclassname.name)) {
+                    publicmethodsofclass = lisofclasses.get(value).get("publicmethods");
+                    protectedmethodsofclass = lisofclasses.get(value).get("protectedmethods");
+                    privatemethodsofclass = lisofclasses.get(value).get("privatemethods");
+                    break;
+                }
+            }
+
+
+        }
+        for (int i = 0; i < publicmethodsofclass.size(); i++) {
+            privatecallofmethods.put(publicmethodsofclass.get(i), new LinkedHashMap<String,ArrayList<String>>());
+            privatecallofmethods.get(publicmethodsofclass.get(i)).put("privatemethodcalled",new ArrayList<String>());
+            privatecallofmethods.get(publicmethodsofclass.get(i)).put("classvariableused",new ArrayList<String>());
+            for (String value : methodcalls.keySet()) {
+                String methodname = value;
+                if (publicmethodsofclass.get(i).equals(methodname)) {
+                    methodscalled.addAll(methodcalls.get(methodname));
+                    for(int k=0;k<methodscalled.size();k++){
+                        for(int k1=0;k1<privatemethodsofclass.size();k1++){
+                            if(methodscalled.get(k).equals(privatemethodsofclass.get(k1))){
+
+                                privatecallofmethods.get(methodname).get("privatemethodcalled").add(privatemethodsofclass.get(k1));
+                            }
+                        }
+                    }
+                    methodscalled.clear();
+
+                }
+
+
+            }
+        }
+        String methodname = null;
+        for (int i1 = 0; i1 < protectedmethodsofclass.size(); i1++) {
+            privatecallofmethods.put(protectedmethodsofclass.get(i1), new LinkedHashMap<String, ArrayList<String>>());
+            privatecallofmethods.get(protectedmethodsofclass.get(i1)).put("privatemethodcalled", new ArrayList<String>());
+            privatecallofmethods.get(protectedmethodsofclass.get(i1)).put("classvariableused", new ArrayList<>());
+            for (String value : methodcalls.keySet()) {
+                methodname = value;
+                if (protectedmethodsofclass.get(i1).equals(methodname)) {
+                    methodscalled.addAll(methodcalls.get(methodname));
+                    for (int k = 0; k < methodscalled.size(); k++) {
+                        for (int k1 = 0; k1 < privatemethodsofclass.size(); k1++) {
+                            if (methodscalled.get(k).equals(privatemethodsofclass.get(k1))) {
+
+                                privatecallofmethods.get(methodname).get("privatemethodcalled").add(privatemethodsofclass.get(k1));
+                            }
+                        }
+                    }
+                    methodscalled.clear();
+
+                }
+
+
+            }
+
+        }
+            for(String value: privatecallofmethods.keySet()){
+                String methodname1=value;
+                for(String value1: classvariables.keySet()){
+                    String varname=value1;
+                    for(int m=0;m<classvariables.get(varname).size();m++){
+                        if(methodname1.equals(classvariables.get(varname).get(m))){
+                            privatecallofmethods.get(methodname1).get("classvariableused").add(varname);
+                        }
+                    }
+
+                }
+            }
 
 
 
-}
+
+
+        System.out.println("private call of methods::");
+        for(String value: privatecallofmethods.keySet()){
+            System.out.println("method name is:"+value.toString());
+            System.out.println(privatecallofmethods.get(value));
+        }
+
+    }
+
+    }
+
+
+

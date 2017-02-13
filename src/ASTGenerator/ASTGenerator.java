@@ -78,7 +78,35 @@ public class  ASTGenerator {
                 e.printStackTrace();
             }
         }
+        Iterator<String> it2 = compilationUnits.iterator();
 
+        while (it2.hasNext()) {
+            try {
+                String compUnit = it2.next();
+                String myfile = readFile(compUnit);
+
+
+
+                ANTLRInputStream input = new ANTLRInputStream(myfile);
+                javaLexer lexer = new javaLexer(input);
+                CommonTokenStream tokens = new CommonTokenStream(lexer);
+                javaParser parser = new javaParser(tokens);
+                javaParser.CompilationUnitContext tree = parser.compilationUnit();
+                InheritanceMetrics InheritanceExtractor=new InheritanceMetrics();
+                ParseTreeWalker.DEFAULT.walk(InheritanceExtractor,tree);
+                classlevelmetrics2 inheritedmetricextractor=new classlevelmetrics2(InheritanceExtractor.Inheritancelistofclass);
+                ParseTreeWalker.DEFAULT.walk(inheritedmetricextractor,tree);
+
+
+
+
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
         Iterator<String> it5 = compilationUnits.iterator();
 
         while (it5.hasNext()) {
@@ -104,8 +132,8 @@ public class  ASTGenerator {
                 //**##**System.out.println("importlistofclass is:"+importlist);
                 CouplingMetrics couplingextractor=new CouplingMetrics(symboltableextractor.globals,symboltableextractor.Scopes,symboltableextractor.refrences,importlist,InheritanceExtractor.Inheritancelistofclass,symboltableextractor.objectinstances);
                 ParseTreeWalker.DEFAULT.walk(couplingextractor,tree);
-                CohesionMetrics cohesinextractor=new CohesionMetrics(symboltableextractor.globals,symboltableextractor.Scopes,couplingextractor.objectinstances,importlist,symboltableextractor.nameoftypes);
-                ParseTreeWalker.DEFAULT.walk(cohesinextractor,tree);
+                CohesionMetrics cohesinextractor=new CohesionMetrics(symboltableextractor.globals,symboltableextractor.Scopes,couplingextractor.objectinstances,importlist,symboltableextractor.nameoftypes,Staticlistclasslevelmetrics.lisofclasses);
+              ParseTreeWalker.DEFAULT.walk(cohesinextractor,tree);
 
                 Defectdensitymetrics defectdensityextractor=new Defectdensitymetrics(symboltableextractor.globals,symboltableextractor.Scopes);
                 ParseTreeWalker.DEFAULT.walk(defectdensityextractor,tree);
@@ -117,32 +145,7 @@ public class  ASTGenerator {
             }
 
         }
-        Iterator<String> it2 = compilationUnits.iterator();
 
-        while (it2.hasNext()) {
-            try {
-                String compUnit = it2.next();
-                String myfile = readFile(compUnit);
-
-
-
-                ANTLRInputStream input = new ANTLRInputStream(myfile);
-                javaLexer lexer = new javaLexer(input);
-                CommonTokenStream tokens = new CommonTokenStream(lexer);
-                javaParser parser = new javaParser(tokens);
-                javaParser.CompilationUnitContext tree = parser.compilationUnit();
-                InheritanceMetrics InheritanceExtractor=new InheritanceMetrics();
-                ParseTreeWalker.DEFAULT.walk(InheritanceExtractor,tree);
-                classlevelmetrics2 inheritedmetricextractor=new classlevelmetrics2(InheritanceExtractor.Inheritancelistofclass);
-                ParseTreeWalker.DEFAULT.walk(inheritedmetricextractor,tree);
-
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
 
 
        /* Iterator<String> it1 = compilationUnits.iterator();
