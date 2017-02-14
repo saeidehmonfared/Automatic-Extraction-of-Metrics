@@ -371,7 +371,7 @@ if(type!=null) {
 
     @Override public void enterAssignment1(javaParser.Assignment1Context ctx) {
         ArrayList<String> methods = new ArrayList<String>();
-        String name = ctx.expressionName().getText();
+        String name = ctx.expressionName().getChild(0).getText();
         String Scope = currentScope.getScopeName();
         Scope mycurrentscope = null;
         if (Scope.equals("Block")) {
@@ -421,11 +421,12 @@ if(type!=null) {
         Scope mycurrentscope = null;
         if (Scope.equals("Block")) {
             mycurrentscope = currentScope.getEnclosingScope();
-        }
-        if(mycurrentscope!=null)
-        while(mycurrentscope.getScopeName().equals("Block")){
-            mycurrentscope=mycurrentscope.getEnclosingScope();
-        }
+
+
+            if (mycurrentscope != null)
+                while (mycurrentscope.getScopeName().equals("Block")) {
+                    mycurrentscope = mycurrentscope.getEnclosingScope();
+                }
             Symbol s = currentScope.resolve1(name);
 
             if (s == null) {
@@ -444,9 +445,9 @@ if(type!=null) {
                             }
                         }
                         if (b == true)
-                            methods = classvariables.get(name);
-                        methods.add(mycurrentscope.getScopeName());
-                        classvariables.put(name, methods);
+                         classvariables.get(name).add(mycurrentscope.getScopeName());
+                        //methods.add(mycurrentscope.getScopeName());
+                        //classvariables.put(name, methods);
 
                         break;
 
@@ -456,7 +457,7 @@ if(type!=null) {
 
             }
 
-
+        }
         }
 
     @Override public void exitExpertionName1(javaParser.ExpertionName1Context ctx) { }
@@ -468,13 +469,13 @@ if(type!=null) {
         Scope mycurrentscope = null;
         if (Scope.equals("Block")) {
             mycurrentscope = currentScope.getEnclosingScope();
-        }
+
 
         while(mycurrentscope.getScopeName().equals("Block")){
             mycurrentscope=mycurrentscope.getEnclosingScope();
         }
 
-            Symbol s = mycurrentscope.resolve1(name);
+            Symbol s = currentScope.resolve1(name);
 
             if (s == null) {
 
@@ -492,9 +493,9 @@ if(type!=null) {
                             }
                         }
                         if (b == true)
-                            methods = classvariables.get(name);
-                        methods.add(mycurrentscope.getScopeName());
-                        classvariables.put(name, methods);
+                            classvariables.get(name).add(mycurrentscope.getScopeName());
+                       // methods.add(mycurrentscope.getScopeName());
+                       // classvariables.put(name, methods);
 
                         break;
 
@@ -502,7 +503,7 @@ if(type!=null) {
 
                 }
 
-            }
+            }   }
     }
 
     @Override public void exitExpertionName2(javaParser.ExpertionName2Context ctx) { }
@@ -625,6 +626,48 @@ if(type!=null) {
 
 
         }
+
+        ArrayList<String> methods = new ArrayList<String>();
+        String name1 = ctx.typeName().getText();
+        String Scope = currentScope.getScopeName();
+        Scope mycurrentscope = null;
+        if (Scope.equals("Block")) {
+            mycurrentscope = currentScope.getEnclosingScope();
+
+
+            while(mycurrentscope.getScopeName().equals("Block")){
+                mycurrentscope=mycurrentscope.getEnclosingScope();
+            }
+
+            Symbol s = currentScope.resolve1(name1);
+
+            if (s == null) {
+
+                boolean b = true;
+                for (String value : classvariables.keySet()) {
+
+                    String name2 = value;
+
+                    if (name1.equals(name2)) {
+
+                        for (int i = 0; i < classvariables.get(name1).size(); i++) {
+                            if (mycurrentscope.getScopeName().equals(classvariables.get(name2).get(i))) {
+                                b = false;
+                                break;
+                            }
+                        }
+                        if (b == true)
+                            classvariables.get(name1).add(mycurrentscope.getScopeName());
+                       // methods.add(mycurrentscope.getScopeName());
+                       // classvariables.put(name1, methods);
+
+                        break;
+
+                    }
+
+                }
+
+            }   }
     }
 
 
@@ -754,19 +797,63 @@ if(type!=null) {
 
             }
 
+        ArrayList<String> methods = new ArrayList<String>();
+        String name1 = ctx.typeName().getText();
+        String Scope = currentScope.getScopeName();
+        Scope mycurrentscope = null;
+        if (Scope.equals("Block")) {
+            mycurrentscope = currentScope.getEnclosingScope();
+
+
+            while(mycurrentscope.getScopeName().equals("Block")){
+                mycurrentscope=mycurrentscope.getEnclosingScope();
+            }
+
+            Symbol s = currentScope.resolve1(name1);
+
+            if (s == null) {
+
+                boolean b = true;
+                for (String value : classvariables.keySet()) {
+
+                    String name2 = value;
+
+                    if (name1.equals(name2)) {
+
+                        for (int i = 0; i < classvariables.get(name1).size(); i++) {
+                            if (mycurrentscope.getScopeName().equals(classvariables.get(name2).get(i))) {
+                                b = false;
+                                break;
+                            }
+                        }
+                        if (b == true)
+                           classvariables.get(name1).add(mycurrentscope.getScopeName());
+                       // methods.add(mycurrentscope.getScopeName());
+                       // classvariables.put(name1, methods);
+
+                        break;
+
+                    }
+
+                }
+
+            }
+        }
+
 
         }
+
 
 
     @Override public void exitMethodinvocation_lfno_primary2(javaParser.Methodinvocation_lfno_primary2Context ctx) { }
 
     //--------------------------------------------------------------------------------------------
     @Override public void enterBlock(javaParser.BlockContext ctx) {
-        //currentScope=scopes.get(ctx);
+       currentScope=scopes.get(ctx);
     }
 
     @Override public void exitBlock(javaParser.BlockContext ctx) {
-        //currentScope=currentScope.getEnclosingScope();
+        currentScope=currentScope.getEnclosingScope();
     }
     //----------------------------------------------------------
         ArrayList<String>publicmethodsofclass=new ArrayList<String>();
