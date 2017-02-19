@@ -330,13 +330,55 @@ public class Defphase extends javaBaseListener {
     }
     //------------------------------------------------------------
 
-    @Override public void enterInterfaceMethodDeclaration(javaParser.InterfaceMethodDeclarationContext ctx) { }
+    @Override public void enterInterfaceMethodDeclaration(javaParser.InterfaceMethodDeclarationContext ctx) {
+
+        String methodname = ctx.getChild(0).getText();
+
+
+        boolean a=true;
+        if(!(methodmodifier.equals(null))) {
+            for (int i = 0; i < methodmodifier.size(); i++) {
+                Symbol.AccessModifier access = methodmodifier.get(i);
+                if ((access == Symbol.AccessModifier.tpublic) || (access == Symbol.AccessModifier.tprivate) || (access == Symbol.AccessModifier.tprotected))
+                    a = false;
+            }
+
+            if (a) {
+                methodmodifier.add(Symbol.AccessModifier.tpublic);
+            }
+        }
+        else if (methodmodifier.equals(null))
+        {
+            methodmodifier.add(Symbol.AccessModifier.tpublic);
+        }
+
+
+
+
+        MethodSymbol ms = new MethodSymbol(methodname, methodmodifier,methodresult, currentscope);
+
+        if(methodresult.equals(VariableSymbol.TYPE.TREFRENCE)){
+
+            if((!methodresulttype.equals("String"))){
+                refrences.put(ms,methodresulttype);}
+            //System.out.println(s);
+
+
+        }
+
+
+
+        currentscope.define(ms);
+
+        saveScope(ctx, ms);
+        currentscope = ms;
+    }
 
     @Override public void exitInterfaceMethodDeclaration(javaParser.InterfaceMethodDeclarationContext ctx) {
        //**// System.out.println(currentscope);
         saveScope(ctx,currentscope);
         currentscope = currentscope.getEnclosingScope();
-        methodmodifier.clear();
+        interfacemodifier.clear();
     }
 
     //---------------------------------------------------------------
@@ -963,6 +1005,16 @@ public class Defphase extends javaBaseListener {
 
 
 
+    }
+    //----------------------------------------------------------------------------------------------------
+
+    @Override public void enterInterfaceMethodModifier(javaParser.InterfaceMethodModifierContext ctx) { }
+
+    @Override public void exitInterfaceMethodModifier(javaParser.InterfaceMethodModifierContext ctx) {
+        int m=ctx.start.getType();
+        Symbol.AccessModifier methodmod=CheckSymbols.getAccessmodifierType(m);
+
+        interfacemodifier.add(methodmod);
     }
     //----------------------------------------------------------------------------------------------------
 

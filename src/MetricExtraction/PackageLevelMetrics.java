@@ -65,6 +65,7 @@ public class PackageLevelMetrics {
 
         int numberofclasses=0;
         int numberofinterfaces=0;
+        int numberofabstractclasses=0;
         Iterator<Symbol> it = StaticList.staticlist.values().iterator();
 
 
@@ -86,6 +87,25 @@ public class PackageLevelMetrics {
 
         }
         System.out.println("number of class of this project is:"+numberofclasses+"\n\nnumber of interface of this project if:"+numberofinterfaces);
+        Iterator<Symbol> it0 = StaticList.staticlist.values().iterator();
+
+
+        while (it0.hasNext()) {
+            try {
+                Symbol s=it0.next();
+                for(int i=0;i<s.accessmodifier.size();i++){
+                    if(s.accessmodifier.get(i).equals(Symbol.AccessModifier.TABSTRACT)){
+                        numberofabstractclasses++;
+                    }
+
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+        System.out.println("number of abstract class of this project is:"+numberofabstractclasses);
 
     }
 

@@ -29,6 +29,8 @@ public class ClassLevelMetrics extends javaBaseListener{
     Map<String,ArrayList<String>>metriclist=new LinkedHashMap<String,ArrayList<String>>();
     ArrayList<Symbol>allofmethods=new ArrayList<Symbol>();
     ArrayList<Symbol>overridedmethods=new ArrayList<Symbol>();
+    public static int allofabstractmethods=0;
+    public static ArrayList<String> allofabstractmethodslist=new ArrayList<String>();
     int numberofoverridemethods;
     public ClassLevelMetrics(GlobalScope globals, ParseTreeProperty<Scope> Scopes) {
         this.globals = globals;
@@ -148,7 +150,8 @@ public class ClassLevelMetrics extends javaBaseListener{
 
         }
 
-
+            allofabstractmethods=allofabstractmethods+listofAbstractcMethods.size();
+        allofabstractmethodslist.addAll(listofAbstractcMethods);
 
         metriclist.get("publicmethods").addAll(listofPublicmethods);
         metriclist.get("protectedmethods").addAll(listofProtectedmethods);
@@ -290,6 +293,8 @@ public class ClassLevelMetrics extends javaBaseListener{
 
                 classname1=ctx.Identifier().getText();
 
+        allofabstractmethods=allofabstractmethods+listofAbstractcMethods.size();
+        allofabstractmethodslist.addAll(listofAbstractcMethods);
 
         metriclist.get("publicmethods").addAll(listofPublicmethods);
         metriclist.get("protectedmethods").addAll(listofProtectedmethods);
@@ -361,9 +366,9 @@ public class ClassLevelMetrics extends javaBaseListener{
         System.out.println("number of overloaded methods:" + numberofoverridemethods);
         System.out.println("list of overloaded methods:" + overridedmethods);
     }
+    //------------------------------------------------------------------------
+    @Override public void enterNormalInterfaceDeclaration1(javaParser.NormalInterfaceDeclaration1Context ctx) {
 
-
-   /* public void enterNormalClassDeclaration(javaParser.NormalClassDeclarationContext ctx) {
         ArrayList<String> listofPublicmethods = new ArrayList<String>();
         ArrayList<String> listofPrivatemethods = new ArrayList<String>();
         ArrayList<String> listofStaticmethods = new ArrayList<String>();
@@ -384,9 +389,10 @@ public class ClassLevelMetrics extends javaBaseListener{
         for (Symbol value : currentScope.symboltableshow().values()) {
             Symbol s = value;
 
-           if (s.getClass().getName().equals("Symbols.MethodSymbol")) {
+            if (s.getClass().getName().equals("Symbols.MethodSymbol")) {
+                allofmethods.add(s);
                 //Symbol m= (MethodSymbol)s;
-               Methodclasscount = Methodclasscount + 1;
+                Methodclasscount = Methodclasscount + 1;
 
                 for (int i = 0; i < ((MethodSymbol) s).methodmodifier.size(); i++) {
 
@@ -405,39 +411,51 @@ public class ClassLevelMetrics extends javaBaseListener{
                 }
 
             } else if (s.getClass().getName().equals("Symbols.VariableSymbol")) {
-               Variableclasscount = Variableclasscount + 1;
+                Variableclasscount = Variableclasscount + 1;
 
-               for (int i = 0; i < ((VariableSymbol) s).variablemodifier.size(); i++) {
-                   if (((VariableSymbol) s).variablemodifier.get(i).equals(Symbol.AccessModifier.tpublic))
-                       listofPublicVariables.add(s.name);
-                   else if (((VariableSymbol) s).variablemodifier.get(i).equals(Symbol.AccessModifier.tprivate))
-                       listofPrivateVariables.add(s.name);
+                for (int i = 0; i < ((VariableSymbol) s).variablemodifier.size(); i++) {
+                    if (((VariableSymbol) s).variablemodifier.get(i).equals(Symbol.AccessModifier.tpublic))
+                        listofPublicVariables.add(s.name);
+                    else if (((VariableSymbol) s).variablemodifier.get(i).equals(Symbol.AccessModifier.tprivate))
+                        listofPrivateVariables.add(s.name);
 
-                   else if (((VariableSymbol) s).variablemodifier.get(i).equals(Symbol.AccessModifier.tprotected))
-                       listofProtectedVariables.add(s.name);
-                   else if (((VariableSymbol) s).variablemodifier.get(i).equals(Symbol.AccessModifier.TSTATIC))
-                       listofStaticvariables.add(s.name);
-               }
-
-
-           }
-
-          }
+                    else if (((VariableSymbol) s).variablemodifier.get(i).equals(Symbol.AccessModifier.tprotected))
+                        listofProtectedVariables.add(s.name);
+                    else if (((VariableSymbol) s).variablemodifier.get(i).equals(Symbol.AccessModifier.TSTATIC))
+                        listofStaticvariables.add(s.name);
+                }
 
 
+            }
+
+        }
 
 
+        classname1=ctx.Identifier().getText();
+
+        allofabstractmethods=allofabstractmethods+listofAbstractcMethods.size();
+        allofabstractmethodslist.addAll(listofAbstractcMethods);
+
+        metriclist.get("publicmethods").addAll(listofPublicmethods);
+        metriclist.get("protectedmethods").addAll(listofProtectedmethods);
+        metriclist.get("privatemethods").addAll(listofPrivatemethods);
+        metriclist.get("publicvariables").addAll(listofPublicVariables);
+        metriclist.get("privatevariables").addAll(listofPrivateVariables);
+        metriclist.get("protectedvariables").addAll(listofProtectedVariables);
+
+        Symbol s1=new Symbol(classname1,packagename);
+        classsymbol=s1;
+        Staticlistclasslevelmetrics.put(s1,metriclist);
 
 
-
-        System.out.println("number of methods of this class is:"+Methodclasscount);
+        System.out.println("number of methods of this interface is:"+Methodclasscount);
         System.out.println("PublicMethods:"+listofPublicmethods);
         System.out.println("privateMethods:"+listofPrivatemethods);
         System.out.println("Protectedmethods:"+listofProtectedmethods);
         System.out.println("Abstractmethods:"+listofAbstractcMethods);
         System.out.println("Staticmethods:"+listofStaticmethods);
 
-        System.out.println("number of variables of this class is:"+Variableclasscount);
+        System.out.println("number of variables of this interface is:"+Variableclasscount);
         System.out.println("PublicVariables:"+listofPublicVariables);
         System.out.println("privateVariables:"+listofPrivateVariables);
         System.out.println("ProtectedVariables:"+listofProtectedVariables);
@@ -445,8 +463,120 @@ public class ClassLevelMetrics extends javaBaseListener{
 
 
 
-    }*/
-    //-----------------------------------------------------------------
+
+    }
+
+    @Override public void exitNormalInterfaceDeclaration1(javaParser.NormalInterfaceDeclaration1Context ctx) {
+
+    }
+    //----------------------------------------------------------------------------
+    @Override public void enterNormalInterfaceDeclaration2(javaParser.NormalInterfaceDeclaration2Context ctx) {
+
+        ArrayList<String> listofPublicmethods = new ArrayList<String>();
+        ArrayList<String> listofPrivatemethods = new ArrayList<String>();
+        ArrayList<String> listofStaticmethods = new ArrayList<String>();
+        ArrayList<String> listofAbstractcMethods = new ArrayList<String>();
+        ArrayList<String> listofProtectedmethods = new ArrayList<String>();
+        ArrayList<String> listofPublicVariables = new ArrayList<String>();
+        ArrayList<String> listofPrivateVariables = new ArrayList<String>();
+        ArrayList<String> listofProtectedVariables = new ArrayList<String>();
+        ArrayList<String> listofStaticvariables = new ArrayList<String>();
+
+        currentScope = scopes.get(ctx);
+
+
+
+        int Methodclasscount = 0;
+        int Variableclasscount = 0;
+
+        for (Symbol value : currentScope.symboltableshow().values()) {
+            Symbol s = value;
+
+            if (s.getClass().getName().equals("Symbols.MethodSymbol")) {
+                allofmethods.add(s);
+                //Symbol m= (MethodSymbol)s;
+                Methodclasscount = Methodclasscount + 1;
+
+                for (int i = 0; i < ((MethodSymbol) s).methodmodifier.size(); i++) {
+
+
+                    if (((MethodSymbol) s).methodmodifier.get(i).equals(Symbol.AccessModifier.tpublic)){
+                        listofPublicmethods.add(s.name);}
+                    else if (((MethodSymbol) s).methodmodifier.get(i).equals(Symbol.AccessModifier.tprivate)){
+                        listofPrivatemethods.add(s.name);}
+                    else if (((MethodSymbol) s).methodmodifier.get(i).equals(Symbol.AccessModifier.tprotected)){
+                        listofProtectedmethods.add(s.name);}
+                    else if (((MethodSymbol) s).methodmodifier.get(i).equals(Symbol.AccessModifier.TSTATIC)){
+                        listofStaticmethods.add(s.name);}
+                    else if (((MethodSymbol) s).methodmodifier.get(i).equals(Symbol.AccessModifier.TABSTRACT)){
+                        listofAbstractcMethods.add(s.name);}
+
+                }
+
+            } else if (s.getClass().getName().equals("Symbols.VariableSymbol")) {
+                Variableclasscount = Variableclasscount + 1;
+
+                for (int i = 0; i < ((VariableSymbol) s).variablemodifier.size(); i++) {
+                    if (((VariableSymbol) s).variablemodifier.get(i).equals(Symbol.AccessModifier.tpublic))
+                        listofPublicVariables.add(s.name);
+                    else if (((VariableSymbol) s).variablemodifier.get(i).equals(Symbol.AccessModifier.tprivate))
+                        listofPrivateVariables.add(s.name);
+
+                    else if (((VariableSymbol) s).variablemodifier.get(i).equals(Symbol.AccessModifier.tprotected))
+                        listofProtectedVariables.add(s.name);
+                    else if (((VariableSymbol) s).variablemodifier.get(i).equals(Symbol.AccessModifier.TSTATIC))
+                        listofStaticvariables.add(s.name);
+                }
+
+
+            }
+
+        }
+
+
+        classname1=ctx.Identifier().getText();
+
+        allofabstractmethods=allofabstractmethods+listofAbstractcMethods.size();
+        allofabstractmethodslist.addAll(listofAbstractcMethods);
+
+        metriclist.get("publicmethods").addAll(listofPublicmethods);
+        metriclist.get("protectedmethods").addAll(listofProtectedmethods);
+        metriclist.get("privatemethods").addAll(listofPrivatemethods);
+        metriclist.get("publicvariables").addAll(listofPublicVariables);
+        metriclist.get("privatevariables").addAll(listofPrivateVariables);
+        metriclist.get("protectedvariables").addAll(listofProtectedVariables);
+
+        Symbol s1=new Symbol(classname1,packagename);
+        classsymbol=s1;
+        Staticlistclasslevelmetrics.put(s1,metriclist);
+
+
+        System.out.println("number of methods of this interface is:"+Methodclasscount);
+        System.out.println("PublicMethods:"+listofPublicmethods);
+        System.out.println("privateMethods:"+listofPrivatemethods);
+        System.out.println("Protectedmethods:"+listofProtectedmethods);
+        System.out.println("Abstractmethods:"+listofAbstractcMethods);
+        System.out.println("Staticmethods:"+listofStaticmethods);
+
+        System.out.println("number of variables of this interface is:"+Variableclasscount);
+        System.out.println("PublicVariables:"+listofPublicVariables);
+        System.out.println("privateVariables:"+listofPrivateVariables);
+        System.out.println("ProtectedVariables:"+listofProtectedVariables);
+        System.out.println("StaticVariables:"+listofStaticvariables);
+
+
+
+
+    }
+
+    @Override public void exitNormalInterfaceDeclaration2(javaParser.NormalInterfaceDeclaration2Context ctx) {
+
+    }
+    //-------------------------------------------------------------------------------------
+
+
+
+    //--------------------------------------------------------------------
     @Override public void enterMethodDeclarator(javaParser.MethodDeclaratorContext ctx) {
 
 

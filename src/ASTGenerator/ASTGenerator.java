@@ -234,7 +234,9 @@ public class  ASTGenerator {
         PackageLevelMetrics p=new PackageLevelMetrics();
         p.ListofPackages();
         p.ListofClasses();
+        Qualityformula.show();
         p.Packagemetrics();
+
 
         Staticlistclasslevelmetrics.show();
 

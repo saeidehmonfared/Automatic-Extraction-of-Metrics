@@ -421,6 +421,7 @@ if(type!=null) {
         Scope mycurrentscope = null;
         if (Scope.equals("Block")) {
             mycurrentscope = currentScope.getEnclosingScope();
+            
 
 
             if (mycurrentscope != null)
@@ -513,9 +514,15 @@ if(type!=null) {
     @Override public void enterMethodInvoc1(javaParser.MethodInvoc1Context ctx) {
         String name=ctx.methodName().getText();
         String scope=currentScope.getScopeName();
+        Scope mycurrentscope=null;
         boolean b=false;
         if(scope.equals("Block")){
-            String methodname=currentScope.getEnclosingScope().getScopeName();
+             mycurrentscope=currentScope.getEnclosingScope();
+            while(mycurrentscope.getScopeName().equals("Block")){
+                mycurrentscope=mycurrentscope.getEnclosingScope();
+            }
+
+            String methodname=mycurrentscope.getScopeName();
             for(String value:methodcalls.keySet()){
                 String name2=value;
                 if(methodname.equals(name2)){
@@ -545,40 +552,44 @@ if(type!=null) {
 
 
         String objectname = ctx.typeName().getText();
-        String classname=null;
-        String name=ctx.Identifier().toString();
-        String scope=currentScope.getScopeName();
-        String methodname=null;
-        if(scope.equals("Block")){
-          methodname=currentScope.getEnclosingScope().getScopeName();
-
-        }
-
-    if(scope.equals("Block")) {
-        Iterator<Object> it0 = objectinstances.iterator();
-        while (it0.hasNext()) {
-            Object name1 = it0.next();
-            if (objectname.equals(name1.symbol.name)) {
-                classname = name1.classname;
-
-                // if (!(name1.currentscope.getScopeName().equals("Class"))) {
-                //   relation = Invoc.RelationType.DEPENDENCY;
-                //} else if(name1.currentscope.getScopeName().equals("Class")) {
-                // relation = Invoc.RelationType.ASSOSIATION;
-                //}
-                break;
-
+        String classname = null;
+        String name = ctx.Identifier().toString();
+        String scope = currentScope.getScopeName();
+        Scope mycurrentscope = null;
+        String methodname = null;
+        if (scope.equals("Block")) {
+            mycurrentscope = currentScope.getEnclosingScope();
+            while (mycurrentscope.getScopeName().equals("Block")) {
+                mycurrentscope = mycurrentscope.getEnclosingScope();
             }
+
+            methodname = mycurrentscope.getScopeName();
         }
+            if (scope.equals("Block")) {
+                Iterator<Object> it0 = objectinstances.iterator();
+                while (it0.hasNext()) {
+                    Object name1 = it0.next();
+                    if (objectname.equals(name1.symbol.name)) {
+                        classname = name1.classname;
+
+                        // if (!(name1.currentscope.getScopeName().equals("Class"))) {
+                        //   relation = Invoc.RelationType.DEPENDENCY;
+                        //} else if(name1.currentscope.getScopeName().equals("Class")) {
+                        // relation = Invoc.RelationType.ASSOSIATION;
+                        //}
+                        break;
+
+                    }
+                }
 
 
-       // Invoc inv = new Invoc(ctx.Identifier().getText(), Invoc.InvocType.METHODINVOC, relation);
-        //be in nokte deghat kon k momken ast dar packagehay mokhtalef classhay hamname dashte bashim, felan in ro dar nazar nagerefti
-        Symbol s1 = null;
-        boolean r = false;
-        for (Symbol value1 : importlistofclass.values()) {
-            s1 = value1;
-            if (s1.name.equals(classname)) {
+                // Invoc inv = new Invoc(ctx.Identifier().getText(), Invoc.InvocType.METHODINVOC, relation);
+                //be in nokte deghat kon k momken ast dar packagehay mokhtalef classhay hamname dashte bashim, felan in ro dar nazar nagerefti
+                Symbol s1 = null;
+                boolean r = false;
+                for (Symbol value1 : importlistofclass.values()) {
+                    s1 = value1;
+                    if (s1.name.equals(classname)) {
                 /*Iterator<String> it = Inheritancelistofclass.iterator();
                 while (it.hasNext()) {
                     String name2 = it.next();
@@ -588,87 +599,87 @@ if(type!=null) {
 
                     }
                 }*/
-                r = true;
-                break;
-
-
-            }
-        }
-        String keyname=null;
-        if (r) {
-
-            keyname  = s1.packagename + s1.name +"."+ name;}
-        else if(!r){
-            keyname=name;
-        }
-            String s = null;
-        boolean b=false;
-            for (String value : methodcalls.keySet()) {
-                s = value;
-                if (s.equals(methodname)) {
-                    for(int i=0;i<methodcalls.get(methodname).size();i++)
-                    {
-                        if(methodcalls.get(methodname).get(i).equals(keyname))
-                            b=true;
-
-                    }
-                    if(!b) {
-
-                        methodcalls.get(methodname).add(keyname);
-                        b = false;
-                    }
-
-                    break;
-                }
-
-
-            }
-
-
-        }
-
-        ArrayList<String> methods = new ArrayList<String>();
-        String name1 = ctx.typeName().getText();
-        String Scope = currentScope.getScopeName();
-        Scope mycurrentscope = null;
-        if (Scope.equals("Block")) {
-            mycurrentscope = currentScope.getEnclosingScope();
-
-
-            while(mycurrentscope.getScopeName().equals("Block")){
-                mycurrentscope=mycurrentscope.getEnclosingScope();
-            }
-
-            Symbol s = currentScope.resolve1(name1);
-
-            if (s == null) {
-
-                boolean b = true;
-                for (String value : classvariables.keySet()) {
-
-                    String name2 = value;
-
-                    if (name1.equals(name2)) {
-
-                        for (int i = 0; i < classvariables.get(name1).size(); i++) {
-                            if (mycurrentscope.getScopeName().equals(classvariables.get(name2).get(i))) {
-                                b = false;
-                                break;
-                            }
-                        }
-                        if (b == true)
-                            classvariables.get(name1).add(mycurrentscope.getScopeName());
-                       // methods.add(mycurrentscope.getScopeName());
-                       // classvariables.put(name1, methods);
-
+                        r = true;
                         break;
 
+
                     }
+                }
+                String keyname = null;
+                if (r) {
+
+                    keyname = s1.packagename + s1.name + "." + name;
+                } else if (!r) {
+                    keyname = name;
+                }
+                String s = null;
+                boolean b = false;
+                for (String value : methodcalls.keySet()) {
+                    s = value;
+                    if (s.equals(methodname)) {
+                        for (int i = 0; i < methodcalls.get(methodname).size(); i++) {
+                            if (methodcalls.get(methodname).get(i).equals(keyname))
+                                b = true;
+
+                        }
+                        if (!b) {
+
+                            methodcalls.get(methodname).add(keyname);
+                            b = false;
+                        }
+
+                        break;
+                    }
+
 
                 }
 
-            }   }
-    }
+
+            }
+
+            ArrayList<String> methods = new ArrayList<String>();
+            String name1 = ctx.typeName().getText();
+            String Scope = currentScope.getScopeName();
+            Scope mycurrentscope1 = null;
+            if (Scope.equals("Block")) {
+                mycurrentscope1 = currentScope.getEnclosingScope();
+
+
+                while (mycurrentscope1.getScopeName().equals("Block")) {
+                    mycurrentscope1 = mycurrentscope1.getEnclosingScope();
+                }
+
+                Symbol s = currentScope.resolve1(name1);
+
+                if (s == null) {
+
+                    boolean b = true;
+                    for (String value : classvariables.keySet()) {
+
+                        String name2 = value;
+
+                        if (name1.equals(name2)) {
+
+                            for (int i = 0; i < classvariables.get(name1).size(); i++) {
+                                if (mycurrentscope1.getScopeName().equals(classvariables.get(name2).get(i))) {
+                                    b = false;
+                                    break;
+                                }
+                            }
+                            if (b == true)
+                                classvariables.get(name1).add(mycurrentscope1.getScopeName());
+                            // methods.add(mycurrentscope.getScopeName());
+                            // classvariables.put(name1, methods);
+
+                            break;
+
+                        }
+
+                    }
+
+                }
+            }
+        }
 
 
 
@@ -718,9 +729,14 @@ if(type!=null) {
         String name = ctx.Identifier().toString();
         String scope = currentScope.getScopeName();
         String methodname = null;
+        Scope mycurrentscope=null;
         if (scope.equals("Block")) {
-            methodname = currentScope.getEnclosingScope().getScopeName();
+           mycurrentscope=currentScope.getEnclosingScope();
+            while (mycurrentscope.getScopeName().equals("Block")) {
+                mycurrentscope = mycurrentscope.getEnclosingScope();
+            }
 
+            methodname = mycurrentscope.getScopeName();
         }
 
         if (scope.equals("Block")) {
@@ -800,13 +816,13 @@ if(type!=null) {
         ArrayList<String> methods = new ArrayList<String>();
         String name1 = ctx.typeName().getText();
         String Scope = currentScope.getScopeName();
-        Scope mycurrentscope = null;
+        Scope mycurrentscope1 = null;
         if (Scope.equals("Block")) {
-            mycurrentscope = currentScope.getEnclosingScope();
+            mycurrentscope1 = currentScope.getEnclosingScope();
 
 
-            while(mycurrentscope.getScopeName().equals("Block")){
-                mycurrentscope=mycurrentscope.getEnclosingScope();
+            while(mycurrentscope1.getScopeName().equals("Block")){
+                mycurrentscope1=mycurrentscope1.getEnclosingScope();
             }
 
             Symbol s = currentScope.resolve1(name1);
@@ -821,13 +837,13 @@ if(type!=null) {
                     if (name1.equals(name2)) {
 
                         for (int i = 0; i < classvariables.get(name1).size(); i++) {
-                            if (mycurrentscope.getScopeName().equals(classvariables.get(name2).get(i))) {
+                            if (mycurrentscope1.getScopeName().equals(classvariables.get(name2).get(i))) {
                                 b = false;
                                 break;
                             }
                         }
                         if (b == true)
-                           classvariables.get(name1).add(mycurrentscope.getScopeName());
+                           classvariables.get(name1).add(mycurrentscope1.getScopeName());
                        // methods.add(mycurrentscope.getScopeName());
                        // classvariables.put(name1, methods);
 
@@ -925,6 +941,13 @@ if(type!=null) {
 
 
             }
+
+        }
+
+        for(int i2=0;i2<privatemethodsofclass.size();i2++){
+            privatecallofmethods.put(privatemethodsofclass.get(i2), new LinkedHashMap<String, ArrayList<String>>());
+            privatecallofmethods.get(privatemethodsofclass.get(i2)).put("privatemethodcalled", null);
+            privatecallofmethods.get(privatemethodsofclass.get(i2)).put("classvariableused", new ArrayList<>());
 
         }
             for(String value: privatecallofmethods.keySet()){

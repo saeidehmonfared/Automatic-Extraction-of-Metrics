@@ -34,6 +34,9 @@ public class CouplingMetrics extends javaBaseListener {
 // classname;
     String packagename;
     public  Map<String, ArrayList<Invoc>> Couplinglist = new LinkedHashMap<String, ArrayList<Invoc>>();
+    public Map<String, ArrayList<Invoc>> Couplinglistheper=new LinkedHashMap<String,ArrayList<Invoc>>();
+    public Map<String,String> assignmentinmethod=new LinkedHashMap<String,String>();
+
     public ArrayList<Object> objectinstances = new ArrayList<Object>();
 
 
@@ -82,6 +85,8 @@ public class CouplingMetrics extends javaBaseListener {
 
         }
         System.out.println("coupling list is:" );
+
+
         for (String value : Couplinglist.keySet()) {
             String name = value;
 
@@ -142,10 +147,12 @@ public class CouplingMetrics extends javaBaseListener {
     @Override
     public void enterMethodDeclaration(javaParser.MethodDeclarationContext ctx) {
         currentScope = scopes.get(ctx);
+        assignmentinmethod.clear();
     }
 
     @Override
     public void exitMethodDeclaration(javaParser.MethodDeclarationContext ctx) {
+
         currentScope = currentScope.getEnclosingScope();
     }
     //----------------------------------------------------------------------------------
@@ -273,6 +280,7 @@ public class CouplingMetrics extends javaBaseListener {
 
                 if (h) {
                     Couplinglist.get(keyname).add(inv);
+
                 }
 
             }
@@ -281,6 +289,7 @@ public class CouplingMetrics extends javaBaseListener {
 
                 Couplinglist.put(keyname,invoclist);
                 Couplinglist.get(keyname).add(inv);
+
             }
 
         }
@@ -301,12 +310,19 @@ public class CouplingMetrics extends javaBaseListener {
     public void exitExpertionName2(javaParser.ExpertionName2Context ctx) {
     }
     //------------------------------------------------------------------------------
-    @Override public void enterAssignment1(javaParser.Assignment1Context ctx) { }
+    @Override public void enterAssignment1(javaParser.Assignment1Context ctx) {
+        String leftsidename=ctx.expressionName().getText();
+        //String rightsidename=ctx.expression().assignmentExpression().conditionalExpression().conditionalOrExpression().conditionalAndExpression().inclusiveOrExpression().exclusiveOrExpression().andExpression().equalityExpression().relationalExpression().shiftExpression().additiveExpression().multiplicativeExpression().unaryExpression().unaryExpressionNotPlusMinus().postfixExpression().expressionName().getText();
+        //assignmentinmethod.put(leftsidename,rightsidename);
+
+
+    }
 
     @Override public void exitAssignment1(javaParser.Assignment1Context ctx) {
 
         assignmentname=null;
         leftofassignment=ctx.expressionName().getText();
+
     }
     //---------------------------------------------------------------------------
 
@@ -460,6 +476,7 @@ public class CouplingMetrics extends javaBaseListener {
 
                             if (h) {
                                 Couplinglist.get(keyname).add(inv);
+
                             }
 
                         }
@@ -468,6 +485,7 @@ public class CouplingMetrics extends javaBaseListener {
 
                             Couplinglist.put(keyname,invoclist);
                             Couplinglist.get(keyname).add(inv);
+
                         }
 
                     }
@@ -612,6 +630,7 @@ public class CouplingMetrics extends javaBaseListener {
 
             if (h) {
                 Couplinglist.get(keyname).add(inv);
+
             }
 
         }
@@ -620,6 +639,7 @@ public class CouplingMetrics extends javaBaseListener {
 
             Couplinglist.put(keyname,invoclist);
             Couplinglist.get(keyname).add(inv);
+
         }
 
     }
