@@ -234,11 +234,13 @@ public class  ASTGenerator {
         PackageLevelMetrics p=new PackageLevelMetrics();
         p.ListofPackages();
         p.ListofClasses();
-        Qualityformula.show();
+
         p.Packagemetrics();
 
 
         Staticlistclasslevelmetrics.show();
+        Qualityformula.Expandabilitycalculation();
+        Qualityformula.couplingcalculation();
 
     }
     public void parseFile(String compUnit, String outDir) {

@@ -12,6 +12,7 @@ import java.lang.String;
 import Symbols.VariableSymbol;
 import com.sun.org.apache.xpath.internal.SourceTree;
 
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import java.util.Map;
  * Created by saeideh on 1/14/17.
  */
 public class CouplingMetrics extends javaBaseListener {
+    public static Map<String,Map<String,Map<String,ArrayList<Invoc>>>> returnvalue=new LinkedHashMap<>();
 
     ArrayList<Symbol> Couplinglistofclass = new ArrayList<Symbol>();
 
@@ -32,9 +34,9 @@ public class CouplingMetrics extends javaBaseListener {
     Map<Symbol, String> refrencesofclass = new LinkedHashMap<Symbol, String>();
     Map<String, Symbol> importlistofclass = new LinkedHashMap<String, Symbol>();
 // classname;
-    String packagename;
+    String packagename="";
     public  Map<String, ArrayList<Invoc>> Couplinglist = new LinkedHashMap<String, ArrayList<Invoc>>();
-    public Map<String, ArrayList<Invoc>> Couplinglistheper=new LinkedHashMap<String,ArrayList<Invoc>>();
+    public Map<String, ArrayList<Invoc>> Couplinglisthelper=new LinkedHashMap<String,ArrayList<Invoc>>();
     public Map<String,String> assignmentinmethod=new LinkedHashMap<String,String>();
 
     public ArrayList<Object> objectinstances = new ArrayList<Object>();
@@ -45,6 +47,15 @@ public class CouplingMetrics extends javaBaseListener {
     String assignmentclassname=null;
     String assignmentname=null;
     String leftofassignment;
+    String classname;
+    ParseTreeProperty<String>assigmnetrightside=new ParseTreeProperty<String>();
+    public void setValue(ParseTree ctx, String value) {
+        assigmnetrightside.put(ctx, value);
+    }
+
+    public String getValue(ParseTree ctx) {
+        return assigmnetrightside.get(ctx);
+    }
 
     public CouplingMetrics(GlobalScope globals, ParseTreeProperty<Scope> Scopes, Map<Symbol, String> refrences, Map<String, Symbol> importlist, ArrayList<Symbol> inheritancelistofclass, ArrayList<Object> objectinstances) {
         this.globals = globals;
@@ -102,6 +113,10 @@ public class CouplingMetrics extends javaBaseListener {
 
             }
         }
+
+
+        if(classname!=null){
+        returnvalue.get(packagename).get(classname).putAll(Couplinglist);}
     }
 
     //-----------------------------------------------------------------------------
@@ -123,6 +138,16 @@ public class CouplingMetrics extends javaBaseListener {
         packagename = packagename + ".";
 
         // System.out.println("mypackname:"+packagename);
+        boolean a=true;
+        for(String value: returnvalue.keySet())
+        {
+          if(value.equals(packagename)){
+              a=false;
+          }
+        }
+        if(a){
+        returnvalue.put(packagename,new LinkedHashMap<>());
+        }
     }
 
     @Override
@@ -133,34 +158,93 @@ public class CouplingMetrics extends javaBaseListener {
 
     @Override public void enterNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx) {
         currentScope=scopes.get(ctx);
+        classname=ctx.Identifier().getText();
+        returnvalue.get(packagename).put(classname,new LinkedHashMap<>());
     }
 
     @Override public void exitNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx) { }
 
 
-    @Override public void enterNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) {currentScope=scopes.get(ctx); }
+    @Override public void enterNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) {currentScope=scopes.get(ctx);
+    classname=ctx.Identifier().getText();
+        returnvalue.get(packagename).put(classname,new LinkedHashMap<>());
+
+    }
 
     @Override public void exitNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) { }
 
     //----------------------------------------------------------------------------------------
-
+        String methodname;
     @Override
     public void enterMethodDeclaration(javaParser.MethodDeclarationContext ctx) {
         currentScope = scopes.get(ctx);
         assignmentinmethod.clear();
+
     }
 
     @Override
     public void exitMethodDeclaration(javaParser.MethodDeclarationContext ctx) {
 
+
         currentScope = currentScope.getEnclosingScope();
+
+
+       for(String value:Couplinglisthelper.keySet()){
+           for(int i=0;i<Couplinglisthelper.get(value).size();i++){
+
+               Invoc Invocname=Couplinglisthelper.get(value).get(i);
+               for(String value1: assignmentinmethod.keySet())
+               {
+                   if(Invocname.objectname.equals(assignmentinmethod.get(value1))){
+                       if(Couplinglisthelper.get(value).get(i).relationType.equals(Invoc.RelationType.DEPENDENCY)){
+                          Couplinglisthelper.get(value).get(i).relationType=Invoc.RelationType.ASSOSIATION;
+                           
+                       }
+
+                   }
+               }
+           }
+
+       }
+
+
+
+
     }
     //----------------------------------------------------------------------------------
+    @Override public void enterMethodDeclarator(javaParser.MethodDeclaratorContext ctx) {
+        methodname=ctx.Identifier().getText();
+    }
 
-    @Override
+    @Override public void exitMethodDeclarator(javaParser.MethodDeclaratorContext ctx) {
+
+
+
+
+
+
+
+
+
+        methodname="";
+    }
+
+
+    //----------------------------------------------------------------------------------
+    @Override public void enterExpertionName1(javaParser.ExpertionName1Context ctx) { }
+
+    @Override public void exitExpertionName1(javaParser.ExpertionName1Context ctx) {
+        String name=ctx.Identifier().getText();
+        setValue(ctx,name);
+    }
+
+        //-----------------------------------------------------------------------------------
+
+
     public void enterExpertionName2(javaParser.ExpertionName2Context ctx) {
 
         String name = ctx.ambiguousName().Identifier().toString();
+        setValue(ctx,name);
 
         String classname=null;
 
@@ -224,7 +308,7 @@ public class CouplingMetrics extends javaBaseListener {
 
 
 
-        Invoc inv = new Invoc(ctx.Identifier().getText(), Invoc.InvocType.ATTRIBUTEINVOC, relation,currentScope);
+        Invoc inv = new Invoc(name, ctx.Identifier().getText(), Invoc.InvocType.ATTRIBUTEINVOC, relation,currentScope);
         //be in nokte deghat kon k momken ast dar packagehay mokhtalef classhay hamname dashte bashim, felan in ro dar nazar nagerefti
         Symbol s1=null;
         boolean r=false;
@@ -280,15 +364,20 @@ public class CouplingMetrics extends javaBaseListener {
 
                 if (h) {
                     Couplinglist.get(keyname).add(inv);
+                    Couplinglisthelper.get(keyname).add(inv);
 
                 }
 
             }
             else if(!(f)){
                 ArrayList<Invoc>invoclist=new ArrayList<Invoc>();
+                ArrayList<Invoc>invoclist1=new ArrayList<>();
 
                 Couplinglist.put(keyname,invoclist);
                 Couplinglist.get(keyname).add(inv);
+
+                Couplinglisthelper.put(keyname,invoclist1);
+                Couplinglisthelper.get(keyname).add(inv);
 
             }
 
@@ -311,8 +400,9 @@ public class CouplingMetrics extends javaBaseListener {
     }
     //------------------------------------------------------------------------------
     @Override public void enterAssignment1(javaParser.Assignment1Context ctx) {
-        String leftsidename=ctx.expressionName().getText();
-        //String rightsidename=ctx.expression().assignmentExpression().conditionalExpression().conditionalOrExpression().conditionalAndExpression().inclusiveOrExpression().exclusiveOrExpression().andExpression().equalityExpression().relationalExpression().shiftExpression().additiveExpression().multiplicativeExpression().unaryExpression().unaryExpressionNotPlusMinus().postfixExpression().expressionName().getText();
+
+
+
         //assignmentinmethod.put(leftsidename,rightsidename);
 
 
@@ -320,13 +410,238 @@ public class CouplingMetrics extends javaBaseListener {
 
     @Override public void exitAssignment1(javaParser.Assignment1Context ctx) {
 
+
+        String leftsidename=ctx.expressionName().getText();
+        ArrayList<Object>candid=new ArrayList<Object>();
+
+        Iterator<Object> it=objectinstances.iterator();
+        while (it.hasNext()){
+            Object s=it.next();
+            if(s.symbol.name.equals(leftsidename)){
+                candid.add(s);
+            }
+
+        }
+        boolean classscope=false;
+        boolean methodscope=false;
+        String objectname;
+        Iterator<Object> it0=candid.iterator();
+        while (it0.hasNext()){
+            Object s1=it0.next();
+            if(s1.currentscope.getScopeName().equals(methodname)){
+                methodscope=true;
+                break;
+
+            }
+            else if(s1.currentscope.getScopeName().equals("Class")){
+                classscope=true;
+
+
+            }
+
+        }
+
+        if((methodscope==false) && (classscope=true)){
+
+            String rightsidename=getValue(ctx.getChild(0));
+            assignmentinmethod.put(leftsidename,rightsidename);
+
+
+        }
+
+
+
+
         assignmentname=null;
         leftofassignment=ctx.expressionName().getText();
 
+
+
     }
     //---------------------------------------------------------------------------
+    @Override public void enterExpression(javaParser.ExpressionContext ctx) { }
 
+    @Override public void exitExpression(javaParser.ExpressionContext ctx) {
+        String name=getValue(ctx.getChild(0));
+        setValue(ctx,name);
+    }
     //--------------------------------------------------------------------------------
+    @Override public void enterAssignmentExpression(javaParser.AssignmentExpressionContext ctx) { }
+
+    @Override public void exitAssignmentExpression(javaParser.AssignmentExpressionContext ctx) {
+        String name=getValue(ctx.getChild(0));
+        setValue(ctx,name);
+    }
+    //--------------------------------------------------------------------------------
+    @Override public void enterConditionalExpression(javaParser.ConditionalExpressionContext ctx) { }
+
+    @Override public void exitConditionalExpression(javaParser.ConditionalExpressionContext ctx) {
+        String name=getValue(ctx.getChild(0));
+        setValue(ctx,name);
+    }
+    //---------------------------------------------------------------------------------
+    @Override public void enterConditionalOrExpression(javaParser.ConditionalOrExpressionContext ctx) { }
+
+    @Override public void exitConditionalOrExpression(javaParser.ConditionalOrExpressionContext ctx) {
+        String name=getValue(ctx.getChild(0));
+        setValue(ctx,name);
+    }
+    //----------------------------------------------------------------------------------
+    @Override public void enterConditionalAndExpression(javaParser.ConditionalAndExpressionContext ctx) { }
+
+    @Override public void exitConditionalAndExpression(javaParser.ConditionalAndExpressionContext ctx) {
+        String name=getValue(ctx.getChild(0));
+        setValue(ctx,name);
+    }
+    //-----------------------------------------------------------------------------------------------
+    @Override public void enterInclusiveOrExpression(javaParser.InclusiveOrExpressionContext ctx) { }
+
+    @Override public void exitInclusiveOrExpression(javaParser.InclusiveOrExpressionContext ctx) {
+        String name=getValue(ctx.getChild(0));
+        setValue(ctx,name);
+    }
+    //-----------------------------------------------------------------------------------------------
+
+    @Override public void enterExclusiveOrExpression(javaParser.ExclusiveOrExpressionContext ctx) { }
+
+    @Override public void exitExclusiveOrExpression(javaParser.ExclusiveOrExpressionContext ctx) {
+        String name=getValue(ctx.getChild(0));
+        setValue(ctx,name);
+    }
+    //---------------------------------------------------------------------------------------------
+    @Override public void enterAndExpression(javaParser.AndExpressionContext ctx) { }
+
+    @Override public void exitAndExpression(javaParser.AndExpressionContext ctx) {
+
+        String name=getValue(ctx.getChild(0));
+        setValue(ctx,name);
+    }
+    //---------------------------------------------------------------------------------------------
+    @Override public void enterEqualityExpression(javaParser.EqualityExpressionContext ctx) { }
+
+    @Override public void exitEqualityExpression(javaParser.EqualityExpressionContext ctx) {
+        String name=getValue(ctx.getChild(0));
+        setValue(ctx,name);
+    }
+    //---------------------------------------------------------------------------------------------
+    @Override public void enterRelationalExpression(javaParser.RelationalExpressionContext ctx) { }
+
+    @Override public void exitRelationalExpression(javaParser.RelationalExpressionContext ctx) {
+        String name=getValue(ctx.getChild(0));
+        setValue(ctx,name);
+    }
+    //---------------------------------------------------------------------------------------------
+    @Override public void enterShiftExpression(javaParser.ShiftExpressionContext ctx) { }
+
+    @Override public void exitShiftExpression(javaParser.ShiftExpressionContext ctx) {
+        String name=getValue(ctx.getChild(0));
+        setValue(ctx,name);
+    }
+
+    //----------------------------------------------------------------------------------------------
+    @Override public void enterAdditiveExpression(javaParser.AdditiveExpressionContext ctx) { }
+
+    @Override public void exitAdditiveExpression(javaParser.AdditiveExpressionContext ctx) {
+        String name=getValue(ctx.getChild(0));
+        setValue(ctx,name);
+    }
+    //-----------------------------------------------------------------------------------------------
+    @Override public void enterMultiplicativeExpression(javaParser.MultiplicativeExpressionContext ctx) { }
+
+    @Override public void exitMultiplicativeExpression(javaParser.MultiplicativeExpressionContext ctx) {
+        String name=getValue(ctx.getChild(0));
+        setValue(ctx,name);
+    }
+    //------------------------------------------------------------------------------------------------
+
+    @Override public void enterUnaryExpression(javaParser.UnaryExpressionContext ctx) { }
+
+    @Override public void exitUnaryExpression(javaParser.UnaryExpressionContext ctx) {
+        String name=getValue(ctx.getChild(0));
+        setValue(ctx,name);
+    }
+    //---------------------------------------------------------------------------------------------
+    @Override public void enterPreIncrementExpression(javaParser.PreIncrementExpressionContext ctx) { }
+
+    @Override public void exitPreIncrementExpression(javaParser.PreIncrementExpressionContext ctx) {
+
+        String name=getValue(ctx.getChild(0));
+        setValue(ctx,name);
+
+    }
+
+
+    //----------------------------------------------------------------------------------------------
+
+    @Override public void enterPreDecrementExpression(javaParser.PreDecrementExpressionContext ctx) { }
+
+    @Override public void exitPreDecrementExpression(javaParser.PreDecrementExpressionContext ctx) {
+        String name=getValue(ctx.getChild(0));
+        setValue(ctx,name);
+
+    }
+    //---------------------------------------------------------------------------------------------
+    @Override public void enterUnaryExpressionNotPlusMinus(javaParser.UnaryExpressionNotPlusMinusContext ctx) { }
+
+    @Override public void exitUnaryExpressionNotPlusMinus(javaParser.UnaryExpressionNotPlusMinusContext ctx) {
+        String name=getValue(ctx.getChild(0));
+        setValue(ctx,name);
+    }
+    //----------------------------------------------------------------------------------------------
+    @Override public void enterPostfixExpression(javaParser.PostfixExpressionContext ctx) { }
+
+    @Override public void exitPostfixExpression(javaParser.PostfixExpressionContext ctx) {
+        String name=getValue(ctx.getChild(0));
+        setValue(ctx,name);
+    }
+    //----------------------------------------------------------------------------------------------
+    @Override public void enterCastExpression(javaParser.CastExpressionContext ctx) { }
+
+    @Override public void exitCastExpression(javaParser.CastExpressionContext ctx) {
+
+        String name=getValue(ctx.getChild(0));
+        setValue(ctx,name);
+    }
+
+    //----------------------------------------------------------------------------------------------
+
+    @Override public void enterPostIncrementExpression(javaParser.PostIncrementExpressionContext ctx) { }
+
+    @Override public void exitPostIncrementExpression(javaParser.PostIncrementExpressionContext ctx) {
+        String name=getValue(ctx.getChild(0));
+        setValue(ctx,name);
+    }
+    //----------------------------------------------------------------------------------------------
+
+
+    @Override public void enterPostIncrementExpression_lf_postfixExpression(javaParser.PostIncrementExpression_lf_postfixExpressionContext ctx) { }
+
+    @Override public void exitPostIncrementExpression_lf_postfixExpression(javaParser.PostIncrementExpression_lf_postfixExpressionContext ctx) {
+
+        String name=getValue(ctx.getChild(0));
+        setValue(ctx,name);
+
+    }
+
+    //----------------------------------------------------------------------------------------------
+
+    @Override public void enterPostDecrementExpression(javaParser.PostDecrementExpressionContext ctx) { }
+
+    @Override public void exitPostDecrementExpression(javaParser.PostDecrementExpressionContext ctx) {
+
+        String name=ctx.getText();
+        setValue(ctx,name);
+    }
+    //----------------------------------------------------------------------------------------------
+
+    @Override public void enterPostDecrementExpression_lf_postfixExpression(javaParser.PostDecrementExpression_lf_postfixExpressionContext ctx) { }
+
+    @Override public void exitPostDecrementExpression_lf_postfixExpression(javaParser.PostDecrementExpression_lf_postfixExpressionContext ctx) {
+
+        String name=ctx.getText();
+        setValue(ctx,name);
+    }
+    //----------------------------------------------------------------------------------------------
 
     @Override
     public void enterMethodInvoc2(javaParser.MethodInvoc2Context ctx) {
@@ -368,7 +683,7 @@ public class CouplingMetrics extends javaBaseListener {
         if(primaryname==null){
 
             Iterator<Object> it02 = kandidlist.iterator();
-            while (it01.hasNext()) {
+            while (it02.hasNext()) {
                 Object name2 = it02.next();
                 classname = name2.classname;
 
@@ -420,7 +735,7 @@ public class CouplingMetrics extends javaBaseListener {
 
 
 
-            Invoc inv = new Invoc(ctx.Identifier().getText(), Invoc.InvocType.METHODINVOC, relation,currentScope);
+            Invoc inv = new Invoc(objectname,ctx.Identifier().getText(), Invoc.InvocType.METHODINVOC, relation,currentScope);
             //be in nokte deghat kon k momken ast dar packagehay mokhtalef classhay hamname dashte bashim, felan in ro dar nazar nagerefti
         Symbol s1=null;
         boolean r=false;
@@ -532,7 +847,7 @@ public class CouplingMetrics extends javaBaseListener {
     if(primaryname==null){
 
         Iterator<Object> it02 = kandidlist.iterator();
-        while (it01.hasNext()) {
+        while (it02.hasNext()) {
             Object name2 = it02.next();
             classname = name2.classname;
 
@@ -579,7 +894,7 @@ public class CouplingMetrics extends javaBaseListener {
 
 
 
-    Invoc inv = new Invoc(ctx.Identifier().getText(), Invoc.InvocType.METHODINVOC, relation,currentScope);
+    Invoc inv = new Invoc(objectname,ctx.Identifier().getText(), Invoc.InvocType.METHODINVOC, relation,currentScope);
     //be in nokte deghat kon k momken ast dar packagehay mokhtalef classhay hamname dashte bashim, felan in ro dar nazar nagerefti
     Symbol s1=null;
     for (Symbol value1 : importlistofclass.values()) {

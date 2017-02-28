@@ -14,9 +14,11 @@ public class Invoc {
     RelationType relationType;
     String name;
     Scope currentScope;
+    String objectname;
 
 
-    public Invoc(String name,InvocType invoc, RelationType relation,Scope currentScope){
+    public Invoc(String objectname,String  name,InvocType invoc, RelationType relation,Scope currentScope){
+        this.objectname=objectname;
         this.name=name;
         this.invoctype=invoc;
         this.relationType=relation;

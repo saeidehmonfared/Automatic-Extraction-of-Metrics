@@ -379,7 +379,10 @@ public class ClassLevelMetrics extends javaBaseListener{
         ArrayList<String> listofProtectedVariables = new ArrayList<String>();
         ArrayList<String> listofStaticvariables = new ArrayList<String>();
 
+        classname1=ctx.Identifier().getText();
+
         currentScope = scopes.get(ctx);
+        System.out.println("rrrrrrrrrrrrrrrrrrrrrrrrrrrsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"+currentScope);
 
 
 
@@ -431,7 +434,7 @@ public class ClassLevelMetrics extends javaBaseListener{
         }
 
 
-        classname1=ctx.Identifier().getText();
+
 
         allofabstractmethods=allofabstractmethods+listofAbstractcMethods.size();
         allofabstractmethodslist.addAll(listofAbstractcMethods);
@@ -484,6 +487,7 @@ public class ClassLevelMetrics extends javaBaseListener{
 
         currentScope = scopes.get(ctx);
 
+        System.out.println("rrrrrrrrrrrrrrrrrrrrrrrrrrrsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"+currentScope);
 
 
         int Methodclasscount = 0;

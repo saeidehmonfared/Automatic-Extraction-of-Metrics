@@ -51,6 +51,7 @@ public class Defphase extends javaBaseListener {
     public String packagename="";
     public ArrayList<Symbol.AccessModifier> accessmod=new ArrayList<Symbol.AccessModifier>();
     public ArrayList<Symbol.AccessModifier> interfacemodifier=new ArrayList<Symbol.AccessModifier>();
+    public ArrayList<Symbol.AccessModifier> interfacemethodmodifier=new ArrayList<Symbol.AccessModifier>();
     public ArrayList<Symbol.AccessModifier> fielsmodifier=new ArrayList<Symbol.AccessModifier>();
     public ArrayList<Symbol.AccessModifier> variablemodifier=new ArrayList<Symbol.AccessModifier>();
     ParseTreeProperty<Symbol.AccessModifier>methodmodifier1=new ParseTreeProperty<Symbol.AccessModifier>();
@@ -89,12 +90,12 @@ public class Defphase extends javaBaseListener {
        //**// System.out.println("coupling is from this symbols:"+refrences);
         //**//System.out.println("objectinstance list is:");
 
-       // Iterator<Object> it=objectinstances.iterator();
+      // Iterator<Object> it=objectinstances.iterator();
        //while (it.hasNext()){
-          // Object s=it.next();
+         // Object s=it.next();
 
-         // System.out.println("objectinstansec:\n"+s.classname+" "+s.symbol+" "+s.currentscope.getScopeName());
-       //}
+        //System.out.println("objectinstansec:\n"+s.classname+" "+s.symbol+" "+s.currentscope.getScopeName());
+      //}
 
         //System.out.println(StaticList.staticlist);
 
@@ -107,6 +108,7 @@ public class Defphase extends javaBaseListener {
 
 
         //System.out.println(objectinstances+"5555555555555555555");
+        //System.out.println(refrences+"8888888888888888888888888888");
 
     }
 
@@ -332,32 +334,32 @@ public class Defphase extends javaBaseListener {
 
     @Override public void enterInterfaceMethodDeclaration(javaParser.InterfaceMethodDeclarationContext ctx) {
 
-        String methodname = ctx.getChild(0).getText();
+        String methodname = ctx.methodHeader().methodDeclarator().getChild(0).getText();
 
 
         boolean a=true;
-        if(!(methodmodifier.equals(null))) {
-            for (int i = 0; i < methodmodifier.size(); i++) {
-                Symbol.AccessModifier access = methodmodifier.get(i);
+        if(!(interfacemethodmodifier.equals(null))) {
+            for (int i = 0; i < interfacemethodmodifier.size(); i++) {
+                Symbol.AccessModifier access = interfacemethodmodifier.get(i);
                 if ((access == Symbol.AccessModifier.tpublic) || (access == Symbol.AccessModifier.tprivate) || (access == Symbol.AccessModifier.tprotected))
                     a = false;
             }
 
             if (a) {
-                methodmodifier.add(Symbol.AccessModifier.tpublic);
+                interfacemethodmodifier.add(Symbol.AccessModifier.tpublic);
             }
         }
-        else if (methodmodifier.equals(null))
+        else if (interfacemethodmodifier.equals(null))
         {
-            methodmodifier.add(Symbol.AccessModifier.tpublic);
+            interfacemethodmodifier.add(Symbol.AccessModifier.tpublic);
         }
 
 
 
 
-        MethodSymbol ms = new MethodSymbol(methodname, methodmodifier,methodresult, currentscope);
+        MethodSymbol ms = new MethodSymbol(methodname, interfacemethodmodifier,methodresult, currentscope);
 
-        if(methodresult.equals(VariableSymbol.TYPE.TREFRENCE)){
+        if(methodresult==VariableSymbol.TYPE.TREFRENCE){
 
             if((!methodresulttype.equals("String"))){
                 refrences.put(ms,methodresulttype);}
@@ -371,14 +373,14 @@ public class Defphase extends javaBaseListener {
         currentscope.define(ms);
 
         saveScope(ctx, ms);
-        currentscope = ms;
+        //currentscope = ms;
     }
 
     @Override public void exitInterfaceMethodDeclaration(javaParser.InterfaceMethodDeclarationContext ctx) {
        //**// System.out.println(currentscope);
         saveScope(ctx,currentscope);
         currentscope = currentscope.getEnclosingScope();
-        interfacemodifier.clear();
+        interfacemethodmodifier.clear();
     }
 
     //---------------------------------------------------------------
@@ -1014,7 +1016,7 @@ public class Defphase extends javaBaseListener {
         int m=ctx.start.getType();
         Symbol.AccessModifier methodmod=CheckSymbols.getAccessmodifierType(m);
 
-        interfacemodifier.add(methodmod);
+        interfacemethodmodifier.add(methodmod);
     }
     //----------------------------------------------------------------------------------------------------
 
