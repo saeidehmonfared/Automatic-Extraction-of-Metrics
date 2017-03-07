@@ -185,7 +185,7 @@ public class CouplingMetrics extends javaBaseListener {
     @Override
     public void exitMethodDeclaration(javaParser.MethodDeclarationContext ctx) {
 
-
+        System.out.println("coupling list helper is:"+Couplinglisthelper);
         currentScope = currentScope.getEnclosingScope();
 
 
@@ -197,8 +197,10 @@ public class CouplingMetrics extends javaBaseListener {
                {
                    if(Invocname.objectname.equals(assignmentinmethod.get(value1))){
                        if(Couplinglisthelper.get(value).get(i).relationType.equals(Invoc.RelationType.DEPENDENCY)){
+                           Couplinglist.get(value).get(i).relationType=Invoc.RelationType.ASSOSIATION;
                           Couplinglisthelper.get(value).get(i).relationType=Invoc.RelationType.ASSOSIATION;
-                           
+
+
                        }
 
                    }
@@ -206,6 +208,11 @@ public class CouplingMetrics extends javaBaseListener {
            }
 
        }
+
+     // Couplinglist.putAll(Couplinglisthelper);
+
+       // Couplinglisthelper.clear();
+        assignmentinmethod.clear();
 
 
 
@@ -352,19 +359,43 @@ public class CouplingMetrics extends javaBaseListener {
             if (f) {
                 boolean h = true;
 
-                Iterator<Invoc> it3 = Couplinglist.get(keyname).iterator();
-                while (it3.hasNext()) {
-                    Invoc name2 = it3.next();
-                    if ((name2.name.equals(inv.name))&&(name2.currentScope.getScopeName().equals(inv.currentScope.getScopeName()))) {
-                        h = false;
-                        break;
+               //@@ Iterator<Invoc> it3 = Couplinglist.get(keyname).iterator();
+               //@@ while (it3.hasNext()) {
+                  //@@  Invoc name2 = it3.next();
+                  //@@  if ((name2.name.equals(inv.name))&&(name2.currentScope.getScopeName().equals(inv.currentScope.getScopeName()))) {
+                       //@@ h = false;
+                     //@@   break;
 
-                    }
-                }
+                  //@@  }
+               //@@ }
 
                 if (h) {
                     Couplinglist.get(keyname).add(inv);
-                    Couplinglisthelper.get(keyname).add(inv);
+                    if(Couplinglisthelper.size()==0) {
+                        ArrayList<Invoc> invlist0 = new ArrayList<Invoc>();
+                        Couplinglisthelper.put(keyname, invlist0);
+                        Couplinglisthelper.get(keyname).add(inv);
+                    }
+                    else if(!(Couplinglisthelper.size()==0)) {
+                        boolean h1 = false;
+                        Iterator<String> it4 = Couplinglisthelper.keySet().iterator();
+                        while (it4.hasNext()) {
+                            String name2 = it4.next();
+                            if (name2.equals(keyname)) {
+                                h1 = true;
+                            }
+                            if (h1 == false) {
+                                ArrayList<Invoc> invlist0 = new ArrayList<Invoc>();
+                                Couplinglisthelper.put(keyname, invlist0);
+                                Couplinglisthelper.get(keyname).add(inv);
+
+                            } else if (h1 == true) {
+                                Couplinglisthelper.get(keyname).add(inv);
+
+                            }
+
+                        }
+                    }
 
                 }
 
@@ -413,6 +444,8 @@ public class CouplingMetrics extends javaBaseListener {
 
         String leftsidename=ctx.expressionName().getText();
         ArrayList<Object>candid=new ArrayList<Object>();
+        boolean classscope=false;
+        boolean methodscope=false;
 
         Iterator<Object> it=objectinstances.iterator();
         while (it.hasNext()){
@@ -422,8 +455,7 @@ public class CouplingMetrics extends javaBaseListener {
             }
 
         }
-        boolean classscope=false;
-        boolean methodscope=false;
+
         String objectname;
         Iterator<Object> it0=candid.iterator();
         while (it0.hasNext()){
@@ -435,6 +467,7 @@ public class CouplingMetrics extends javaBaseListener {
             }
             else if(s1.currentscope.getScopeName().equals("Class")){
                 classscope=true;
+                break;
 
 
             }
@@ -443,9 +476,11 @@ public class CouplingMetrics extends javaBaseListener {
 
         if((methodscope==false) && (classscope=true)){
 
-            String rightsidename=getValue(ctx.getChild(0));
+            String rightsidename=getValue(ctx.getChild(2));
             assignmentinmethod.put(leftsidename,rightsidename);
-
+            methodscope=false;
+            classscope=false;
+            candid.clear();
 
         }
 
@@ -778,28 +813,77 @@ public class CouplingMetrics extends javaBaseListener {
                         if (f) {
                             boolean h = true;
 
-                            Iterator<Invoc> it3 = Couplinglist.get(keyname).iterator();
-                            while (it3.hasNext()) {
-                                Invoc name2 = it3.next();
-                                if ((name2.name.equals(inv.name))&&(name2.currentScope.getScopeName().equals(inv.currentScope.getScopeName())))
-                                {
-                                    h = false;
-                                    break;
+                           //@@ Iterator<Invoc> it3 = Couplinglist.get(keyname).iterator();
+                           // @@while (it3.hasNext()) {
+                              // @@ Invoc name2 = it3.next();
+                              // @@ if ((name2.name.equals(inv.name))&&(name2.currentScope.getScopeName().equals(inv.currentScope.getScopeName())))
+                              // @@ {
+                                 //@@   h = false;
+                                // @@   break;
 
-                                }
-                            }
+                              // @@ }
+                           // @@}
 
                             if (h) {
+
                                 Couplinglist.get(keyname).add(inv);
+
+
+
+
+
+                                if(Couplinglisthelper.size()==0) {
+
+
+                                            ArrayList<Invoc> invlist0 = new ArrayList<Invoc>();
+                                            Couplinglisthelper.put(keyname, invlist0);
+                                            Couplinglisthelper.get(keyname).add(inv);
+
+
+
+
+
+                                }
+                                else if(!(Couplinglisthelper.size()==0)){
+                                boolean h1=false;
+                                    Iterator<String> it4 = Couplinglisthelper.keySet().iterator();
+                                    while (it4.hasNext()) {
+                                        String name2 = it4.next();
+                                        if(name2.equals(keyname)){
+                                            h1=true;
+                                        }
+                                        if(h1==false){
+                                            ArrayList<Invoc> invlist0 = new ArrayList<Invoc>();
+                                            Couplinglisthelper.put(keyname, invlist0);
+                                            Couplinglisthelper.get(keyname).add(inv);
+
+                                        }
+                                        else if(h1==true){
+                                            Couplinglisthelper.get(keyname).add(inv);
+
+                                        }
+
+                                    }
+
+
+                                }
 
                             }
 
                         }
                         else if(!(f)){
                             ArrayList<Invoc>invoclist=new ArrayList<Invoc>();
+                            ArrayList<Invoc>invoclist1=new ArrayList<Invoc>();
 
                             Couplinglist.put(keyname,invoclist);
                             Couplinglist.get(keyname).add(inv);
+
+                            Couplinglisthelper.put(keyname,invoclist1);
+                            Couplinglisthelper.get(keyname).add(inv);
+
+
+
+
 
                         }
 
@@ -932,28 +1016,57 @@ public class CouplingMetrics extends javaBaseListener {
         if (f) {
             boolean h = true;
 
-            Iterator<Invoc> it3 = Couplinglist.get(keyname).iterator();
-            while (it3.hasNext()) {
-                Invoc name2 = it3.next();
-                if ((name2.name.equals(inv.name))&&(name2.currentScope.getScopeName().equals(inv.currentScope.getScopeName())))
-                {
-                    h = false;
-                    break;
+           // @@Iterator<Invoc> it3 = Couplinglist.get(keyname).iterator();
+           //@@ while (it3.hasNext()) {
+            // @@   Invoc name2 = it3.next();
+             // @@  if ((name2.name.equals(inv.name))&&(name2.currentScope.getScopeName().equals(inv.currentScope.getScopeName())))
+               //@@ {
+                   //@@ h = false;
+                  //@@  break;
 
-                }
-            }
+               //@@ }
+           //@@ }
 
             if (h) {
                 Couplinglist.get(keyname).add(inv);
+                if(Couplinglisthelper.size()==0) {
+                    ArrayList<Invoc> invlist0 = new ArrayList<Invoc>();
+                    Couplinglisthelper.put(keyname, invlist0);
+                    Couplinglisthelper.get(keyname).add(inv);
+                }
+                else if(!(Couplinglisthelper.size()==0)) {
+                    boolean h1 = false;
+                    Iterator<String> it4 = Couplinglisthelper.keySet().iterator();
+                    while (it4.hasNext()) {
+                        String name2 = it4.next();
+                        if (name2.equals(keyname)) {
+                            h1 = true;
+                        }
+                        if (h1 == false) {
+                            ArrayList<Invoc> invlist0 = new ArrayList<Invoc>();
+                            Couplinglisthelper.put(keyname, invlist0);
+                            Couplinglisthelper.get(keyname).add(inv);
+
+                        } else if (h1 == true) {
+                            Couplinglisthelper.get(keyname).add(inv);
+
+                        }
+
+                    }
+                }
 
             }
 
         }
         else if(!(f)){
             ArrayList<Invoc>invoclist=new ArrayList<Invoc>();
+            ArrayList<Invoc>invoclist1=new ArrayList<Invoc>();
 
             Couplinglist.put(keyname,invoclist);
             Couplinglist.get(keyname).add(inv);
+
+            Couplinglisthelper.put(keyname,invoclist1);
+            Couplinglisthelper.get(keyname).add(inv);
 
         }
 

@@ -645,10 +645,10 @@ public class Defphase extends javaBaseListener {
         while(myscope.getScopeName().equals("Block")){
             myscope=myscope.getEnclosingScope();
         }
-        if(!(name.equals("String"))&&(assignmentname!=null)){
-            Object o=new Object(assignmentname,v,myscope);
-            objectinstances.add(o);}
-        assignmentname=null;
+        //@@if(!(name.equals("String"))&&(assignmentname!=null)){
+         // @@  Object o=new Object(assignmentname,v,myscope);
+          //@@  objectinstances.add(o);}
+       //@@ assignmentname=null;
 
     }
     //-------------------------------------------------------------------------------
