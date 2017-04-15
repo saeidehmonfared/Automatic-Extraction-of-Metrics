@@ -116,7 +116,13 @@ public class CouplingMetrics extends javaBaseListener {
 
 
         if(classname!=null){
-        returnvalue.get(packagename).get(classname).putAll(Couplinglist);}
+            for(String value1:Couplinglist.keySet()){
+                String name1=value1;
+                ArrayList<Invoc> mylist1=new ArrayList<>();
+                mylist1=Couplinglist.get(name1);
+                returnvalue.get(packagename).get(classname).put(name1,mylist1);
+            }
+       }
     }
 
     //-----------------------------------------------------------------------------
@@ -185,7 +191,7 @@ public class CouplingMetrics extends javaBaseListener {
     @Override
     public void exitMethodDeclaration(javaParser.MethodDeclarationContext ctx) {
 
-        System.out.println("coupling list helper is:"+Couplinglisthelper);
+       // System.out.println("coupling list helper is:"+Couplinglisthelper);
         currentScope = currentScope.getEnclosingScope();
 
 

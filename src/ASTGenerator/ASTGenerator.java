@@ -241,6 +241,8 @@ public class  ASTGenerator {
         Staticlistclasslevelmetrics.show();
         Qualityformula.Expandabilitycalculation();
         Qualityformula.couplingcalculation();
+        Qualityformula.cohesioncalculation();
+        Qualityformula.inheritancecalculation();
 
     }
     public void parseFile(String compUnit, String outDir) {

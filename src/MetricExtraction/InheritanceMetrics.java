@@ -8,11 +8,14 @@
 
             import java.util.ArrayList;
             import java.util.Iterator;
+            import java.util.LinkedHashMap;
+            import java.util.Map;
 
-/**
+    /**
  * Created by saeideh on 1/11/17.
  */
 public class InheritanceMetrics extends javaBaseListener {
+    public  static Map<String,Map<String,ArrayList<Symbol>>> returnvalue=new LinkedHashMap<>();
     public   ArrayList<Symbol> Inheritancelistofclass = new ArrayList<Symbol>();
 
     String nameofclass;
@@ -37,6 +40,7 @@ public class InheritanceMetrics extends javaBaseListener {
 
     @Override public void enterNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx) {nameofclass = ctx.Identifier().toString();
         Symbol s1 = null;
+        returnvalue.put(nameofclass,new LinkedHashMap<>());
 
         for (Symbol value : Inheritancelist.inheritanclist.values()) {
             Symbol s = value;
@@ -102,7 +106,7 @@ public class InheritanceMetrics extends javaBaseListener {
 
     @Override public void enterNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) { nameofclass = ctx.Identifier().toString();
         Symbol s1 = null;
-
+            returnvalue.put(nameofclass,new LinkedHashMap<>());
         for (Symbol value : Inheritancelist.inheritanclist.values()) {
             Symbol s = value;
             if (s.name.equals(nameofclass) && s.Parent!=null) {
@@ -143,6 +147,9 @@ public class InheritanceMetrics extends javaBaseListener {
 
        System.out.println("\nInheritance list of " + nameofclass + " is:" + Inheritancelistofclass);
         //Inheritancelistofclass.clear();
+        returnvalue.get(nameofclass).put("list of parents",new ArrayList<Symbol>());
+        returnvalue.get(nameofclass).put("list of childrens",new ArrayList<Symbol>());
+        returnvalue.get(nameofclass).get("list of parents").addAll(Inheritancelistofclass);
 
         Iterator<Symbol> it3 = Inheritancelist.inheritanclist.values().iterator();
 

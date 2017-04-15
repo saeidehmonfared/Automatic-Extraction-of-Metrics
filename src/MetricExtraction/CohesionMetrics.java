@@ -20,6 +20,8 @@ import java.util.Map;
  * Created by saeideh on 1/15/17.
  */
 public class CohesionMetrics extends javaBaseListener {
+    public static Map<String,Map<String,Map<String,ArrayList<String>>>> returnvalue=new LinkedHashMap<>();
+    public static Map<String,Map<String,Map<String,ArrayList<String>>>> returnvalue1=new LinkedHashMap<>();
     ParseTreeProperty<Scope> scopes;
     GlobalScope globals;
     Scope currentScope;
@@ -35,7 +37,7 @@ public class CohesionMetrics extends javaBaseListener {
     Map<String, Symbol> importlistofclass = new LinkedHashMap<String, Symbol>();
     ParseTreeProperty<String>nameoftypes=new ParseTreeProperty<String>();
     public  Map<Symbol,Map<String,ArrayList<String>>> lisofclasses=new LinkedHashMap<Symbol,Map<String, ArrayList<String>>>();
-    String nameofclass;
+    public String nameofclass;
 
 
 
@@ -74,14 +76,17 @@ public class CohesionMetrics extends javaBaseListener {
         cohesionmetrics2();
 
 
+
     }
     //----------------------------------------------------------------
 
     @Override
     public void enterNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx) {
         currentScope = scopes.get(ctx);
-        nameofclass=ctx.Identifier().getText();
 
+        nameofclass=ctx.Identifier().getText();
+        returnvalue.put(nameofclass,new LinkedHashMap<>());
+        returnvalue1.put(nameofclass,new LinkedHashMap<>());
         for (Symbol value : currentScope.symboltableshow().values()) {
             Symbol s = value;
             if (s.getClass().getName().equals("Symbols.VariableSymbol")) {
@@ -101,6 +106,7 @@ public class CohesionMetrics extends javaBaseListener {
 
     @Override
     public void exitNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx) {
+
         if(currentScope.getScopeName().equals("Class")){
         currentScope = currentScope.getEnclosingScope();}
         System.out.println("classs variables is:"+classvariables);
@@ -112,6 +118,8 @@ public class CohesionMetrics extends javaBaseListener {
     public void enterNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) {
         currentScope = scopes.get(ctx);
         nameofclass=ctx.Identifier().getText();
+        returnvalue.put(nameofclass,new LinkedHashMap<>());
+        returnvalue1.put(nameofclass,new LinkedHashMap<>());
 
         for (Symbol value : currentScope.symboltableshow().values()) {
             Symbol s = value;
@@ -141,6 +149,13 @@ public class CohesionMetrics extends javaBaseListener {
     public void enterMethodDeclaration(javaParser.MethodDeclarationContext ctx) {
         currentScope = scopes.get(ctx);
         distinictargs.clear();
+        returnvalue.get(nameofclass).put(currentScope.getScopeName(),new LinkedHashMap<>());
+        returnvalue1.get(nameofclass).put(currentScope.getScopeName(),new LinkedHashMap<>());
+        returnvalue1.get(nameofclass).get(currentScope.getScopeName()).put("distinct parameter types",new ArrayList<>());
+        returnvalue.get(nameofclass).get(currentScope.getScopeName()).put("class variables used",new ArrayList<>());
+        returnvalue.get(nameofclass).get(currentScope.getScopeName()).put("private method called",new ArrayList<>());
+
+
 
 
     }
@@ -184,6 +199,7 @@ public class CohesionMetrics extends javaBaseListener {
         }
             if(distinictargs!=null){
                 System.out.println("distinict parameter type of this method is:"+distinictargs+"\n");
+                returnvalue1.get(nameofclass).get(currentScope.getScopeName()).get("distinct parameter types").addAll(distinictargs);
         String methodname=currentScope.getScopeName().toString();
 
                 ArrayList<String>args=new ArrayList<String>();
@@ -884,7 +900,7 @@ if(type!=null) {
         for (Symbol value : lisofclasses.keySet()) {
             Symbol myclassname = value;
             //TODO:shart hamnam bodane package ra ham dar nazar begir
-            if(myclassname!=null && nameofclass!=null) {
+            if (myclassname != null && nameofclass != null) {
                 if (nameofclass.equals(myclassname.name)) {
                     publicmethodsofclass = lisofclasses.get(value).get("publicmethods");
                     protectedmethodsofclass = lisofclasses.get(value).get("protectedmethods");
@@ -896,16 +912,16 @@ if(type!=null) {
 
         }
         for (int i = 0; i < publicmethodsofclass.size(); i++) {
-            privatecallofmethods.put(publicmethodsofclass.get(i), new LinkedHashMap<String,ArrayList<String>>());
-            privatecallofmethods.get(publicmethodsofclass.get(i)).put("privatemethodcalled",new ArrayList<String>());
-            privatecallofmethods.get(publicmethodsofclass.get(i)).put("classvariableused",new ArrayList<String>());
+            privatecallofmethods.put(publicmethodsofclass.get(i), new LinkedHashMap<String, ArrayList<String>>());
+            privatecallofmethods.get(publicmethodsofclass.get(i)).put("privatemethodcalled", new ArrayList<String>());
+            privatecallofmethods.get(publicmethodsofclass.get(i)).put("classvariableused", new ArrayList<String>());
             for (String value : methodcalls.keySet()) {
                 String methodname = value;
                 if (publicmethodsofclass.get(i).equals(methodname)) {
                     methodscalled.addAll(methodcalls.get(methodname));
-                    for(int k=0;k<methodscalled.size();k++){
-                        for(int k1=0;k1<privatemethodsofclass.size();k1++){
-                            if(methodscalled.get(k).equals(privatemethodsofclass.get(k1))){
+                    for (int k = 0; k < methodscalled.size(); k++) {
+                        for (int k1 = 0; k1 < privatemethodsofclass.size(); k1++) {
+                            if (methodscalled.get(k).equals(privatemethodsofclass.get(k1))) {
 
                                 privatecallofmethods.get(methodname).get("privatemethodcalled").add(privatemethodsofclass.get(k1));
                             }
@@ -944,38 +960,42 @@ if(type!=null) {
 
         }
 
-        for(int i2=0;i2<privatemethodsofclass.size();i2++){
+        for (int i2 = 0; i2 < privatemethodsofclass.size(); i2++) {
             privatecallofmethods.put(privatemethodsofclass.get(i2), new LinkedHashMap<String, ArrayList<String>>());
             privatecallofmethods.get(privatemethodsofclass.get(i2)).put("privatemethodcalled", null);
             privatecallofmethods.get(privatemethodsofclass.get(i2)).put("classvariableused", new ArrayList<>());
 
         }
-            for(String value: privatecallofmethods.keySet()){
-                String methodname1=value;
-                for(String value1: classvariables.keySet()){
-                    String varname=value1;
-                    for(int m=0;m<classvariables.get(varname).size();m++){
-                        if(methodname1.equals(classvariables.get(varname).get(m))){
-                            privatecallofmethods.get(methodname1).get("classvariableused").add(varname);
-                        }
+        for (String value : privatecallofmethods.keySet()) {
+            String methodname1 = value;
+            for (String value1 : classvariables.keySet()) {
+                String varname = value1;
+                for (int m = 0; m < classvariables.get(varname).size(); m++) {
+                    if (methodname1.equals(classvariables.get(varname).get(m))) {
+                        privatecallofmethods.get(methodname1).get("classvariableused").add(varname);
                     }
-
                 }
+
             }
-
-
-
+        }
 
 
         System.out.println("private call of methods::");
-        for(String value: privatecallofmethods.keySet()){
-            System.out.println("method name is:"+value.toString());
+        for (String value : privatecallofmethods.keySet()) {
+            System.out.println("method name is:" + value.toString());
             System.out.println(privatecallofmethods.get(value));
+            returnvalue.get(nameofclass).putAll(privatecallofmethods);
+            // if(nameofclass!=null){
+            //   if(privatecallofmethods.get(value).get("classvariableused")!=null){
+            // returnvalue.get(nameofclass).get(value).get("class variables used").addAll(privatecallofmethods.get(value).get("classvariableused"));}
+            //returnvalue.get(nameofclass).get(value).get("private method called");
+
+        }
+    }
+
         }
 
-    }
 
-    }
 
 
 

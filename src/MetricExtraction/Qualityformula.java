@@ -1,5 +1,6 @@
 package MetricExtraction;
 
+import ASTGenerator.Inheritancelist;
 import MetricExtraction.CouplingExtraction.CouplingMetrics;
 
 /**
@@ -36,6 +37,7 @@ public class Qualityformula {
 
 
         System.out.println("class level:");
+        //TODO: kafiye ke list returnvalue ro barresi koni ta betoni formula ro darbiari
 
         //System.out.println(CouplingMetrics.returnvalue);
 
@@ -43,6 +45,17 @@ public class Qualityformula {
 
         System.out.println("package level:");
 
+    }
+    public  static void cohesioncalculation(){
+        System.out.println("mmmmmmmmmmmmmmmmmmmmm:"+CohesionMetrics.returnvalue);
+        System.out.println("nnnnnnnnnnnnnnnnnnnnnnnnn"+CohesionMetrics.returnvalue1);
+        //TODO: kafiye ke az in do ta list estefadeh koni ta felan metric cohesion ro hesab koni
+    }
+
+    public static void inheritancecalculation(){
+
+        System.out.println("Inheritance metric is:");
+        System.out.println(InheritanceMetrics.returnvalue);
     }
 
 }
