@@ -10,8 +10,8 @@ public class Invoc {
 
     public static enum RelationType {ASSOSIATION, DEPENDENCY,INVALID,STATICMETHOD};
 
-    InvocType invoctype;
-    RelationType relationType;
+    public InvocType invoctype;
+   public RelationType relationType;
     String name;
     Scope currentScope;
     String objectname;

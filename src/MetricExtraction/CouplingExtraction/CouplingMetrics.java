@@ -25,7 +25,7 @@ import java.util.Map;
  */
 public class CouplingMetrics extends javaBaseListener {
     public static Map<String,Map<String,Map<String,ArrayList<Invoc>>>> returnvalue=new LinkedHashMap<>();
-
+    public static Map<String,ArrayList<Object>> objectinstancevalue=new LinkedHashMap<>();
     ArrayList<Symbol> Couplinglistofclass = new ArrayList<Symbol>();
 
     ParseTreeProperty<Scope> scopes;
@@ -165,6 +165,8 @@ public class CouplingMetrics extends javaBaseListener {
     @Override public void enterNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx) {
         currentScope=scopes.get(ctx);
         classname=ctx.Identifier().getText();
+        objectinstancevalue.put(classname,new ArrayList<Object>());
+        objectinstancevalue.get(classname).addAll(objectinstances);
         returnvalue.get(packagename).put(classname,new LinkedHashMap<>());
     }
 
