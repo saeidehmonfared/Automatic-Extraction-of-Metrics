@@ -49,7 +49,7 @@ public class ClassLevelMetrics extends javaBaseListener{
               //  classsymbol=s;
                 System.out.println("Class name is:" + s.name + "\npackage of this class is:" + s.packagename);
             } else if (s.type.equals(Symbol.Type.tINTERFACE)) {
-                System.out.println("Interface name is:" + s.name + "\npackage of this interface is:" + s.packagename);
+               //@@ System.out.println("Interface name is:" + s.name + "\npackage of this interface is:" + s.packagename);
             }
 
 
@@ -165,12 +165,12 @@ public class ClassLevelMetrics extends javaBaseListener{
         Staticlistclasslevelmetrics.put(s1,metriclist);
 
 
-        System.out.println("number of methods of this class is:"+Methodclasscount);
-        System.out.println("PublicMethods:"+listofPublicmethods);
-        System.out.println("privateMethods:"+listofPrivatemethods);
-        System.out.println("Protectedmethods:"+listofProtectedmethods);
-        System.out.println("Abstractmethods:"+listofAbstractcMethods);
-        System.out.println("Staticmethods:"+listofStaticmethods);
+      //@@  System.out.println("number of methods of this class is:"+Methodclasscount);
+       //@@ System.out.println("PublicMethods:"+listofPublicmethods);
+       //@@ System.out.println("privateMethods:"+listofPrivatemethods);
+       //@@ System.out.println("Protectedmethods:"+listofProtectedmethods);
+       //@@ System.out.println("Abstractmethods:"+listofAbstractcMethods);
+       //@@ System.out.println("Staticmethods:"+listofStaticmethods);
 
         System.out.println("number of variables of this class is:"+Variableclasscount);
         System.out.println("PublicVariables:"+listofPublicVariables);
@@ -382,7 +382,7 @@ public class ClassLevelMetrics extends javaBaseListener{
         classname1=ctx.Identifier().getText();
 
         currentScope = scopes.get(ctx);
-        System.out.println("rrrrrrrrrrrrrrrrrrrrrrrrrrrsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"+currentScope);
+       //@@ System.out.println("rrrrrrrrrrrrrrrrrrrrrrrrrrrsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"+currentScope);
 
 
 
@@ -451,18 +451,18 @@ public class ClassLevelMetrics extends javaBaseListener{
         Staticlistclasslevelmetrics.put(s1,metriclist);
 
 
-        System.out.println("number of methods of this interface is:"+Methodclasscount);
-        System.out.println("PublicMethods:"+listofPublicmethods);
-        System.out.println("privateMethods:"+listofPrivatemethods);
-        System.out.println("Protectedmethods:"+listofProtectedmethods);
-        System.out.println("Abstractmethods:"+listofAbstractcMethods);
-        System.out.println("Staticmethods:"+listofStaticmethods);
+       //@@ System.out.println("number of methods of this interface is:"+Methodclasscount);
+       //@@ System.out.println("PublicMethods:"+listofPublicmethods);
+      //@@  System.out.println("privateMethods:"+listofPrivatemethods);
+       //@@ System.out.println("Protectedmethods:"+listofProtectedmethods);
+        //@@System.out.println("Abstractmethods:"+listofAbstractcMethods);
+        //@@System.out.println("Staticmethods:"+listofStaticmethods);
 
-        System.out.println("number of variables of this interface is:"+Variableclasscount);
-        System.out.println("PublicVariables:"+listofPublicVariables);
-        System.out.println("privateVariables:"+listofPrivateVariables);
-        System.out.println("ProtectedVariables:"+listofProtectedVariables);
-        System.out.println("StaticVariables:"+listofStaticvariables);
+       //@@ System.out.println("number of variables of this interface is:"+Variableclasscount);
+       //@@ System.out.println("PublicVariables:"+listofPublicVariables);
+        //@@System.out.println("privateVariables:"+listofPrivateVariables);
+        //@@System.out.println("ProtectedVariables:"+listofProtectedVariables);
+        //@@System.out.println("StaticVariables:"+listofStaticvariables);
 
 
 
@@ -487,7 +487,7 @@ public class ClassLevelMetrics extends javaBaseListener{
 
         currentScope = scopes.get(ctx);
 
-        System.out.println("rrrrrrrrrrrrrrrrrrrrrrrrrrrsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"+currentScope);
+        //@@System.out.println("rrrrrrrrrrrrrrrrrrrrrrrrrrrsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"+currentScope);
 
 
         int Methodclasscount = 0;

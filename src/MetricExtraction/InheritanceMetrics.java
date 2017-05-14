@@ -78,8 +78,11 @@ public class InheritanceMetrics extends javaBaseListener {
         }
 
 
-        System.out.println("\nInheritance list of " + nameofclass + " is:" + Inheritancelistofclass);
+       //@@ System.out.println("\nInheritance list of " + nameofclass + " is:" + Inheritancelistofclass);
         //Inheritancelistofclass.clear();
+        returnvalue.get(nameofclass).put("list of parents",new ArrayList<Symbol>());
+        returnvalue.get(nameofclass).put("list of childrens",new ArrayList<Symbol>());
+        returnvalue.get(nameofclass).get("list of parents").addAll(Inheritancelistofclass);
 
 
         Iterator<Symbol> it3 = Inheritancelist.inheritanclist.values().iterator();
@@ -89,7 +92,7 @@ public class InheritanceMetrics extends javaBaseListener {
                 Symbol s = it3.next();
 
                 if (s.name.equals(nameofclass) && (s.Implementlist != null)) {
-                    System.out.println("implemented interfacec with " + nameofclass + " is:" + s.Implementlist);
+                  //@@  System.out.println("implemented interfacec with " + nameofclass + " is:" + s.Implementlist);
                     break;
 
                 }
@@ -145,7 +148,7 @@ public class InheritanceMetrics extends javaBaseListener {
         }
 
 
-       System.out.println("\nInheritance list of " + nameofclass + " is:" + Inheritancelistofclass);
+       //@@System.out.println("\nInheritance list of " + nameofclass + " is:" + Inheritancelistofclass);
         //Inheritancelistofclass.clear();
         returnvalue.get(nameofclass).put("list of parents",new ArrayList<Symbol>());
         returnvalue.get(nameofclass).put("list of childrens",new ArrayList<Symbol>());
@@ -158,7 +161,7 @@ public class InheritanceMetrics extends javaBaseListener {
                 Symbol s = it3.next();
 
                 if (s.name.equals(nameofclass) && (s.Implementlist != null)) {
-                    System.out.println("implemented interfacec with " + nameofclass + " is:" + s.Implementlist);
+                    //@@System.out.println("implemented interfacec with " + nameofclass + " is:" + s.Implementlist);
                     break;
 
                 }

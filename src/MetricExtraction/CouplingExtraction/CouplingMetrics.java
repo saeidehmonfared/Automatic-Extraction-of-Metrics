@@ -26,6 +26,7 @@ import java.util.Map;
 public class CouplingMetrics extends javaBaseListener {
     public static Map<String,Map<String,Map<String,ArrayList<Invoc>>>> returnvalue=new LinkedHashMap<>();
     public static Map<String,ArrayList<Object>> objectinstancevalue=new LinkedHashMap<>();
+    public static Map<String,Map<String,Map<String,ArrayList<cohesionobject>>>>Cohesionlist=new LinkedHashMap<>();
     ArrayList<Symbol> Couplinglistofclass = new ArrayList<Symbol>();
 
     ParseTreeProperty<Scope> scopes;
@@ -33,7 +34,7 @@ public class CouplingMetrics extends javaBaseListener {
     Scope Currentscope;
     Map<Symbol, String> refrencesofclass = new LinkedHashMap<Symbol, String>();
     Map<String, Symbol> importlistofclass = new LinkedHashMap<String, Symbol>();
-// classname;
+    // classname;
     String packagename="";
     public  Map<String, ArrayList<Invoc>> Couplinglist = new LinkedHashMap<String, ArrayList<Invoc>>();
     public Map<String, ArrayList<Invoc>> Couplinglisthelper=new LinkedHashMap<String,ArrayList<Invoc>>();
@@ -72,7 +73,7 @@ public class CouplingMetrics extends javaBaseListener {
 
     public void enterCompilationUnit(javaParser.CompilationUnitContext ctx) {
         Currentscope = globals;
-       // System.out.println(this.objectinstances+"66666666666666666666");
+        // System.out.println(this.objectinstances+"66666666666666666666");
 
     }
 
@@ -122,17 +123,20 @@ public class CouplingMetrics extends javaBaseListener {
                 mylist1=Couplinglist.get(name1);
                 returnvalue.get(packagename).get(classname).put(name1,mylist1);
             }
-       }
+        }
+
+
+
     }
 
     //-----------------------------------------------------------------------------
     //public void enterNormalClassDeclaration(javaParser.NormalClassDeclarationContext ctx) {
-        //classname = ctx.getText();
+    //classname = ctx.getText();
 
-       // System.out.println("Name of class is:" + ctx.Identifier());
-       // Couplinglist.put(packagename + classname, null);
+    // System.out.println("Name of class is:" + ctx.Identifier());
+    // Couplinglist.put(packagename + classname, null);
 
-  //  }
+    //  }
     //----------------------------------------------------------------------------
 
     @Override
@@ -147,12 +151,12 @@ public class CouplingMetrics extends javaBaseListener {
         boolean a=true;
         for(String value: returnvalue.keySet())
         {
-          if(value.equals(packagename)){
-              a=false;
-          }
+            if(value.equals(packagename)){
+                a=false;
+            }
         }
         if(a){
-        returnvalue.put(packagename,new LinkedHashMap<>());
+            returnvalue.put(packagename,new LinkedHashMap<>());
         }
     }
 
@@ -161,28 +165,37 @@ public class CouplingMetrics extends javaBaseListener {
 
 
     }
+    public String classnameasli="";
 
     @Override public void enterNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx) {
         currentScope=scopes.get(ctx);
         classname=ctx.Identifier().getText();
+        classnameasli=ctx.Identifier().getText();
         objectinstancevalue.put(classname,new ArrayList<Object>());
         objectinstancevalue.get(classname).addAll(objectinstances);
         returnvalue.get(packagename).put(classname,new LinkedHashMap<>());
+        Cohesionlist.put(classname,new LinkedHashMap<>());
     }
 
-    @Override public void exitNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx) { }
+    @Override public void exitNormalClassDeclaration1(javaParser.NormalClassDeclaration1Context ctx) {
+        classnameasli="";
+    }
 
 
     @Override public void enterNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) {currentScope=scopes.get(ctx);
-    classname=ctx.Identifier().getText();
+        classname=ctx.Identifier().getText();
+        classnameasli=ctx.Identifier().getText();
         returnvalue.get(packagename).put(classname,new LinkedHashMap<>());
+        Cohesionlist.put(classname,new LinkedHashMap<>());
 
     }
 
-    @Override public void exitNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) { }
+    @Override public void exitNormalClassdeclaration2(javaParser.NormalClassdeclaration2Context ctx) {
+        classnameasli="";
+    }
 
     //----------------------------------------------------------------------------------------
-        String methodname;
+    String methodname;
     @Override
     public void enterMethodDeclaration(javaParser.MethodDeclarationContext ctx) {
         currentScope = scopes.get(ctx);
@@ -193,42 +206,53 @@ public class CouplingMetrics extends javaBaseListener {
     @Override
     public void exitMethodDeclaration(javaParser.MethodDeclarationContext ctx) {
 
-       // System.out.println("coupling list helper is:"+Couplinglisthelper);
+        // System.out.println("coupling list helper is:"+Couplinglisthelper);
         currentScope = currentScope.getEnclosingScope();
 
 
-       for(String value:Couplinglisthelper.keySet()){
-           for(int i=0;i<Couplinglisthelper.get(value).size();i++){
+        for(String value:Couplinglisthelper.keySet()){
+            for(int i=0;i<Couplinglisthelper.get(value).size();i++){
 
-               Invoc Invocname=Couplinglisthelper.get(value).get(i);
-               for(String value1: assignmentinmethod.keySet())
-               {
-                   if(Invocname.objectname.equals(assignmentinmethod.get(value1))){
-                       if(Couplinglisthelper.get(value).get(i).relationType.equals(Invoc.RelationType.DEPENDENCY)){
-                           Couplinglist.get(value).get(i).relationType=Invoc.RelationType.ASSOSIATION;
-                          Couplinglisthelper.get(value).get(i).relationType=Invoc.RelationType.ASSOSIATION;
+                Invoc Invocname=Couplinglisthelper.get(value).get(i);
+                for(String value1: assignmentinmethod.keySet())
+                {
+                    if(Invocname.objectname.equals(assignmentinmethod.get(value1))){
+                        if(Couplinglisthelper.get(value).get(i).relationType.equals(Invoc.RelationType.DEPENDENCY)){
+                            Couplinglist.get(value).get(i).relationType=Invoc.RelationType.ASSOSIATION;
+                            Couplinglisthelper.get(value).get(i).relationType=Invoc.RelationType.ASSOSIATION;
 
 
-                       }
+                        }
 
-                   }
-               }
-           }
+                    }
+                }
+            }
 
-       }
 
-     // Couplinglist.putAll(Couplinglisthelper);
+        }
 
-       // Couplinglisthelper.clear();
+        // Couplinglist.putAll(Couplinglisthelper);
+
+        // Couplinglisthelper.clear();
         assignmentinmethod.clear();
 
+        methodnameasli="";
 
 
 
     }
     //----------------------------------------------------------------------------------
+    String methodnameasli;
     @Override public void enterMethodDeclarator(javaParser.MethodDeclaratorContext ctx) {
         methodname=ctx.Identifier().getText();
+        methodnameasli=ctx.Identifier().getText();
+        if((!classnameasli.equals("")) && (!methodnameasli.equals(""))) {
+            Cohesionlist.get(classnameasli).put(methodnameasli, new LinkedHashMap<>());
+            Cohesionlist.get(classnameasli).get(methodnameasli).put("innerattributes", new ArrayList<cohesionobject>());
+            Cohesionlist.get(classnameasli).get(methodnameasli).put("outerattributes", new ArrayList<cohesionobject>());
+            Cohesionlist.get(classnameasli).get(methodnameasli).put("innercalls", new ArrayList<cohesionobject>());
+            Cohesionlist.get(classnameasli).get(methodnameasli).put("outercalls", new ArrayList<cohesionobject>());
+        }
     }
 
     @Override public void exitMethodDeclarator(javaParser.MethodDeclaratorContext ctx) {
@@ -237,11 +261,28 @@ public class CouplingMetrics extends javaBaseListener {
 
 
 
-
-
-
-
         methodname="";
+
+
+
+
+    }
+    @Override public void enterConstructorDeclaration(javaParser.ConstructorDeclarationContext ctx) {
+        methodnameasli=ctx.constructorDeclarator().simpleTypeName().Identifier().toString();
+
+        Cohesionlist.get(classnameasli).put(methodnameasli,new LinkedHashMap<>());
+        Cohesionlist.get(classnameasli).get(methodnameasli).put("innerattributes",new ArrayList<cohesionobject>());
+        Cohesionlist.get(classnameasli).get(methodnameasli).put("outerattributes",new ArrayList<cohesionobject>());
+        Cohesionlist.get(classnameasli).get(methodnameasli).put("innercalls",new ArrayList<cohesionobject>());
+        Cohesionlist.get(classnameasli).get(methodnameasli).put("outercalls",new ArrayList<cohesionobject>());
+    }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override public void exitConstructorDeclaration(javaParser.ConstructorDeclarationContext ctx) {
+        methodnameasli="";
     }
 
 
@@ -251,9 +292,13 @@ public class CouplingMetrics extends javaBaseListener {
     @Override public void exitExpertionName1(javaParser.ExpertionName1Context ctx) {
         String name=ctx.Identifier().getText();
         setValue(ctx,name);
+        cohesionobject ob=new cohesionobject(name);
+        if((classnameasli.equals("")) && (!methodnameasli.equals(""))){
+        Cohesionlist.get(classnameasli).get(methodnameasli).get("innerattributes").add(ob);}
+        //TODO:deghat kon inja samte raste yek ebarat ke mitone parametere khode method bashe ro ham  b onvane attribute dakheli dar nazar migire,hatman ye fekri barash bokon.
     }
 
-        //-----------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------
 
 
     public void enterExpertionName2(javaParser.ExpertionName2Context ctx) {
@@ -307,6 +352,11 @@ public class CouplingMetrics extends javaBaseListener {
 
             }
         }
+
+        //in tike baray por kardan list cohesion hast va rabti b coupling nadard
+        cohesionobject ob=new cohesionobject(name,classname);
+        if(!(classnameasli.equals("")) && (!methodnameasli.equals(""))){
+        Cohesionlist.get(classnameasli).get(methodnameasli).get("outerattributes").add(ob);}
 
         if(primaryname!=null) {
             if (primaryname.currentscope.getScopeName().equals("Class") ) {
@@ -367,15 +417,15 @@ public class CouplingMetrics extends javaBaseListener {
             if (f) {
                 boolean h = true;
 
-               //@@ Iterator<Invoc> it3 = Couplinglist.get(keyname).iterator();
-               //@@ while (it3.hasNext()) {
-                  //@@  Invoc name2 = it3.next();
-                  //@@  if ((name2.name.equals(inv.name))&&(name2.currentScope.getScopeName().equals(inv.currentScope.getScopeName()))) {
-                       //@@ h = false;
-                     //@@   break;
+                //@@ Iterator<Invoc> it3 = Couplinglist.get(keyname).iterator();
+                //@@ while (it3.hasNext()) {
+                //@@  Invoc name2 = it3.next();
+                //@@  if ((name2.name.equals(inv.name))&&(name2.currentScope.getScopeName().equals(inv.currentScope.getScopeName()))) {
+                //@@ h = false;
+                //@@   break;
 
-                  //@@  }
-               //@@ }
+                //@@  }
+                //@@ }
 
                 if (h) {
                     Couplinglist.get(keyname).add(inv);
@@ -425,8 +475,8 @@ public class CouplingMetrics extends javaBaseListener {
     }
     //---------------------------------------------------------------------------
     @Override public void enterClassInstanceCreationExpression_lfno_primary(javaParser.ClassInstanceCreationExpression_lfno_primaryContext ctx) {
-                assignmentname=ctx.Identifier(0).getText();
-               assignmentclassname=ctx.Identifier().get(0).getText();
+        assignmentname=ctx.Identifier(0).getText();
+        assignmentclassname=ctx.Identifier().get(0).getText();
         //System.out.println(assignmentclassname+"maaaaaaaaaaaaaaan");
 
     }
@@ -723,6 +773,7 @@ public class CouplingMetrics extends javaBaseListener {
             }
         }
 
+
         if(primaryname==null){
 
             Iterator<Object> it02 = kandidlist.iterator();
@@ -760,6 +811,11 @@ public class CouplingMetrics extends javaBaseListener {
             }
 
         }
+        //add to cohesion list
+        cohesionobject ob=new cohesionobject(objectname,classname);
+        if((!classnameasli.equals("")) && (!methodnameasli.equals(""))){
+        Cohesionlist.get(classnameasli).get(methodnameasli).get("outercalls").add(ob);}
+
 
         if(primaryname!=null) {
             if (primaryname.currentscope.getScopeName().equals("Class")) {
@@ -778,320 +834,354 @@ public class CouplingMetrics extends javaBaseListener {
 
 
 
-            Invoc inv = new Invoc(objectname,ctx.Identifier().getText(), Invoc.InvocType.METHODINVOC, relation,currentScope);
-            //be in nokte deghat kon k momken ast dar packagehay mokhtalef classhay hamname dashte bashim, felan in ro dar nazar nagerefti
+        Invoc inv = new Invoc(objectname,ctx.Identifier().getText(), Invoc.InvocType.METHODINVOC, relation,currentScope);
+        //be in nokte deghat kon k momken ast dar packagehay mokhtalef classhay hamname dashte bashim, felan in ro dar nazar nagerefti
         Symbol s1=null;
         boolean r=false;
-            for (Symbol value1 : importlistofclass.values()) {
-                s1 = value1;
-                if (s1.name.equals(classname)) {
-                    Iterator<Symbol> it = Inheritancelistofclass.iterator();
-                    while (it.hasNext()) {
-                        Symbol name2 = it.next();
-                        if ((classname.equals(name2.name))) {
-                            coupling = false;
-                            break;
-
-                        }
-                    }
-                         r=true;
+        for (Symbol value1 : importlistofclass.values()) {
+            s1 = value1;
+            if (s1.name.equals(classname)) {
+                Iterator<Symbol> it = Inheritancelistofclass.iterator();
+                while (it.hasNext()) {
+                    Symbol name2 = it.next();
+                    if ((classname.equals(name2.name))) {
+                        coupling = false;
                         break;
 
-
-
-
-
-                }
-            }
-                    if (coupling && r) {
-
-                        String keyname = s1.packagename + s1.name;
-                        boolean f = false;
-                        String s = null;
-                        for (String value : Couplinglist.keySet()) {
-                            s = value;
-                            if (s.equals(keyname)) {
-                                f = true;
-                                break;
-                            }
-                            // Couplinglist.get(s).add()
-
-                        }
-
-                        if (f) {
-                            boolean h = true;
-
-                           //@@ Iterator<Invoc> it3 = Couplinglist.get(keyname).iterator();
-                           // @@while (it3.hasNext()) {
-                              // @@ Invoc name2 = it3.next();
-                              // @@ if ((name2.name.equals(inv.name))&&(name2.currentScope.getScopeName().equals(inv.currentScope.getScopeName())))
-                              // @@ {
-                                 //@@   h = false;
-                                // @@   break;
-
-                              // @@ }
-                           // @@}
-
-                            if (h) {
-
-                                Couplinglist.get(keyname).add(inv);
-
-
-
-
-
-                                if(Couplinglisthelper.size()==0) {
-
-
-                                            ArrayList<Invoc> invlist0 = new ArrayList<Invoc>();
-                                            Couplinglisthelper.put(keyname, invlist0);
-                                            Couplinglisthelper.get(keyname).add(inv);
-
-
-
-
-
-                                }
-                                else if(!(Couplinglisthelper.size()==0)){
-                                boolean h1=false;
-                                    Iterator<String> it4 = Couplinglisthelper.keySet().iterator();
-                                    while (it4.hasNext()) {
-                                        String name2 = it4.next();
-                                        if(name2.equals(keyname)){
-                                            h1=true;
-                                        }
-                                        if(h1==false){
-                                            ArrayList<Invoc> invlist0 = new ArrayList<Invoc>();
-                                            Couplinglisthelper.put(keyname, invlist0);
-                                            Couplinglisthelper.get(keyname).add(inv);
-
-                                        }
-                                        else if(h1==true){
-                                            Couplinglisthelper.get(keyname).add(inv);
-
-                                        }
-
-                                    }
-
-
-                                }
-
-                            }
-
-                        }
-                        else if(!(f)){
-                            ArrayList<Invoc>invoclist=new ArrayList<Invoc>();
-                            ArrayList<Invoc>invoclist1=new ArrayList<Invoc>();
-
-                            Couplinglist.put(keyname,invoclist);
-                            Couplinglist.get(keyname).add(inv);
-
-                            Couplinglisthelper.put(keyname,invoclist1);
-                            Couplinglisthelper.get(keyname).add(inv);
-
-
-
-
-
-                        }
-
                     }
                 }
-//--------------------------------------------------------------------
-@Override public void enterMethodinvocation_lfno_primary2(javaParser.Methodinvocation_lfno_primary2Context ctx) {
+                r=true;
+                break;
 
-    String objectname = ctx.typeName().getText();
-    String classname=null;
 
-    boolean coupling = true;
 
-    Invoc.RelationType relation = Invoc.RelationType.INVALID;
 
-    ArrayList<Object>kandidlist=new ArrayList<Object>();
 
-    Iterator<Object> it0 = objectinstances.iterator();
-    while (it0.hasNext()) {
-        Object name1 = it0.next();
-        if (objectname.equals(name1.symbol.name)) {
-            kandidlist.add(name1);
+            }
+        }
+        if (coupling && r) {
+
+            String keyname = s1.packagename + s1.name;
+            boolean f = false;
+            String s = null;
+            for (String value : Couplinglist.keySet()) {
+                s = value;
+                if (s.equals(keyname)) {
+                    f = true;
+                    break;
+                }
+                // Couplinglist.get(s).add()
+
+            }
+
+            if (f) {
+                boolean h = true;
+
+                //@@ Iterator<Invoc> it3 = Couplinglist.get(keyname).iterator();
+                // @@while (it3.hasNext()) {
+                // @@ Invoc name2 = it3.next();
+                // @@ if ((name2.name.equals(inv.name))&&(name2.currentScope.getScopeName().equals(inv.currentScope.getScopeName())))
+                // @@ {
+                //@@   h = false;
+                // @@   break;
+
+                // @@ }
+                // @@}
+
+                if (h) {
+
+                    Couplinglist.get(keyname).add(inv);
+
+
+
+
+
+                    if(Couplinglisthelper.size()==0) {
+
+
+                        ArrayList<Invoc> invlist0 = new ArrayList<Invoc>();
+                        Couplinglisthelper.put(keyname, invlist0);
+                        Couplinglisthelper.get(keyname).add(inv);
+
+
+
+
+
+                    }
+                    else if(!(Couplinglisthelper.size()==0)){
+                        boolean h1=false;
+                        Iterator<String> it4 = Couplinglisthelper.keySet().iterator();
+                        while (it4.hasNext()) {
+                            String name2 = it4.next();
+                            if(name2.equals(keyname)){
+                                h1=true;
+                            }
+                            if(h1==false){
+                                ArrayList<Invoc> invlist0 = new ArrayList<Invoc>();
+                                Couplinglisthelper.put(keyname, invlist0);
+                                Couplinglisthelper.get(keyname).add(inv);
+
+                            }
+                            else if(h1==true){
+                                Couplinglisthelper.get(keyname).add(inv);
+
+                            }
+
+                        }
+
+
+                    }
+
+                }
+
+            }
+            else if(!(f)){
+                ArrayList<Invoc>invoclist=new ArrayList<Invoc>();
+                ArrayList<Invoc>invoclist1=new ArrayList<Invoc>();
+
+                Couplinglist.put(keyname,invoclist);
+                Couplinglist.get(keyname).add(inv);
+
+                Couplinglisthelper.put(keyname,invoclist1);
+                Couplinglisthelper.get(keyname).add(inv);
+
+
+
+
+
+            }
+
         }
     }
+    //--------------------------------------------------------------------
+    @Override public void enterMethodinvocation_lfno_primary2(javaParser.Methodinvocation_lfno_primary2Context ctx) {
 
-    Object primaryname=null;
+        String objectname = ctx.typeName().getText();
+        String classname=null;
 
+        boolean coupling = true;
 
-    Iterator<Object> it01 = kandidlist.iterator();
-    while (it01.hasNext()) {
-        Object name2 = it01.next();
-        classname = name2.classname;
+        Invoc.RelationType relation = Invoc.RelationType.INVALID;
 
-        if ((name2.symbol.name.equals(objectname))&&(name2.currentscope.getScopeName().equals(currentScope.getScopeName()))) {
+        ArrayList<Object>kandidlist=new ArrayList<Object>();
 
-            primaryname = name2;
-            break;
+        Iterator<Object> it0 = objectinstances.iterator();
+        while (it0.hasNext()) {
+            Object name1 = it0.next();
+            if (objectname.equals(name1.symbol.name)) {
+                kandidlist.add(name1);
+            }
         }
-        else if(objectname.equals(name2.symbol.name)){
-            primaryname=name2;
-            break;
-        }
-    }
 
-    if(primaryname==null){
+        Object primaryname=null;
 
-        Iterator<Object> it02 = kandidlist.iterator();
-        while (it02.hasNext()) {
-            Object name2 = it02.next();
+
+        Iterator<Object> it01 = kandidlist.iterator();
+        while (it01.hasNext()) {
+            Object name2 = it01.next();
             classname = name2.classname;
 
-            if ((name2.symbol.name.equals(objectname))) {
+            if ((name2.symbol.name.equals(objectname))&&(name2.currentscope.getScopeName().equals(currentScope.getScopeName()))) {
 
                 primaryname = name2;
-                break;}
-
-
-
-        }
-    }
-    if(primaryname==null){
-        boolean f=false;
-        Symbol s0=null;
-        for (Symbol value1 : importlistofclass.values()) {
-            s0 = value1;
-            if (s0.name.equals(objectname)) {
-                for(int i=0;i<s0.accessmodifier.size();i++){
-                    if(s0.accessmodifier.get(i).equals(Symbol.AccessModifier.TSTATIC)) {
-                        f = true;
-                        break;
-                    }
-
-                }
-               relation=Invoc.RelationType.STATICMETHOD;
-                f=false;
                 break;
             }
+            else if(objectname.equals(name2.symbol.name)){
+                primaryname=name2;
+                break;
             }
-
-    }
-    if(primaryname!=null) {
-        if (primaryname.currentscope.getScopeName().equals("Class")) {
-            relation = Invoc.RelationType.ASSOSIATION;
-        } else if ((primaryname.currentscope.getClass().getName().equals("Symbols.MethodSymbol"))) {
-            if (((MethodSymbol) primaryname.currentscope).returntype.equals(VariableSymbol.TYPE.TCONSTRUCTOR))
-                relation = Invoc.RelationType.ASSOSIATION;
-            else
-                relation = Invoc.RelationType.DEPENDENCY;
         }
-    }
 
 
 
+        if(primaryname==null){
 
-    Invoc inv = new Invoc(objectname,ctx.Identifier().getText(), Invoc.InvocType.METHODINVOC, relation,currentScope);
-    //be in nokte deghat kon k momken ast dar packagehay mokhtalef classhay hamname dashte bashim, felan in ro dar nazar nagerefti
-    Symbol s1=null;
-    for (Symbol value1 : importlistofclass.values()) {
-        s1 = value1;
-        if (s1.name.equals(classname)) {
-            Iterator<Symbol> it = Inheritancelistofclass.iterator();
-            while (it.hasNext()) {
-                Symbol name2 = it.next();
-                if ((classname.equals(name2.name))) {
-                    coupling = false;
+            Iterator<Object> it02 = kandidlist.iterator();
+            while (it02.hasNext()) {
+                Object name2 = it02.next();
+                classname = name2.classname;
+
+                if ((name2.symbol.name.equals(objectname))) {
+
+                    primaryname = name2;
+                    break;}
+
+
+
+            }
+        }
+        if(primaryname==null){
+            boolean f=false;
+            Symbol s0=null;
+            for (Symbol value1 : importlistofclass.values()) {
+                s0 = value1;
+                if (s0.name.equals(objectname)) {
+                    for(int i=0;i<s0.accessmodifier.size();i++){
+                        if(s0.accessmodifier.get(i).equals(Symbol.AccessModifier.TSTATIC)) {
+                            f = true;
+                            break;
+                        }
+
+                    }
+                    relation=Invoc.RelationType.STATICMETHOD;
+                    f=false;
                     break;
-
                 }
-
-
             }
-            break;
-        }
-    }
-    if (coupling) {
-
-        String keyname = s1.packagename + s1.name;
-        boolean f = false;
-        String s = null;
-        for (String value : Couplinglist.keySet()) {
-            s = value;
-            if (s.equals(keyname)) {
-                f = true;
-                break;
-            }
-            // Couplinglist.get(s).add()
 
         }
 
-        if (f) {
-            boolean h = true;
+        //add to cohesion list
+        cohesionobject ob=new cohesionobject(objectname,classname);
+        Cohesionlist.get(classnameasli).get(methodnameasli).get("outercalls").add(ob);
+        if(primaryname!=null) {
+            if (primaryname.currentscope.getScopeName().equals("Class")) {
+                relation = Invoc.RelationType.ASSOSIATION;
+            } else if ((primaryname.currentscope.getClass().getName().equals("Symbols.MethodSymbol"))) {
+                if (((MethodSymbol) primaryname.currentscope).returntype.equals(VariableSymbol.TYPE.TCONSTRUCTOR))
+                    relation = Invoc.RelationType.ASSOSIATION;
+                else
+                    relation = Invoc.RelationType.DEPENDENCY;
+            }
+        }
 
-           // @@Iterator<Invoc> it3 = Couplinglist.get(keyname).iterator();
-           //@@ while (it3.hasNext()) {
-            // @@   Invoc name2 = it3.next();
-             // @@  if ((name2.name.equals(inv.name))&&(name2.currentScope.getScopeName().equals(inv.currentScope.getScopeName())))
-               //@@ {
-                   //@@ h = false;
-                  //@@  break;
 
-               //@@ }
-           //@@ }
 
-            if (h) {
-                Couplinglist.get(keyname).add(inv);
-                if(Couplinglisthelper.size()==0) {
-                    ArrayList<Invoc> invlist0 = new ArrayList<Invoc>();
-                    Couplinglisthelper.put(keyname, invlist0);
-                    Couplinglisthelper.get(keyname).add(inv);
-                }
-                else if(!(Couplinglisthelper.size()==0)) {
-                    boolean h1 = false;
-                    Iterator<String> it4 = Couplinglisthelper.keySet().iterator();
-                    while (it4.hasNext()) {
-                        String name2 = it4.next();
-                        if (name2.equals(keyname)) {
-                            h1 = true;
-                        }
-                        if (h1 == false) {
-                            ArrayList<Invoc> invlist0 = new ArrayList<Invoc>();
-                            Couplinglisthelper.put(keyname, invlist0);
-                            Couplinglisthelper.get(keyname).add(inv);
 
-                        } else if (h1 == true) {
-                            Couplinglisthelper.get(keyname).add(inv);
-
-                        }
+        Invoc inv = new Invoc(objectname,ctx.Identifier().getText(), Invoc.InvocType.METHODINVOC, relation,currentScope);
+        //be in nokte deghat kon k momken ast dar packagehay mokhtalef classhay hamname dashte bashim, felan in ro dar nazar nagerefti
+        Symbol s1=null;
+        for (Symbol value1 : importlistofclass.values()) {
+            s1 = value1;
+            if (s1.name.equals(classname)) {
+                Iterator<Symbol> it = Inheritancelistofclass.iterator();
+                while (it.hasNext()) {
+                    Symbol name2 = it.next();
+                    if ((classname.equals(name2.name))) {
+                        coupling = false;
+                        break;
 
                     }
+
+
                 }
+                break;
+            }
+        }
+        if (coupling) {
+
+            String keyname = s1.packagename + s1.name;
+            boolean f = false;
+            String s = null;
+            for (String value : Couplinglist.keySet()) {
+                s = value;
+                if (s.equals(keyname)) {
+                    f = true;
+                    break;
+                }
+                // Couplinglist.get(s).add()
+
+            }
+
+            if (f) {
+                boolean h = true;
+
+                // @@Iterator<Invoc> it3 = Couplinglist.get(keyname).iterator();
+                //@@ while (it3.hasNext()) {
+                // @@   Invoc name2 = it3.next();
+                // @@  if ((name2.name.equals(inv.name))&&(name2.currentScope.getScopeName().equals(inv.currentScope.getScopeName())))
+                //@@ {
+                //@@ h = false;
+                //@@  break;
+
+                //@@ }
+                //@@ }
+
+                if (h) {
+                    Couplinglist.get(keyname).add(inv);
+                    if(Couplinglisthelper.size()==0) {
+                        ArrayList<Invoc> invlist0 = new ArrayList<Invoc>();
+                        Couplinglisthelper.put(keyname, invlist0);
+                        Couplinglisthelper.get(keyname).add(inv);
+                    }
+                    else if(!(Couplinglisthelper.size()==0)) {
+                        boolean h1 = false;
+                        Iterator<String> it4 = Couplinglisthelper.keySet().iterator();
+                        while (it4.hasNext()) {
+                            String name2 = it4.next();
+                            if (name2.equals(keyname)) {
+                                h1 = true;
+                            }
+                            if (h1 == false) {
+                                ArrayList<Invoc> invlist0 = new ArrayList<Invoc>();
+                                Couplinglisthelper.put(keyname, invlist0);
+                                Couplinglisthelper.get(keyname).add(inv);
+
+                            } else if (h1 == true) {
+                                Couplinglisthelper.get(keyname).add(inv);
+
+                            }
+
+                        }
+                    }
+
+                }
+
+            }
+            else if(!(f)){
+                ArrayList<Invoc>invoclist=new ArrayList<Invoc>();
+                ArrayList<Invoc>invoclist1=new ArrayList<Invoc>();
+
+                Couplinglist.put(keyname,invoclist);
+                Couplinglist.get(keyname).add(inv);
+
+                Couplinglisthelper.put(keyname,invoclist1);
+                Couplinglisthelper.get(keyname).add(inv);
 
             }
 
         }
-        else if(!(f)){
-            ArrayList<Invoc>invoclist=new ArrayList<Invoc>();
-            ArrayList<Invoc>invoclist1=new ArrayList<Invoc>();
-
-            Couplinglist.put(keyname,invoclist);
-            Couplinglist.get(keyname).add(inv);
-
-            Couplinglisthelper.put(keyname,invoclist1);
-            Couplinglisthelper.get(keyname).add(inv);
-
-        }
 
     }
-
-}
     @Override public void exitMethodinvocation_lfno_primary2(javaParser.Methodinvocation_lfno_primary2Context ctx) { }
 
 
 
-
-
-
-
-
-
     @Override public void exitMethodInvoc2(javaParser.MethodInvoc2Context ctx) { }
+    //---------------------------------------------------------------------------------
+    @Override public void enterMethodInvoc1(javaParser.MethodInvoc1Context ctx) {
+        String name=ctx.methodName().getText();
+        cohesionobject ob=new cohesionobject(name);
+        Cohesionlist.get(classnameasli).get(methodnameasli).get("innercalls").add(ob);
+
+    }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override public void exitMethodInvoc1(javaParser.MethodInvoc1Context ctx) { }
+    //-----------------------------------------------------------------------------------
+
+    @Override public void enterMethodinvocation_lfno_primary1(javaParser.Methodinvocation_lfno_primary1Context ctx) {
+
+        String name=ctx.methodName().getText();
+        cohesionobject ob=new cohesionobject(name);
+        Cohesionlist.get(classnameasli).get(methodnameasli).get("innercalls").add(ob);
+
+    }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override public void exitMethodinvocation_lfno_primary1(javaParser.Methodinvocation_lfno_primary1Context ctx) { }
+
+    //---------------------------------------------------------------------
+
+
+
+
 }
 
 

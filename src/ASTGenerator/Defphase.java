@@ -549,6 +549,7 @@ public class Defphase extends javaBaseListener {
                 myscope=myscope.getEnclosingScope();
             }
             if(!(s.equals("String"))){
+               // s=packagename+s;
             Object o=new Object(s,v,myscope);
             objectinstances.add(o);}
             //System.out.println(s);
@@ -591,6 +592,7 @@ public class Defphase extends javaBaseListener {
                 myscope=myscope.getEnclosingScope();
             }
             if(!(s.equals("String"))){
+             //   s=packagename+s;
                 Object o=new Object(s,v,myscope);
                 objectinstances.add(o);}
             //System.out.println(s);
@@ -621,6 +623,7 @@ public class Defphase extends javaBaseListener {
                 myscope=myscope.getEnclosingScope();
             }
             if(!(s.equals("String"))){
+               // s=packagename+s;
                 Object o=new Object(s,v,myscope);
                 objectinstances.add(o);}
             //System.out.println(s);
@@ -767,6 +770,7 @@ public class Defphase extends javaBaseListener {
                 myscope=myscope.getEnclosingScope();
             }
             if(!(s.equals("String"))){
+               // s=packagename+s;
             Object o=new Object(s,var,myscope);
             objectinstances.add(o);}
 
@@ -815,7 +819,8 @@ public class Defphase extends javaBaseListener {
                 myscope=myscope.getEnclosingScope();
             }
             if(!(s.equals("String"))){
-            Object o=new Object(s,var,myscope);
+                //s=packagename+s;
+                Object o=new Object(s,var,myscope);
             objectinstances.add(o);}
             //System.out.println(s);
         }
@@ -860,6 +865,7 @@ public class Defphase extends javaBaseListener {
                 myscope=myscope.getEnclosingScope();
             }
             if(!(s.equals("String"))){
+               // s=packagename+s;
             Object o=new Object(s,var,myscope);
             objectinstances.add(o);}
             //System.out.println(s);

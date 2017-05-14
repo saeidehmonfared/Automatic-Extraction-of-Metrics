@@ -137,6 +137,8 @@ public class  ASTGenerator {
 
                 Defectdensitymetrics defectdensityextractor=new Defectdensitymetrics(symboltableextractor.globals,symboltableextractor.Scopes);
                 ParseTreeWalker.DEFAULT.walk(defectdensityextractor,tree);
+                ComplexityMetrics complexityextractor=new ComplexityMetrics(symboltableextractor.globals,symboltableextractor.Scopes);
+                ParseTreeWalker.DEFAULT.walk(complexityextractor,tree);
 
 
 
@@ -243,6 +245,8 @@ public class  ASTGenerator {
         Qualityformula.couplingcalculation();
         Qualityformula.cohesioncalculation();
         Qualityformula.inheritancecalculation();
+      Qualityformula.cohesionextractionfromcouplinglist();
+      Qualityformula.complexitycalculation();
 
     }
     public void parseFile(String compUnit, String outDir) {

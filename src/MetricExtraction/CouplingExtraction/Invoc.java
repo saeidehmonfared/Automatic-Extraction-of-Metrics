@@ -12,9 +12,9 @@ public class Invoc {
 
     public InvocType invoctype;
    public RelationType relationType;
-    String name;
-    Scope currentScope;
-    String objectname;
+    public String name;
+    public Scope currentScope;
+    public String objectname;
 
 
     public Invoc(String objectname,String  name,InvocType invoc, RelationType relation,Scope currentScope){

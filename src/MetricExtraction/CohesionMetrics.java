@@ -1,6 +1,7 @@
 package MetricExtraction;
 import ANTLRParser.*;
 import ASTGenerator.CheckVariableSymbol;
+import MetricExtraction.CouplingExtraction.CouplingMetrics;
 import MetricExtraction.CouplingExtraction.Invoc;
 import MetricExtraction.CouplingExtraction.Object;
 import Scopes.GlobalScope;
@@ -70,14 +71,23 @@ public class CohesionMetrics extends javaBaseListener {
 
     }
 
+
+
+
     public void exitCompilationUnit(javaParser.CompilationUnitContext ctx) {
         //**//System.out.println("All of methods with distinict parameters:");
         //**//System.out.println(Allofmethods);
         cohesionmetrics2();
-
-
-
     }
+
+
+
+
+
+
+
+
+
     //----------------------------------------------------------------
 
     @Override
@@ -149,11 +159,11 @@ public class CohesionMetrics extends javaBaseListener {
     public void enterMethodDeclaration(javaParser.MethodDeclarationContext ctx) {
         currentScope = scopes.get(ctx);
         distinictargs.clear();
-        returnvalue.get(nameofclass).put(currentScope.getScopeName(),new LinkedHashMap<>());
+       // returnvalue.get(nameofclass).put(currentScope.getScopeName(),new LinkedHashMap<>());
         returnvalue1.get(nameofclass).put(currentScope.getScopeName(),new LinkedHashMap<>());
         returnvalue1.get(nameofclass).get(currentScope.getScopeName()).put("distinct parameter types",new ArrayList<>());
-        returnvalue.get(nameofclass).get(currentScope.getScopeName()).put("class variables used",new ArrayList<>());
-        returnvalue.get(nameofclass).get(currentScope.getScopeName()).put("private method called",new ArrayList<>());
+        //returnvalue.get(nameofclass).get(currentScope.getScopeName()).put("class variables used",new ArrayList<>());
+       // returnvalue.get(nameofclass).get(currentScope.getScopeName()).put("private method called",new ArrayList<>());
 
 
 
@@ -437,7 +447,7 @@ if(type!=null) {
         Scope mycurrentscope = null;
         if (Scope.equals("Block")) {
             mycurrentscope = currentScope.getEnclosingScope();
-            
+
 
 
             if (mycurrentscope != null)
@@ -962,7 +972,7 @@ if(type!=null) {
 
         for (int i2 = 0; i2 < privatemethodsofclass.size(); i2++) {
             privatecallofmethods.put(privatemethodsofclass.get(i2), new LinkedHashMap<String, ArrayList<String>>());
-            privatecallofmethods.get(privatemethodsofclass.get(i2)).put("privatemethodcalled", null);
+            privatecallofmethods.get(privatemethodsofclass.get(i2)).put("privatemethodcalled", new ArrayList<>());
             privatecallofmethods.get(privatemethodsofclass.get(i2)).put("classvariableused", new ArrayList<>());
 
         }
@@ -985,15 +995,17 @@ if(type!=null) {
             System.out.println("method name is:" + value.toString());
             System.out.println(privatecallofmethods.get(value));
             returnvalue.get(nameofclass).putAll(privatecallofmethods);
-            // if(nameofclass!=null){
-            //   if(privatecallofmethods.get(value).get("classvariableused")!=null){
-            // returnvalue.get(nameofclass).get(value).get("class variables used").addAll(privatecallofmethods.get(value).get("classvariableused"));}
+             //if(nameofclass!=null){
+            //if(privatecallofmethods.get(value).get("classvariableused")!=null){
+           // returnvalue.get(nameofclass).get(value).get("class variables used").addAll(privatecallofmethods.get(value).get("classvariableused"));
+           // }
             //returnvalue.get(nameofclass).get(value).get("private method called");
 
         }
     }
 
         }
+
 
 
 
