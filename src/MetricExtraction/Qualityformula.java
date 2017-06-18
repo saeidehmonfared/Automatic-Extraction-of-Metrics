@@ -110,7 +110,7 @@ public class Qualityformula {
             int dependencycounter1=0;
             int assosiationcounter1=0;
             for(String value0: couplinglist.keySet()) {
-                System.out.println("class name is:" + value0);
+                System.out.println("\nclass name is:" + value0);
                 System.out.println("coupling list is:");
                 for (String value01 : couplinglist.get(value0).keySet()) {
                     System.out.println("\n" + value01);

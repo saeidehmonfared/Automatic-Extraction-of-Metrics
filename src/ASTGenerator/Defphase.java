@@ -165,11 +165,12 @@ public class Defphase extends javaBaseListener {
         for(int i=0;i<accessmod.size();i++)
         {
             Symbol.AccessModifier access=accessmod.get(i);
-            if ((access== Symbol.AccessModifier.tpublic)|| (access== Symbol.AccessModifier.tprivate)||(access== Symbol          .AccessModifier.tprotected)) a=false;
+            if ((access== Symbol.AccessModifier.tpublic)|| (access== Symbol.AccessModifier.tprivate)||(access== Symbol  .AccessModifier.tprotected)) a=false;
 
         }
-        if(a){
-            accessmod.add(Symbol.AccessModifier.tpublic);}
+        //define accessmode for class dont have any accessmodofier
+        //if(a){
+          //  accessmod.add(Symbol.AccessModifier.tpublic);}
 
         Symbol C = new Symbol(s, accessmod,Symbol.Type.tCLASS,packagename);
         //System.out.println("Accessmodofier of this class is:"+C.accessmodifier);
@@ -213,8 +214,9 @@ public class Defphase extends javaBaseListener {
             if ((access== Symbol.AccessModifier.tpublic)|| (access== Symbol.AccessModifier.tprivate)||(access== Symbol          .AccessModifier.tprotected)) a=false;
 
         }
-        if(a){
-            accessmod.add(Symbol.AccessModifier.tpublic);}
+        //define accessmode for class dont have any accessmodofier
+       // if(a){
+           // accessmod.add(Symbol.AccessModifier.tpublic);}
 
         Symbol C = new Symbol(s, accessmod,Symbol.Type.tCLASS,packagename);
         //System.out.println("Accessmodofier of this class is:"+C.accessmodifier);

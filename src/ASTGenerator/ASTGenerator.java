@@ -2,6 +2,7 @@ package ASTGenerator;
 
 import DirectoryWalker.DirectoryWalker;
 import MetricExtraction.CouplingExtraction.CouplingMetrics;
+import MetricExtraction.CouplingExtraction.Couplingmetric2;
 import Symbols.Symbol;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -130,15 +131,19 @@ public class  ASTGenerator {
 
                 Map<String, Symbol> importlist = ExtractImportlist(myfile);
                 //**##**System.out.println("importlistofclass is:"+importlist);
-                CouplingMetrics couplingextractor=new CouplingMetrics(symboltableextractor.globals,symboltableextractor.Scopes,symboltableextractor.refrences,importlist,InheritanceExtractor.Inheritancelistofclass,symboltableextractor.objectinstances);
-                ParseTreeWalker.DEFAULT.walk(couplingextractor,tree);
-                CohesionMetrics cohesinextractor=new CohesionMetrics(symboltableextractor.globals,symboltableextractor.Scopes,couplingextractor.objectinstances,importlist,symboltableextractor.nameoftypes,Staticlistclasslevelmetrics.lisofclasses);
-              ParseTreeWalker.DEFAULT.walk(cohesinextractor,tree);
-
+              // CouplingMetrics couplingextractor=new CouplingMetrics(symboltableextractor.globals,symboltableextractor.Scopes,symboltableextractor.refrences,importlist,InheritanceExtractor.Inheritancelistofclass,symboltableextractor.objectinstances);
+              // ParseTreeWalker.DEFAULT.walk(couplingextractor,tree);
+               // CohesionMetrics cohesinextractor=new CohesionMetrics(symboltableextractor.globals,symboltableextractor.Scopes,couplingextractor.objectinstances,importlist,symboltableextractor.nameoftypes,Staticlistclasslevelmetrics.lisofclasses);
+             // ParseTreeWalker.DEFAULT.walk(cohesinextractor,tree);
+                Couplingmetric2 couplingextractor=new Couplingmetric2(symboltableextractor.globals,symboltableextractor.Scopes,importlist,InheritanceExtractor.Inheritancelistofclass,symboltableextractor.objectinstances);
+                 ParseTreeWalker.DEFAULT.walk(couplingextractor,tree);
                 Defectdensitymetrics defectdensityextractor=new Defectdensitymetrics(symboltableextractor.globals,symboltableextractor.Scopes);
                 ParseTreeWalker.DEFAULT.walk(defectdensityextractor,tree);
                 ComplexityMetrics complexityextractor=new ComplexityMetrics(symboltableextractor.globals,symboltableextractor.Scopes);
                 ParseTreeWalker.DEFAULT.walk(complexityextractor,tree);
+
+
+
 
 
 

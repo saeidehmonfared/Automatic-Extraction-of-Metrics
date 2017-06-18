@@ -216,7 +216,7 @@ public class CouplingMetrics extends javaBaseListener {
                 Invoc Invocname=Couplinglisthelper.get(value).get(i);
                 for(String value1: assignmentinmethod.keySet())
                 {
-                    if(Invocname.objectname.equals(assignmentinmethod.get(value1))){
+                    if(Invocname.objectname.equals(assignmentinmethod.get(value1))){file:///home/saeideh/Downloads/0article_v3.pdf
                         if(Couplinglisthelper.get(value).get(i).relationType.equals(Invoc.RelationType.DEPENDENCY)){
                             Couplinglist.get(value).get(i).relationType=Invoc.RelationType.ASSOSIATION;
                             Couplinglisthelper.get(value).get(i).relationType=Invoc.RelationType.ASSOSIATION;
@@ -373,7 +373,7 @@ public class CouplingMetrics extends javaBaseListener {
 
 
 
-        Invoc inv = new Invoc(name, ctx.Identifier().getText(), Invoc.InvocType.ATTRIBUTEINVOC, relation,currentScope);
+        Invoc inv = new Invoc(name, ctx.Identifier().getText(), Invoc.InvocType.ATTRIBUTEINVOC, relation,currentScope,"");
         //be in nokte deghat kon k momken ast dar packagehay mokhtalef classhay hamname dashte bashim, felan in ro dar nazar nagerefti
         Symbol s1=null;
         boolean r=false;
@@ -767,10 +767,10 @@ public class CouplingMetrics extends javaBaseListener {
                 primaryname = name2;
                 break;
             }
-            else if(objectname.equals(name2.symbol.name)){
-                primaryname=name2;
-                break;
-            }
+            //else if(objectname.equals(name2.symbol.name)){
+             //   primaryname=name2;
+             //   break;
+           // }
         }
 
 
@@ -834,7 +834,7 @@ public class CouplingMetrics extends javaBaseListener {
 
 
 
-        Invoc inv = new Invoc(objectname,ctx.Identifier().getText(), Invoc.InvocType.METHODINVOC, relation,currentScope);
+        Invoc inv = new Invoc(objectname,ctx.Identifier().getText(), Invoc.InvocType.METHODINVOC, relation,currentScope,"");
         //be in nokte deghat kon k momken ast dar packagehay mokhtalef classhay hamname dashte bashim, felan in ro dar nazar nagerefti
         Symbol s1=null;
         boolean r=false;
@@ -1048,7 +1048,7 @@ public class CouplingMetrics extends javaBaseListener {
 
 
 
-        Invoc inv = new Invoc(objectname,ctx.Identifier().getText(), Invoc.InvocType.METHODINVOC, relation,currentScope);
+        Invoc inv = new Invoc(objectname,ctx.Identifier().getText(), Invoc.InvocType.METHODINVOC, relation,currentScope,"");
         //be in nokte deghat kon k momken ast dar packagehay mokhtalef classhay hamname dashte bashim, felan in ro dar nazar nagerefti
         Symbol s1=null;
         for (Symbol value1 : importlistofclass.values()) {
